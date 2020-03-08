@@ -1,1 +1,2 @@
 Django==2.2.11
+psycopg2-binary==2.8.4
