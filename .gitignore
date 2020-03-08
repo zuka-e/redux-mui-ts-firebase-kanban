@@ -1,0 +1,16 @@
+# Environment variable
+.env
+.env.dev
+.env.prod
+
+# Python venv files
+penv/
+
+# Pyenv file
+.python-version
+
+# Python compiled byte code
+*.pyc
+
+# SQLite3 database
+*.sqlite3
