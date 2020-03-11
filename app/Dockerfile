@@ -6,14 +6,22 @@ WORKDIR /usr/src/app
 ENV PYTHONDONTWRITEBYTECODE 1
 # Prevents Python from buffering stdout and stderr
 ENV PYTHONUNBUFFERED 1
+# Create ,venv in project-dir instead of ~/.local/share/virtualenvs/
+ENV PIPENV_VENV_IN_PROJECT 1
+# Sytem install, not into virtual-env (equiv.--system)
+ENV PIPENV_SYSTEM 1
 
-# Install psycopg2 dependencies
-RUN apk update \
-  && apk add postgresql-dev gcc python3-dev musl-dev
+# Install psycopg2 for postgres dependencies
+RUN apk update && apk add \
+  postgresql-dev \
+  gcc \
+  python3-dev \
+  musl-dev
 
-RUN pip install --upgrade pip
-COPY ./requirements.txt /usr/src/app/requirements.txt
-RUN pip install -r requirements.txt
+# Install from Pipfile by pipenv
+COPY Pipfile Pipfile.lock /usr/src/app/
+RUN pip install --upgrade pip && pip install pipenv \
+  && pipenv install --deploy
 
 COPY . /usr/src/app/
 

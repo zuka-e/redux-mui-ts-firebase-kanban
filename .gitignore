@@ -9,6 +9,9 @@ penv/
 # Pyenv file
 .python-version
 
+# Pipenv file
+.venv
+
 # Python compiled byte code
 *.pyc
 
