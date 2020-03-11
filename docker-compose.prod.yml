@@ -2,13 +2,15 @@ version: '3.7'
 
 services:
   app:
-    build: ./app
+    build:
+      context: ./app
+      dockerfile: Dockerfile
     volumes:
       - ./app/:/usr/src/app/
-    ports:
-      - 8000:8000
+    expose:
+      - 8000
     env_file:
-      - ./.env.dev
+      - ./.env.prod
     depends_on:
       - db
   db:
@@ -18,12 +20,6 @@ services:
     environment:
       - POSTGRES_DB=myproject_dev
     env_file:
-      - ./.env.dev
-  web:
-    image: nginx:1.17.9-alpine
-    ports:
-      - 8080:80
-    depends_on:
-      - app
+      - ./.env.prod
 volumes:
   postgres_data:
