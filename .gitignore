@@ -42,3 +42,6 @@ penv/
 # SQLite3 database
 *.sqlite3
 
+# VSCode remote container
+.devcontainer/
+.vscode/
