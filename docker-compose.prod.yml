@@ -1,6 +1,14 @@
 version: '3.7'
 
 services:
+  frontend:
+    build: ./frontend
+    volumes:
+      - ./:/usr/src/
+    ports:
+      - 3000:3000
+    environment:
+      - NODE_ENV=production
   app:
     build:
       context: ./app
