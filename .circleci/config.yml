@@ -1,0 +1,37 @@
+version: 2.1
+
+jobs:
+  build:
+    machine:
+      image: circleci/classic:edge
+    steps:
+      - checkout
+      - run:
+          name: decode env file
+          command: echo $ENV_FILE | base64 --decode > .env.dev
+      - run:
+          name: docker-compose build
+          command: docker-compose build
+      - run:
+          name: test
+          command: docker-compose run --rm app python manage.py test
+
+  deploy:
+    machine:
+      image: circleci/classic:edge
+    steps:
+       - checkout
+    # deploy時の記述
+
+workflows: # 実行の条件
+  version: 2.1
+  build_and_deploy:
+    jobs:
+      - build
+      - deploy:
+          requires:
+            - build
+          filters:
+            branches:
+              only: master
+
