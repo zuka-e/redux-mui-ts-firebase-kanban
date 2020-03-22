@@ -1,5 +1,6 @@
 # 環境構築
-Dockerを利用し、以下の環境を構築していきます。
+Dockerを利用し、以下の環境を構築していきます。  
+参考: https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
 - Django
 - Gunicorn
 - React(Typescript)
@@ -171,6 +172,22 @@ services:
 ```
 これをベースにサービスを追加していきます。
 
+## Django
+- シークレットキー、許容ホストを`.env`へ記述し、デバッグを有効にします。  
+.env
+```env
+DEBUG=1
+SECRET_KEY=foo
+DJANGO_ALLOWED_HOSTS=localhost 127.0.0.1 [::1]
+```
+- 環境変数から値を取得するように設定を変更します。  
+app/myproject/setting.py
+```Python
+SECRET_KEY = os.environ.get("SECRET_KEY")
+DEBUG = int(os.environ.get("DEBUG", default=0))
+ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+```
+
 ## PostgreSQL 
 - インストールと依存関係の記述  
 docker-compose.yml
@@ -296,7 +313,7 @@ gunicorn = "==20.0.4"
 psycopg2-binary = "==2.8.4"
 Django = "==2.2.11"
 ```
-- ビルトインサーバから置き換える
+- ビルトインサーバから置き換える  
 app/Dockerfile
 ```Dockerfile
 # CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]
