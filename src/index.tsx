@@ -12,22 +12,26 @@ interface SquareState {
   value: string;
 }
 // tsではジェネリクスにする必要がある
-class Square extends React.Component<SquareProps, SquareState> {
-  constructor(props: SquareProps) {
-    super(props);
-    this.state = {
-      value: ""
-    };
-  }
-  render() {
-    return (
-      // 属性の'onClick'は任意の命名(慣習: on[Event]), setStateをBoardに移行
-      <button className="square" onClick={() => this.props.onClick()}>
-        {this.state.value}
-      </button>
-    );
-  }
+// class Square extends React.Component<SquareProps, SquareState> {
+//   constructor(props: SquareProps) {
+//     super(props);
+//     this.state = {
+//       value: ""
+//     };
+//   }
+//   render() {
+
+// 関数コンポーネントに切り替え
+function Square(props: SquareProps) {
+  return (
+    // 属性の'onClick'は任意の命名(慣習: on[Event]), setStateをBoardに移行
+    <button className="square" onClick={props.onClick}>
+      {/* cf. ()=>this.props.onClick() */}
+      {props.value}
+    </button>
+  );
 }
+// }
 
 interface BoardProps {}
 
