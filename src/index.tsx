@@ -4,7 +4,8 @@ import "./index.css";
 
 interface SquareProps {
   // props定義にinterfaceが必要(Typescript,ts)
-  value: number;
+  value: string;
+  onClick: () => void;
 }
 interface SquareState {
   // state定義にもinterfaceが必要
@@ -20,17 +21,42 @@ class Square extends React.Component<SquareProps, SquareState> {
   }
   render() {
     return (
-      <button className="square" onClick={() => this.setState({ value: "X" })}>
+      // 属性の'onClick'は任意の命名(慣習: on[Event]), setStateをBoardに移行
+      <button className="square" onClick={() => this.props.onClick()}>
         {this.state.value}
       </button>
     );
   }
 }
 
-class Board extends React.Component {
+interface BoardProps {}
+
+interface BoardState {
+  squares: Array<string>;
+}
+class Board extends React.Component<BoardProps, BoardState> {
+  constructor(props: BoardProps) {
+    super(props);
+    this.state = {
+      squares: Array(9).fill(null) // 9マスnullを初期値に
+    };
+  }
+
+  // handle[Event] 慣習名
+  handleClick(i: number) {
+    const squares = this.state.squares.slice(); // 配列のコピーを作成
+    squares[i] = "X";
+    // immutability: 直接書き換えでなく,新データに置き換える(差分確認が用が容易)
+    this.setState({ squares: squares });
+  }
   renderSquare(i: number) {
     // Square(子)にpropsを渡す
-    return <Square value={i} />; // 実際の値は下記 0~8
+    return (
+      <Square
+        value={this.state.squares[i]}
+        onClick={() => this.handleClick(i)}
+      />
+    ); // 実際の値は下記 0~8
   }
 
   render() {
