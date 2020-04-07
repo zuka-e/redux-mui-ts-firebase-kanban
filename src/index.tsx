@@ -2,15 +2,35 @@ import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
 
-class Square extends React.Component {
+interface SquareProps {
+  // props定義にinterfaceが必要(Typescript,ts)
+  value: number;
+}
+interface SquareState {
+  // state定義にもinterfaceが必要
+  value: string;
+}
+// tsではジェネリクスにする必要がある
+class Square extends React.Component<SquareProps, SquareState> {
+  constructor(props: SquareProps) {
+    super(props);
+    this.state = {
+      value: ""
+    };
+  }
   render() {
-    return <button className="square">{/* TODO */}</button>;
+    return (
+      <button className="square" onClick={() => this.setState({ value: "X" })}>
+        {this.state.value}
+      </button>
+    );
   }
 }
 
 class Board extends React.Component {
   renderSquare(i: number) {
-    return <Square />;
+    // Square(子)にpropsを渡す
+    return <Square value={i} />; // 実際の値は下記 0~8
   }
 
   render() {
