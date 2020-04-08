@@ -152,7 +152,7 @@ class Game extends React.Component<GameProps, GameState> {
 
   render() {
     const history = this.state.history;
-    const current = history[history.length - 1];
+    const current = history[this.state.stepNumber];
     // Boardから移行
     const winner: string = calculateWinner(current.squares);
 
