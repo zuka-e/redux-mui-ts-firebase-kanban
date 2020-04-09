@@ -4,7 +4,8 @@ services:
   frontend:
     build: ./frontend
     volumes:
-      - ./:/usr/src/
+      - ./frontend/:/usr/src/frontend/
+      - node_modules:/usr/src/frontend/node_modules/
     ports:
       - 3000:3000
     environment:
@@ -40,5 +41,6 @@ services:
     env_file:
       - ./.env.prod
 volumes:
+  node_modules:
   postgres_data:
   static:
