@@ -2,14 +2,14 @@ FROM python:3.8.2-alpine
 
 WORKDIR /usr/src/app
 
-# Prevents Python from writing pyc files to disc 
-ENV PYTHONDONTWRITEBYTECODE 1
-# Prevents Python from buffering stdout and stderr
-ENV PYTHONUNBUFFERED 1
-# Create ,venv in project-dir instead of ~/.local/share/virtualenvs/
-ENV PIPENV_VENV_IN_PROJECT 1
-# Sytem install, not into virtual-env (equiv.--system)
-ENV PIPENV_SYSTEM 1
+    # Prevents Python from writing pyc files to disc 
+ENV PYTHONDONTWRITEBYTECODE=1 \
+  # Prevents Python from buffering stdout and stderr
+  PYTHONUNBUFFERED=1 \
+  # Create ,venv in project-dir instead of ~/.local/share/virtualenvs/
+  PIPENV_VENV_IN_PROJECT=1 \
+  # Sytem install, not into virtual-env (equiv.--system)
+  PIPENV_SYSTEM=1
 
 # Install psycopg2 for postgres dependencies
 RUN apk update && apk add \
