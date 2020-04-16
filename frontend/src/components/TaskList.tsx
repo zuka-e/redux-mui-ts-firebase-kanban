@@ -1,6 +1,7 @@
 import React from 'react'
 import TaskItem from './TaskItem'
 import { Task } from './Types'
+import { List, ListItem, Checkbox, ListItemText, Button } from '@material-ui/core'
 
 type Props = {
   tasks: Array<Task> //Task型 オブジェクト(連想配列) cf. Type.ts
@@ -29,21 +30,22 @@ const TaskList: React.FC<Props> = ({ tasks, setTasks }) => {
   }
 
   return (
-    <div className="inner">
+    <List component='ul'>
       {
-        tasks.length <= 0 ? '登録されたTODOはありません。' :
-          <ul className="task-list">
-            {tasks.map(task => (
-              <TaskItem
-                key={task.id}
-                task={task}
-                handleDelete={handleDelete}
-                handleDone={handleDone}
-              />
-            ))}
-          </ul>
+        tasks.map((task: Task) => (
+          <ListItem key={task.id} component='li'>
+            <Checkbox checked={task.done} value='primary' onChange={() => handleDone(task)} />
+            <ListItemText>{task.title}{task.done ? ",OK" : ",NG"}</ListItemText>
+            <Button
+              variant='contained'
+              color='secondary'
+              onClick={() => handleDelete(task)}
+            >削除
+            </Button>
+          </ListItem>
+        ))
       }
-    </div>
+    </List>
   )
 }
 

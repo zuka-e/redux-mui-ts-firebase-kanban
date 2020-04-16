@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { Task } from './Types'
+import { Box, TextField, Button } from '@material-ui/core'
 
 type Props = {
   setTasks: React.Dispatch<React.SetStateAction<Task[]>>
@@ -20,32 +21,29 @@ const TaskInput: React.FC<Props> = ({ setTasks, tasks }) => {
   // onSubmit: count を id にして, title は state から取得, tasks(props)に追加
   const handleSubmit = () => {
     setCount(count + 1) // 新規タスクid 設定用
-
     const newTask: Task = {
       id: count, // 直前にインクリメントした値(count)をidに
       title: inputTitle, // onChangeで常に変化していたtitleの最終値(onSubmit)
       done: false, // 当然todoは未完
     }
-
     setTasks([newTask, ...tasks]) // cf.concat(スプレッド演算子)タスク(前に)追加
     setInputTitle('') // titleは次に追加するときにも使うので初期化
-
   }
 
   return ( // 以下HTML, 子はない, form
-    <div>
-      <div className="inputForm">
-        <div className="inner">
-          <input
-            type="text"
-            className="input"
-            value={inputTitle} // 初期値''で可変, 下記onChange
-            onChange={handleInputChange} // value変化させる
-          />
-          <input type="submit" onClick={handleSubmit} className="btn is-primary" value="追加" />
-        </div>
-      </div>
-    </div>
+    <Box mt={5} display='flex' justifyContent='space-around'>
+      <TextField
+        placeholder="Input task's title"
+        value={inputTitle} // 初期値''で可変, 下記onChange
+        onChange={handleInputChange} // value変化させる
+      />
+      <Button
+        disabled={inputTitle === ''}
+        variant='contained'
+        color='primary'
+        onClick={handleSubmit}
+      >追加</Button>
+    </Box>
   )
 }
 

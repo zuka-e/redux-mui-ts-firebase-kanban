@@ -8,14 +8,14 @@ let btn = {
   cursor: 'pointer'
 };
 
-interface ListProps {
+interface ItemListProps {
   items: Array<{
     id: number,
     title: string,
   }>
 }
 
-const List: React.FC<ListProps> = (props: ListProps) => (
+const ItemList: React.FC<ItemListProps> = (props: ItemListProps) => (
   <ul className="siimple-list">
     {props.items.map((item) => (
       <li className="siimple-list-item siimple--bg-white" style={style}> {item.id} - {item.title}<span className="siimple-tag siimple-tag--error siimple-hover" style={btn}>Delete</span></li>
@@ -23,4 +23,4 @@ const List: React.FC<ListProps> = (props: ListProps) => (
   </ul>
 );
 
-export default List;
+export default ItemList;

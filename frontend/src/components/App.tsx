@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import Form from './Form';
-import List from './List';
 import TaskInput from './TaskInput';
 import TaskList from './TaskList';
 import { Task } from './Types';
 import './App.css';
+import {
+  Container
+} from '@material-ui/core'
 
 const initialState: Task[] = [
   {
@@ -23,11 +24,11 @@ const App: React.FC = () => {
   // オブジェクトの配列を変更するメソッドの型? (setStateマウスオーバーで表示)
   const [tasks, setTasks] = useState(initialState)
   return (
-    <div>
+    <Container component='main'>
       {/* 渡す値は子コンポーネントのpropsで定義 */}
       <TaskInput setTasks={setTasks} tasks={tasks} />
       <TaskList setTasks={setTasks} tasks={tasks} />
-    </div>
+    </Container>
   )
 }
 
