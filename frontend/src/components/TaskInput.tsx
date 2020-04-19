@@ -30,6 +30,10 @@ const TaskInput: React.FC<Props> = ({ setTasks, tasks }) => {
     setInputTitle('') // titleは次に追加するときにも使うので初期化
   }
 
+  const isExistingTitle = () => {
+    return tasks.some(task => task.title === inputTitle)
+  }
+
   return ( // 以下HTML, 子はない, form
     <Box mt={5} display='flex' justifyContent='space-around'>
       <TextField
@@ -38,7 +42,7 @@ const TaskInput: React.FC<Props> = ({ setTasks, tasks }) => {
         onChange={handleInputChange} // value変化させる
       />
       <Button
-        disabled={inputTitle === ''}
+        disabled={inputTitle === '' || isExistingTitle()}
         variant='contained'
         color='primary'
         onClick={handleSubmit}
