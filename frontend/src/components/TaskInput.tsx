@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Task } from './Types'
+// import { Task } from './Types'
 import { Box, TextField, Button } from '@material-ui/core'
 import { useDispatch, useSelector } from 'react-redux'
 import { addTask } from '../modules/tasksModule'

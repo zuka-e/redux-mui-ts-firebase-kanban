@@ -1,5 +1,5 @@
 import React from 'react'
-import TaskItem from './TaskItem'
+// import TaskItem from './TaskItem'
 import { Task } from './Types'
 import { List, ListItem, Checkbox, ListItemText, Button } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux'

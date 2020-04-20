@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
+import React from 'react';
 import TaskInput from './TaskInput';
 import TaskList from './TaskList';
-import { Task } from './Types';
+// import { Task } from './Types';
 import './App.css';
 import {
   Container
 } from '@material-ui/core'
 
-const initialState: Task[] = [
-  {
-    id: 2,
-    title: '次にやるやつ',
-    done: false
-  }, {
-    id: 1,
-    title: 'はじめにやるやつ',
-    done: true
-  }
-]
+// const initialState: Task[] = [
+//   {
+//     id: 2,
+//     title: '次にやるやつ',
+//     done: false
+//   }, {
+//     id: 1,
+//     title: 'はじめにやるやつ',
+//     done: true
+//   }
+// ]
 
 const App: React.FC = () => {
   // setTasks: React.Dispatch<React.SetStateAction<Task[]>>
