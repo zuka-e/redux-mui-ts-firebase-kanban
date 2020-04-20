@@ -1,10 +1,11 @@
-import { combineReducers } from '@reduxjs/toolkit'
-import tasksModule from './modules/tasksModule'
+import { combineReducers } from "@reduxjs/toolkit";
+import tasksModule from "./modules/tasksModule";
 
 const rootReducer = combineReducers({
-  tasks: tasksModule.reducer
-})
+  // key(tasks) を利用し、state.tasks で取得
+  tasks: tasksModule.reducer,
+});
 
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = ReturnType<typeof rootReducer>;
 
-export default rootReducer
+export default rootReducer;
