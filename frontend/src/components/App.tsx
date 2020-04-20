@@ -22,12 +22,12 @@ const initialState: Task[] = [
 const App: React.FC = () => {
   // setTasks: React.Dispatch<React.SetStateAction<Task[]>>
   // オブジェクトの配列を変更するメソッドの型? (setStateマウスオーバーで表示)
-  const [tasks, setTasks] = useState(initialState)
+  // const [tasks, setTasks] = useState(initialState) -> Reduxで不要に
   return (
     <Container component='main'>
-      {/* 渡す値は子コンポーネントのpropsで定義 */}
-      <TaskInput setTasks={setTasks} tasks={tasks} />
-      <TaskList setTasks={setTasks} tasks={tasks} />
+      {/* 渡す値は子コンポーネントのpropsで定義 -> Reduxで不要に*/}
+      <TaskInput />
+      <TaskList />
     </Container>
   )
 }
