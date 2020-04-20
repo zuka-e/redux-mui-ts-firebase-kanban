@@ -1,6 +1,9 @@
 import { combineReducers } from '@reduxjs/toolkit'
+import tasksModule from './modules/tasksModule'
 
-const rootReducer = combineReducers({})
+const rootReducer = combineReducers({
+  tasks: tasksModule.reducer
+})
 
 export type RootState = ReturnType<typeof rootReducer>
 
