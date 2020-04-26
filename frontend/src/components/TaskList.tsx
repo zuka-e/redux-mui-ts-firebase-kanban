@@ -1,11 +1,17 @@
 import React, { useState } from "react";
 // import TaskItem from './TaskItem'
-import { Task } from './Types'
-import { List, ListItem, Checkbox, ListItemText, Button } from '@material-ui/core'
-import { useSelector, useDispatch } from 'react-redux'
-import axios from 'axios'
-import { RootState } from '../rootReducer'
-import { doneTask, deleteTask } from '../modules/tasksModule'
+import { Task } from "./Types";
+import {
+  List,
+  ListItem,
+  Checkbox,
+  ListItemText,
+  Button,
+} from "@material-ui/core";
+import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
+import { RootState } from "../rootReducer";
+import { doneTask, deleteTask } from "../modules/tasksModule";
 
 interface User {
   name: string;
@@ -19,9 +25,9 @@ const initialUser: User = {
 // propsは不要になる
 const TaskList: React.FC = () => {
   // (Storeの)stateを引数に, stateの値(ここではtasks)を取得(ReduxHooks記法)
-  const { tasks } = useSelector((state: RootState) => state.tasks)
-  const dispatch = useDispatch() // dispatch(action): State変更の唯一法
-  const [user, setUser] = useState<User>(initialUser)
+  const { tasks } = useSelector((state: RootState) => state.tasks);
+  const dispatch = useDispatch(); // dispatch(action): State変更の唯一法
+  const [user, setUser] = useState<User>(initialUser);
 
   const handleClick = () => {
     axios
@@ -35,31 +41,31 @@ const TaskList: React.FC = () => {
   };
 
   return (
-    <List component='ul'>
-      {
-        tasks.map((task: Task) => (
-          <ListItem key={task.id} component='li'>
-            <Checkbox
-              checked={task.done}
-              value='primary'
-              // Store(State)を変更する
-              onChange={() => dispatch(doneTask(task))}
-            />
-            <ListItemText>
-              {task.title}{task.done ? ",OK" : ",NG"}
-            </ListItemText>
-            <Button
-              variant='contained'
-              color='secondary'
-              onClick={() => dispatch(deleteTask(task))}
-            >削除
-            </Button>
-          </ListItem>
-        ))
-      }
+    <List component="ul">
+      {tasks.map((task: Task) => (
+        <ListItem key={task.id} component="li">
+          <Checkbox
+            checked={task.done}
+            value="primary"
+            // Store(State)を変更する
+            onChange={() => dispatch(doneTask(task))}
+          />
+          <ListItemText onClick={() => handleClick()}>
+            {task.title}
+            {task.done ? ",OK" : ",NG"}, {user.name}, {user.email}
+          </ListItemText>
+          <Button
+            variant="contained"
+            color="secondary"
+            onClick={() => dispatch(deleteTask(task))}
+          >
+            削除
+          </Button>
+        </ListItem>
+      ))}
     </List>
-  )
-}
+  );
+};
 
 // type Props = {
 //   tasks: Array<Task> //Task型 オブジェクト(連想配列) cf. Type.ts
@@ -107,4 +113,4 @@ const TaskList: React.FC = () => {
 //   )
 // }
 
-export default TaskList
+export default TaskList;
