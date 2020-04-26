@@ -1,16 +1,38 @@
-import React from 'react'
+import React, { useState } from "react";
 // import TaskItem from './TaskItem'
 import { Task } from './Types'
 import { List, ListItem, Checkbox, ListItemText, Button } from '@material-ui/core'
 import { useSelector, useDispatch } from 'react-redux'
+import axios from 'axios'
 import { RootState } from '../rootReducer'
 import { doneTask, deleteTask } from '../modules/tasksModule'
+
+interface User {
+  name: string;
+  email?: string; // '?' => 任意の属性に
+}
+
+const initialUser: User = {
+  name: "", // 'email'は任意となる
+};
 
 // propsは不要になる
 const TaskList: React.FC = () => {
   // (Storeの)stateを引数に, stateの値(ここではtasks)を取得(ReduxHooks記法)
   const { tasks } = useSelector((state: RootState) => state.tasks)
   const dispatch = useDispatch() // dispatch(action): State変更の唯一法
+  const [user, setUser] = useState<User>(initialUser)
+
+  const handleClick = () => {
+    axios
+      .get("http://localhost:8080/api/cards")
+      .then((res) => res.data[0]) // response内容は,console.log()で確認可
+      .then((res) => setUser({
+        name: res.todo_list.user.name,
+        email: res.todo_list.user.email
+      }))
+      .catch((err) => alert(err));
+  };
 
   return (
     <List component='ul'>
