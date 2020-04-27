@@ -1,6 +1,6 @@
-import React, { useState } from "react";
+import React from "react";
 // import TaskItem from './TaskItem'
-import { Task } from "./Types";
+import { Task, User } from "./Types";
 import {
   List,
   ListItem,
@@ -9,61 +9,81 @@ import {
   Button,
 } from "@material-ui/core";
 import { useSelector, useDispatch } from "react-redux";
-import axios from "axios";
+// import axios from "axios";
 import { RootState } from "../rootReducer";
 import { doneTask, deleteTask } from "../modules/tasksModule";
+import { fetchUsers } from "../modules/usersModule";
 
-interface User {
-  name: string;
-  email?: string; // '?' => 任意の属性に
-}
+// interface User {
+//   name: string;
+//   email?: string; // '?' => 任意の属性に
+// }
 
-const initialUser: User = {
-  name: "", // 'email'は任意となる
-};
+// const initialUser: User = {
+//   name: "", // 'email'は任意となる
+// };
 
 // propsは不要になる
 const TaskList: React.FC = () => {
   // (Storeの)stateを引数に, stateの値(ここではtasks)を取得(ReduxHooks記法)
   const { tasks } = useSelector((state: RootState) => state.tasks);
   const dispatch = useDispatch(); // dispatch(action): State変更の唯一法
-  const [user, setUser] = useState<User>(initialUser);
+  // const [user, setUser] = useState<User>(iniUser);
 
-  const handleClick = () => {
-    axios
-      .get("http://localhost:8080/api/cards")
-      .then((res) => res.data[0]) // response内容は,console.log()で確認可
-      .then((res) => setUser({
-        name: res.todo_list.user.name,
-        email: res.todo_list.user.email
-      }))
-      .catch((err) => alert(err));
-  };
+  const { users, loading, error } = useSelector(
+    (state: RootState) => state.users
+  );
+
+  // const handleClick = () => {
+  //   axios
+  //     .get("http://localhost:8080/api/cards")
+  //     .then((res) => res.data[0]) // response内容は,console.log()で確認可
+  //     .then((res) => setUser({
+  //       name: res.todo_list.user.name,
+  //       email: res.todo_list.user.email
+  //     }))
+  //     .catch((err) => alert(err));
+  // };
 
   return (
-    <List component="ul">
-      {tasks.map((task: Task) => (
-        <ListItem key={task.id} component="li">
-          <Checkbox
-            checked={task.done}
-            value="primary"
-            // Store(State)を変更する
-            onChange={() => dispatch(doneTask(task))}
-          />
-          <ListItemText onClick={() => handleClick()}>
-            {task.title}
-            {task.done ? ",OK" : ",NG"}, {user.name}, {user.email}
-          </ListItemText>
-          <Button
-            variant="contained"
-            color="secondary"
-            onClick={() => dispatch(deleteTask(task))}
-          >
-            削除
-          </Button>
-        </ListItem>
-      ))}
-    </List>
+    <React.Fragment>
+      <List component="ul">
+        {tasks.map((task: Task) => (
+          <ListItem key={task.id} component="li">
+            <Checkbox
+              checked={task.done}
+              value="primary"
+              // Store(State)を変更する
+              onChange={() => dispatch(doneTask(task))}
+            />
+            <ListItemText onClick={() => dispatch(fetchUsers())}>
+              {task.title}
+              {/* {task.done ? ",OK" : ",NG"}, {user.name}, {user.email} */}
+            </ListItemText>
+            <Button
+              variant="contained"
+              color="secondary"
+              onClick={() => dispatch(deleteTask(task))}
+            >
+              削除
+            </Button>
+          </ListItem>
+        ))}
+      </List>
+      {console.log(loading ? "読込中" : "待機中")}
+      {console.log(error ? error : "エラーなし")}
+      <List component="ul">
+        {users?.map((user: User) => (
+          <ListItem key={user.id} component="li">
+            <ListItemText>
+              {user.name}
+              <br />
+              {user.email}
+            </ListItemText>
+          </ListItem>
+        ))}
+      </List>
+    </React.Fragment>
   );
 };
 
