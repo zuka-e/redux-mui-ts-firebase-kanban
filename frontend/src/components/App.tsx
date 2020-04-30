@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 
-import { Container, ThemeProvider } from '@material-ui/core';
+import { Container, ThemeProvider, CssBaseline } from '@material-ui/core';
 
 import Header from '../layouts/Header';
 import TaskInput from './TaskInput';
@@ -21,6 +21,7 @@ const App: React.FC = () => {
   return (
     // 'material-ui'の配色カスタマイズ ('ThemeContext.theme'をセット)
     <ThemeProvider theme={context.theme}>
+      <CssBaseline />
       <Header />
       <Container component='main'>
         <TaskInput />
