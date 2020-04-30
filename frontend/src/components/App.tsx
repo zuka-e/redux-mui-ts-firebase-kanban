@@ -1,35 +1,33 @@
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
+
+import { Container, ThemeProvider } from '@material-ui/core';
+
+import Header from '../layouts/Header';
 import TaskInput from './TaskInput';
 import TaskList from './TaskList';
-// import { Task } from './Types';
-import './App.css';
-import {
-  Container
-} from '@material-ui/core'
-
-// const initialState: Task[] = [
-//   {
-//     id: 2,
-//     title: '次にやるやつ',
-//     done: false
-//   }, {
-//     id: 1,
-//     title: 'はじめにやるやつ',
-//     done: true
-//   }
-// ]
+import { ThemeContext } from '../layouts/ThemeProvider';
 
 const App: React.FC = () => {
-  // setTasks: React.Dispatch<React.SetStateAction<Task[]>>
-  // オブジェクトの配列を変更するメソッドの型? (setStateマウスオーバーで表示)
-  // const [tasks, setTasks] = useState(initialState) -> Reduxで不要に
+  // 'createContext()'で生成した'ThemeContext'を呼び出す
+  const context = useContext(ThemeContext);
+  // 保存されたテーマがあれば適用する(localStorageから読み込む)
+  useEffect(() => {
+    const theme = localStorage.getItem('theme');
+    if (theme) {
+      context.toggleTheme(theme);
+    }
+  });
+
   return (
-    <Container component='main'>
-      {/* 渡す値は子コンポーネントのpropsで定義 -> Reduxで不要に*/}
-      <TaskInput />
-      <TaskList />
-    </Container>
-  )
-}
+    // 'material-ui'の配色カスタマイズ ('ThemeContext.theme'をセット)
+    <ThemeProvider theme={context.theme}>
+      <Header />
+      <Container component='main'>
+        <TaskInput />
+        <TaskList />
+      </Container>
+    </ThemeProvider>
+  );
+};
 
 export default App;
