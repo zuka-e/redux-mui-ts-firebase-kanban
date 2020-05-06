@@ -1,11 +1,11 @@
 import React, { useContext, useEffect } from 'react';
 
-import { Container, ThemeProvider, CssBaseline } from '@material-ui/core';
+import { BrowserRouter as Router } from 'react-router-dom';
+import { ThemeProvider, CssBaseline, Container } from '@material-ui/core';
 
 import Header from '../layouts/Header';
-import TaskInput from './TaskInput';
-import TaskList from './TaskList';
 import { ThemeContext } from '../layouts/ThemeProvider';
+import Content from '../layouts/Content';
 
 const App: React.FC = () => {
   // 'createContext()'で生成した'ThemeContext'を呼び出す
@@ -20,14 +20,15 @@ const App: React.FC = () => {
 
   return (
     // 'material-ui'の配色カスタマイズ ('ThemeContext.theme'をセット)
-    <ThemeProvider theme={context.theme}>
-      <CssBaseline />
-      <Header />
-      <Container component='main'>
-        <TaskInput />
-        <TaskList />
-      </Container>
-    </ThemeProvider>
+    <Router>
+      <ThemeProvider theme={context.theme}>
+        <CssBaseline />
+        <Header />
+        <Container component='main'>
+          <Content />
+        </Container>
+      </ThemeProvider>
+    </Router>
   );
 };
 
