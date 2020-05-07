@@ -1,3 +1,28 @@
+export interface ITaskBoard {
+  [taskBoardId: string]: {
+    id: string;
+    title: string;
+    taskLists: string[];
+  };
+}
+export interface ITaskList {
+  [taskListId: string]: {
+    taskBoard: string;
+    id: string;
+    title: string;
+    taskCards: string[];
+  };
+}
+export interface ITaskCard {
+  [taskCardId: string]: {
+    taskList: string;
+    id: string;
+    title: string;
+    body: string;
+    done: boolean;
+  };
+}
+
 export type Task = {
   id: number;
   title: string;
@@ -40,25 +65,25 @@ export interface Company {
 export const exampleUsers: User[] = [
   {
     id: 1,
-    name: "Leanne Graham",
-    username: "Bret",
-    email: "Sincere@april.biz",
+    name: 'Leanne Graham',
+    username: 'Bret',
+    email: 'Sincere@april.biz',
     address: {
-      street: "Kulas Light",
-      suite: "Apt. 556",
-      city: "Gwenborough",
-      zipcode: "92998-3874",
+      street: 'Kulas Light',
+      suite: 'Apt. 556',
+      city: 'Gwenborough',
+      zipcode: '92998-3874',
       geo: {
-        lat: "-37.3159",
-        lng: "81.1496",
+        lat: '-37.3159',
+        lng: '81.1496',
       },
     },
-    phone: "1-770-736-8031 x56442",
-    website: "hildegard.org",
+    phone: '1-770-736-8031 x56442',
+    website: 'hildegard.org',
     company: {
-      name: "Romaguera-Crona",
-      catchPhrase: "Multi-layered client-server neural-net",
-      bs: "harness real-time e-markets",
+      name: 'Romaguera-Crona',
+      catchPhrase: 'Multi-layered client-server neural-net',
+      bs: 'harness real-time e-markets',
     },
   },
 ];
