@@ -2,20 +2,20 @@ export interface ITaskBoard {
   [taskBoardId: string]: {
     id: string;
     title: string;
-    taskLists: string[];
+    taskListIds: string[];
   };
 }
 export interface ITaskList {
   [taskListId: string]: {
-    taskBoard: string;
+    taskBoardId: string;
     id: string;
     title: string;
-    taskCards: string[];
+    taskCardIds: string[];
   };
 }
 export interface ITaskCard {
   [taskCardId: string]: {
-    taskList: string;
+    taskListId: string;
     id: string;
     title: string;
     body: string;

@@ -6,10 +6,10 @@ import AddIcon from '@material-ui/icons/Add';
 interface Props {
   // 任意のprops
   list?: {
-    taskBoard: string;
+    taskBoardId: string;
     id: string;
     title: string;
-    taskCards: string[];
+    taskCardIds: string[];
   };
 }
 

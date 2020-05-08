@@ -23,7 +23,7 @@ const TaskBoard: React.FC = () => {
   }
   return (
     <Grid container>
-      {board.taskLists.map((listId) => {
+      {board.taskListIds.map((listId) => {
         const list = taskLists[listId];
         return (
           <Grid item lg={2} md={3} sm={4} xs={6} key={list.id}>

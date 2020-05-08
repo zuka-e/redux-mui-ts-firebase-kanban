@@ -13,7 +13,7 @@ const TaskList: React.FC<ITaskList> = ({ list }: ITaskList) => {
       <Typography color='textPrimary' gutterBottom>
         {list.title}
       </Typography>
-      {list.taskCards.map((cardId) => (
+      {list.taskCardIds.map((cardId) => (
         <TaskCard card={taskCards[cardId]} />
       ))}
       <AddTaskButton list={list} />
