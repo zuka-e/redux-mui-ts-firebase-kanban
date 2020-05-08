@@ -1,10 +1,14 @@
 import { ITaskBoard, ITaskList, ITaskCard } from '../Types';
 
 // 表示確認用データ
+
+// boards.map()を利用するための配列
+export const boardOrder = ['board-1'];
+
 export const taskBoards: ITaskBoard = {
   'board-1': {
     id: 'board-1',
-    title: 'b',
+    title: 'board-title-1',
     taskListIds: ['list-1', 'list-3', 'list-4'],
   },
 };

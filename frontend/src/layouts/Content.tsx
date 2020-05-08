@@ -8,6 +8,9 @@ import TaskBoard from '../components/tasks/TaskBoard';
 const Content: React.FC = () => {
   return (
     <Switch>
+      <Route exact path='/'>
+        <Home />
+      </Route>
       <Route path='/boards/:boardId'>
         <TaskBoard />
       </Route>
