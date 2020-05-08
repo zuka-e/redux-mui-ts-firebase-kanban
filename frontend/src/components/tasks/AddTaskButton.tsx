@@ -47,8 +47,9 @@ export const AddTaskButton: React.FC<Props> = ({ list }) => {
     setTitle(e.target.value);
   };
   // 'Card'('List'がないときは'List')を追加し、フィールドも閉じる
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     if (title === '') return; // title空欄時は処理を行わない
+    e.preventDefault(); // 'form submission canceled'防止
     if (list) {
       dispatch(addCard({ taskListId: list.id, title: title }));
     } else {

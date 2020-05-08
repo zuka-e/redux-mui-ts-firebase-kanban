@@ -9,7 +9,7 @@ import TaskCard from './TaskCard';
 import { AddTaskButton } from './AddTaskButton';
 import { RootState } from '../../store/rootReducer';
 
-const TaskList: React.FC<ITaskList> = ({ list }: ITaskList) => {
+const TaskList: React.FC<ITaskList> = ({ list }) => {
   const { cards } = useSelector((state: RootState) => state.task);
   return (
     <React.Fragment>

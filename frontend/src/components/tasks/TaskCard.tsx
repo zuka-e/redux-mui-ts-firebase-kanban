@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 
 import { ITaskCard } from '../Types';
 
-const TaskCard: React.FC<ITaskCard> = ({ card }: ITaskCard) => {
+const TaskCard: React.FC<ITaskCard> = ({ card }) => {
   return (
     <Card>
       <CardContent>
