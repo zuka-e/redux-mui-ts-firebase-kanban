@@ -1,8 +1,8 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import axios from 'axios';
 
-import { AppThunk, AppDispatch } from "../store";
-import { User } from "../components/Types";
+import { AppThunk, AppDispatch } from './store';
+import { User } from '../components/Types';
 
 interface UserState {
   users: User[] | undefined; // 'User'の属性は取得先に従う
@@ -19,7 +19,7 @@ const initialState: UserState = {
 // 非同期APIコール時のロード状態とエラー有無を保持するため、3つの'Action'が必要
 // 下部のfetchUsers関数(Thunk)によって'dispatch'される
 const usersModule = createSlice({
-  name: "users",
+  name: 'users',
   initialState,
   reducers: {
     getUsersStart(state: UserState) {
@@ -48,7 +48,7 @@ export default usersModule;
 
 // 実際にAPIアクセスする処理, await: 処理完了まで次の処理を待機
 const getUsers = async () => {
-  const res = await axios.get("https://jsonplaceholder.typicode.com/users");
+  const res = await axios.get('https://jsonplaceholder.typicode.com/users');
   return res.data;
 };
 

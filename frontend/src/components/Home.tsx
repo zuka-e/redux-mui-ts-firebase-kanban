@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { Grid, Box, Typography } from '@material-ui/core';
 
-import { RootState } from '../rootReducer';
+import { RootState } from '../store/rootReducer';
 import { boardOrder } from './tasks/initial-data';
 
 const Home: React.FC = () => {

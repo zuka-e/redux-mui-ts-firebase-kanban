@@ -13,7 +13,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 import { useDispatch } from 'react-redux';
 
-import { addCard, addList } from '../../modules/tasksSlice';
+import { addCard, addList } from '../../store/tasksSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

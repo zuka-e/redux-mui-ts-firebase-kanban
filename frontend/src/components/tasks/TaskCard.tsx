@@ -8,7 +8,7 @@ import { ITaskCard } from '../Types';
 
 const TaskCard: React.FC<ITaskCard> = ({ card }: ITaskCard) => {
   return (
-    <Card >
+    <Card>
       <CardContent>
         <Typography color='textSecondary'>{card.title}</Typography>
       </CardContent>

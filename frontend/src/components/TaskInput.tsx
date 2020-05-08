@@ -1,29 +1,29 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 // import { Task } from './Types'
-import { Box, TextField, Button } from '@material-ui/core'
-import { useDispatch, useSelector } from 'react-redux'
-import { addTask } from '../modules/tasksModule'
-import { RootState } from '../rootReducer'
+import { Box, TextField, Button } from '@material-ui/core';
+import { useDispatch, useSelector } from 'react-redux';
+import { addTask } from '../store/tasksModule';
+import { RootState } from '../store/rootReducer';
 
 const TaskInput: React.FC = () => {
   // ref. TaskList.tsx
-  const { tasks } = useSelector((state: RootState) => state.tasks)
-  const dispatch = useDispatch()
+  const { tasks } = useSelector((state: RootState) => state.tasks);
+  const dispatch = useDispatch();
   // LocalState: Storeに組み込まない(コンポーネント内で完結)
-  const [inputTitle, setInputTitle] = useState('')
+  const [inputTitle, setInputTitle] = useState('');
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setInputTitle(e.target.value)
-  }
+    setInputTitle(e.target.value);
+  };
 
   const handleSubmit = () => {
-    dispatch(addTask(inputTitle))
-    setInputTitle('')
-  }
+    dispatch(addTask(inputTitle));
+    setInputTitle('');
+  };
 
   const isExistingTitle = () => {
-    return tasks.some(task => task.title === inputTitle)
-  }
+    return tasks.some((task) => task.title === inputTitle);
+  };
 
   return (
     <Box mt={5} display='flex' justifyContent='space-around'>
@@ -37,10 +37,12 @@ const TaskInput: React.FC = () => {
         variant='contained'
         color='primary'
         onClick={handleSubmit}
-      >追加</Button>
+      >
+        追加
+      </Button>
     </Box>
-  )
-}
+  );
+};
 
 // type Props = {
 //   setTasks: React.Dispatch<React.SetStateAction<Task[]>>
@@ -91,4 +93,4 @@ const TaskInput: React.FC = () => {
 //   )
 // }
 
-export default TaskInput
+export default TaskInput;

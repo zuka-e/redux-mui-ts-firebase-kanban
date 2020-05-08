@@ -7,7 +7,7 @@ import { Box } from '@material-ui/core';
 import { ITaskList } from '../Types';
 import TaskCard from './TaskCard';
 import { AddTaskButton } from './AddTaskButton';
-import { RootState } from '../../rootReducer';
+import { RootState } from '../../store/rootReducer';
 
 const TaskList: React.FC<ITaskList> = ({ list }: ITaskList) => {
   const { cards } = useSelector((state: RootState) => state.task);

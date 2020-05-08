@@ -7,7 +7,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 
 import TaskList from './TaskList';
 import { AddTaskButton } from './AddTaskButton';
-import { RootState } from '../../rootReducer';
+import { RootState } from '../../store/rootReducer';
 
 const TaskBoard: React.FC = () => {
   const { lists, boards } = useSelector((state: RootState) => state.task);

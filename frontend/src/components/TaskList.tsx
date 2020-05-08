@@ -1,18 +1,18 @@
-import React from "react";
+import React from 'react';
 // import TaskItem from './TaskItem'
-import { Task, User } from "./Types";
+import { Task, User } from './Types';
 import {
   List,
   ListItem,
   Checkbox,
   ListItemText,
   Button,
-} from "@material-ui/core";
-import { useSelector, useDispatch } from "react-redux";
+} from '@material-ui/core';
+import { useSelector, useDispatch } from 'react-redux';
 // import axios from "axios";
-import { RootState } from "../rootReducer";
-import { doneTask, deleteTask } from "../modules/tasksModule";
-import { fetchUsers } from "../modules/usersModule";
+import { RootState } from '../store/rootReducer';
+import { doneTask, deleteTask } from '../store/tasksModule';
+import { fetchUsers } from '../store/usersModule';
 
 // interface User {
 //   name: string;
@@ -47,12 +47,12 @@ const TaskList: React.FC = () => {
 
   return (
     <React.Fragment>
-      <List component="ul">
+      <List component='ul'>
         {tasks.map((task: Task) => (
-          <ListItem key={task.id} component="li">
+          <ListItem key={task.id} component='li'>
             <Checkbox
               checked={task.done}
-              value="primary"
+              value='primary'
               // Store(State)を変更する
               onChange={() => dispatch(doneTask(task))}
             />
@@ -61,8 +61,8 @@ const TaskList: React.FC = () => {
               {/* {task.done ? ",OK" : ",NG"}, {user.name}, {user.email} */}
             </ListItemText>
             <Button
-              variant="contained"
-              color="secondary"
+              variant='contained'
+              color='secondary'
               onClick={() => dispatch(deleteTask(task))}
             >
               削除
@@ -70,11 +70,11 @@ const TaskList: React.FC = () => {
           </ListItem>
         ))}
       </List>
-      {console.log(loading ? "読込中" : "待機中")}
-      {console.log(error ? error : "エラーなし")}
-      <List component="ul">
+      {console.log(loading ? '読込中' : '待機中')}
+      {console.log(error ? error : 'エラーなし')}
+      <List component='ul'>
         {users?.map((user: User) => (
-          <ListItem key={user.id} component="li">
+          <ListItem key={user.id} component='li'>
             <ListItemText>
               {user.name}
               <br />
