@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 
+import { useDispatch } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Box,
@@ -11,7 +12,6 @@ import {
 import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
-import { useDispatch } from 'react-redux';
 
 import { addCard, addList } from '../../store/tasksSlice';
 
@@ -47,7 +47,8 @@ export const AddTaskButton: React.FC<Props> = ({ list }) => {
     setTitle(e.target.value);
   };
   // 'Card'('List'がないときは'List')を追加し、フィールドも閉じる
-  const handleSubmit = () => {
+  const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
+    e.preventDefault(); // 'form submission canceled'防止
     if (title === '') return; // title空欄時は処理を行わない
     if (list) {
       dispatch(addCard({ taskListId: list.id, title: title }));
@@ -57,9 +58,9 @@ export const AddTaskButton: React.FC<Props> = ({ list }) => {
     setTitle('');
     setIsEditing(false);
   };
-  // 'Card'追加用フィールドを閉じる
-  const handleClose = () => {
-    setIsEditing(false);
+  // 'Card'追加用フィールドの開閉
+  const handleClick = () => {
+    setIsEditing(!isEditing);
   };
   // 要素外クリック時もフィールドを閉じる
   const handleClickAway = () => {
@@ -82,6 +83,7 @@ export const AddTaskButton: React.FC<Props> = ({ list }) => {
             className={classes.input}
             label='Input a title.' // 説明テキスト
             variant='outlined'
+            autoFocus
             defaultValue={title} // 'state'保持
             onChange={handleChange}
           />
@@ -94,7 +96,7 @@ export const AddTaskButton: React.FC<Props> = ({ list }) => {
           >
             Save
           </Button>
-          <IconButton aria-label='close' onClick={handleClose}>
+          <IconButton aria-label='close' onClick={handleClick}>
             <CloseIcon />
           </IconButton>
         </Box>
@@ -111,9 +113,7 @@ export const AddTaskButton: React.FC<Props> = ({ list }) => {
         <Button
           startIcon={<AddIcon />}
           size='small'
-          onClick={() => {
-            setIsEditing(true);
-          }}
+          onClick={handleClick}
         >
           {buttonText}
         </Button>
