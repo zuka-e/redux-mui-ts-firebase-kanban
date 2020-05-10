@@ -19,8 +19,8 @@ const Home: React.FC = () => {
               <Box m={1} p={1} borderRadius={5} bgcolor='secondary.main'>
                 <Typography
                   component='p'
-                  variant='h4'
-                  color='inherit'
+                  variant='h5'
+                  color='textSecondary'
                   gutterBottom
                 >
                   {board.title}

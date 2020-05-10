@@ -19,6 +19,10 @@ const useStyles = makeStyles((theme: Theme) =>
 const App: React.FC = () => {
   const classes = useStyles();
 
+  // useEffect(() => {
+  //   document.title = `Task Board`;
+  // }, []);
+
   // 'createContext()'で生成した'ThemeContext'を呼び出す
   const context = useContext(ThemeContext);
   // 保存されたテーマがあれば適用する(localStorageから読み込む)
