@@ -1,17 +1,20 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-import Card from '@material-ui/core/Card';
-import CardContent from '@material-ui/core/CardContent';
+import { Card, CardContent } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 
 import { ITaskCard } from '../Types';
+import OpenCardDetails from './OpenCardDetails';
 
 const TaskCard: React.FC<ITaskCard> = ({ card }) => {
+  const [open, setOpen] = useState(false);
   return (
     <Card>
-      <CardContent>
-        <Typography color='textSecondary'>{card.title}</Typography>
-      </CardContent>
+      <OpenCardDetails card={card} open={open} setOpen={setOpen}>
+        <CardContent onClick={() => setOpen(true)}>
+          <Typography color='textSecondary'>{card.title}</Typography>
+        </CardContent>
+      </OpenCardDetails>
     </Card>
   );
 };

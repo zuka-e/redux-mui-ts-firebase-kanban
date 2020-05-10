@@ -47,7 +47,36 @@ const tasksSlice = createSlice({
       state.cards = { ...state.cards, [taskCardId]: newCard }; // 連想配列(オブジェクト)の追加
       state.lists[taskListId].taskCardIds.push(taskCardId); // 配列(Array<>)の追加
     },
-    removeCard(state: State, action: PayloadAction<string>) {},
+
+    removeCard(state: State, action: PayloadAction<{ taskCardId: string }>) {
+      const cardId = action.payload.taskCardId;
+      const listId = state.cards[cardId].taskListId;
+      delete state.cards[cardId]; // 'card'自体の削除
+      const newCardIds = state.lists[listId].taskCardIds.filter(
+        (id) => id !== cardId
+      );
+      state.lists[listId].taskCardIds = newCardIds; // 'list'からの参照を削除
+    },
+
+    editCard(
+      state: State,
+      action: PayloadAction<{
+        taskCardId: string;
+        title?: string;
+        body?: string;
+      }>
+    ) {
+      const { taskCardId, title, body } = action.payload;
+      const card = state.cards[taskCardId];
+      if (title) card.title = title;
+      if (body) card.body = body;
+    },
+
+    toggleCard(state: State, action: PayloadAction<{ taskCardId: string }>) {
+      const { taskCardId } = action.payload;
+      const card = state.cards[taskCardId];
+      card.done = !card.done;
+    },
 
     addList: (
       state: State,
@@ -68,6 +97,12 @@ const tasksSlice = createSlice({
   },
 });
 
-export const { addCard, removeCard, addList } = tasksSlice.actions;
+export const {
+  addCard,
+  removeCard,
+  editCard,
+  toggleCard,
+  addList,
+} = tasksSlice.actions;
 
 export default tasksSlice;

@@ -36,11 +36,10 @@ interface Props {
 }
 
 export const AddTaskButton: React.FC<Props> = ({ list }) => {
-  const dispatch = useDispatch();
+  const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState('');
-  const classes = useStyles();
-  const buttonText = list ? 'Add new card' : 'Add new list';
+  const dispatch = useDispatch();
 
   // 入力内容保持
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -110,12 +109,8 @@ export const AddTaskButton: React.FC<Props> = ({ list }) => {
   } else {
     return (
       <Box component='div' pt={1}>
-        <Button
-          startIcon={<AddIcon />}
-          size='small'
-          onClick={handleClick}
-        >
-          {buttonText}
+        <Button startIcon={<AddIcon />} size='small' onClick={handleClick}>
+          {list ? 'Add new card' : 'Add new list'}
         </Button>
       </Box>
     );
