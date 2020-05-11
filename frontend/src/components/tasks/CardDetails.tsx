@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 import { useDispatch } from 'react-redux';
-import { createStyles, makeStyles } from '@material-ui/core/styles';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Card,
   CardActions,
@@ -9,6 +9,7 @@ import {
   Checkbox,
   FormControlLabel,
   Typography,
+  IconButton,
 } from '@material-ui/core';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import SubjectIcon from '@material-ui/icons/Subject';
@@ -18,10 +19,14 @@ import { toggleCard } from '../../store/tasksSlice';
 import CardForm from './CardForm';
 import DeleteCardButton from './DeleteCardButton';
 
-const useStyles = makeStyles(() =>
+const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
+    endBtn: {
       justifyContent: 'flex-end',
+    },
+    text: {
+      marginLeft: theme.spacing(1.5),
+      whiteSpace: 'pre-wrap',
     },
   })
 );
@@ -65,8 +70,10 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
         />
       </CardActions>
       <CardContent>
-        <AssignmentIcon />
-        {isEditingTitle ? ( // 編集かどうかで条件分岐
+        <IconButton onClick={toggleTitleForm}>
+          <AssignmentIcon />
+        </IconButton>
+        {isEditingTitle ? ( // 編集かどうかで表示の分岐
           <CardForm // 状態を変化させるために必要な要素を渡す
             cardId={card.id}
             title={card.title}
@@ -76,14 +83,21 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
             handleClickAway={handleClickAway}
           />
         ) : (
-          <Typography variant='h5' component='div' onClick={toggleTitleForm}>
+          <Typography
+            className={classes.text}
+            variant='h5'
+            component='p'
+            onClick={toggleTitleForm}
+          >
             {card.title}
           </Typography>
         )}
       </CardContent>
       <CardContent>
-        <SubjectIcon />
-        {isEditingBody ? ( // 編集中かどうかで条件分岐
+        <IconButton onClick={toggleBodyForm}>
+          <SubjectIcon />
+        </IconButton>
+        {isEditingBody ? ( // 編集中かどうかで表示の分岐
           <CardForm
             cardId={card.id}
             body={card.body}
@@ -93,12 +107,16 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
             handleClickAway={handleClickAway}
           />
         ) : (
-          <Typography color='textPrimary' onClick={toggleBodyForm}>
+          <Typography
+            className={classes.text}
+            color='textPrimary'
+            onClick={toggleBodyForm}
+          >
             {card.body}
           </Typography>
         )}
       </CardContent>
-      <CardActions className={classes.root} disableSpacing>
+      <CardActions className={classes.endBtn} disableSpacing>
         <DeleteCardButton cardId={card.id} />
       </CardActions>
     </Card>

@@ -67,8 +67,11 @@ const CardForm: React.FC<FormProps> = (props) => {
         <TextField
           autoFocus
           fullWidth
+          multiline
+          rows={body && 3}
           variant='outlined'
-          defaultValue={title ? editingTitle : editingBody}
+          helperText={title && '2-20 characters'}
+          value={title ? editingTitle : editingBody}
           onChange={handleChange}
         />
         <Button
