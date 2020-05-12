@@ -1,28 +1,23 @@
 import React from 'react';
 
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
-import Modal from '@material-ui/core/Modal';
-import { IconButton, Paper } from '@material-ui/core';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
 import { ITaskCard } from '../Types';
 import CardDetails from './CardDetails';
 
 const useStyles = makeStyles((theme: Theme) =>
-  // モーダル位置
   createStyles({
     root: {
-      top: '50px',
-      left: '5%',
-      position: 'absolute',
-      width: '90%',
-      backgroundColor: theme.palette.background.paper,
-      border: `2px solid ${theme.palette.info.main}`,
-      padding: theme.spacing(1, 1, 2),
+      border: `2px solid ${theme.palette.info.light}`,
+      borderRadius: theme.spacing(0.5),
       '& > *': { boxShadow: 'none' }, // 直下の'paper'の影を消す
     },
+    //'Dialog'閉ボタン
     button: {
-      //モーダル閉ボタン
       top: 0,
       right: 0,
       position: 'absolute',
@@ -32,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface Props {
   card: ITaskCard['taskCardId'];
-  open: boolean; // モーダル開始は親に依存
+  open: boolean; // 'Dialog'開閉状態は親が持つ
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 const OpenCardButton: React.FC<Props> = (props) => {
@@ -45,16 +40,10 @@ const OpenCardButton: React.FC<Props> = (props) => {
 
   return (
     <React.Fragment>
-      {props.children} {/* 利用の際は、モーダル開始のロジックを子に記述 */}
-      {/* 表示する内容を、<Modal>以下に記述 */}
-      <Modal
-        open={open}
-        onClose={handleClose}
-        aria-labelledby='simple-modal-title'
-        aria-describedby='simple-modal-description'
-      >
-        <Paper className={classes.root}>
-          <CardDetails card={card} />
+      {props.children} {/* 'setOpen'は、子が行う */}
+      {/* 表示する内容を、<Dialog>内に記述 */}
+      <Dialog fullWidth maxWidth={false} open={open} onClose={handleClose}>
+        <DialogContent className={classes.root}>
           <IconButton
             className={classes.button}
             aria-label='close'
@@ -62,8 +51,9 @@ const OpenCardButton: React.FC<Props> = (props) => {
           >
             <CloseIcon fontSize='large' />
           </IconButton>
-        </Paper>
-      </Modal>
+          <CardDetails card={card} />
+        </DialogContent>
+      </Dialog>
     </React.Fragment>
   );
 };
