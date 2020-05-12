@@ -14,6 +14,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 
 import { addCard, addList } from '../../store/tasksSlice';
+import { ITaskList, ITaskBoard } from '../Types';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,16 +27,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  // 任意のprops
-  list?: {
-    taskBoardId: string;
-    id: string;
-    title: string;
-    taskCardIds: string[];
-  };
+  board?: ITaskBoard['taskBoardId'];
+  list?: ITaskList['taskBordId'];
 }
 
-export const AddTaskButton: React.FC<Props> = ({ list }) => {
+export const AddTaskButton: React.FC<Props> = (props) => {
+  const { board, list } = props;
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState('');
@@ -51,8 +48,8 @@ export const AddTaskButton: React.FC<Props> = ({ list }) => {
     if (title === '') return; // title空欄時は処理を行わない
     if (list) {
       dispatch(addCard({ taskListId: list.id, title: title }));
-    } else {
-      dispatch(addList({ taskBoardId: 'board-1', title: title }));
+    } else if (board) {
+      dispatch(addList({ taskBoardId: board.id, title: title }));
     }
     setTitle('');
     setIsEditing(false);
@@ -73,16 +70,16 @@ export const AddTaskButton: React.FC<Props> = ({ list }) => {
         <Box // 'List'追加時フォームの'Card'との差別化
           component='form' // CSS加工しつつフォームタグに
           onSubmit={handleSubmit} // returnキーの挙動
-          m={!list ? 1 : 'auto'}
-          p={!list ? 1 : 'auto'}
-          borderRadius={!list ? 5 : 'inherit'}
-          bgcolor={!list ? 'secondary.main' : 'inherit'}
+          m={list ? 'auto' : 1}
+          p={list ? 'auto' : 1}
+          borderRadius={list ? 'inherit' : 5}
+          bgcolor={list ? 'inherit' : 'secondary.light'}
         >
           <TextField
             className={classes.input}
-            label='Input a title.' // 説明テキスト
             variant='outlined'
             autoFocus
+            placeholder='Input a title.'
             defaultValue={title} // 'state'保持
             onChange={handleChange}
           />
@@ -93,7 +90,7 @@ export const AddTaskButton: React.FC<Props> = ({ list }) => {
             startIcon={<SaveIcon />}
             onClick={handleSubmit}
           >
-            Save
+            Add
           </Button>
           <IconButton aria-label='close' onClick={handleClick}>
             <CloseIcon />

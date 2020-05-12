@@ -29,14 +29,14 @@ const TaskBoard: React.FC = () => {
         const list = lists[listId];
         return (
           <Grid item lg={2} md={3} sm={4} xs={6} key={list.id}>
-            <Box m={1} p={1} borderRadius={5} bgcolor='secondary.main'>
+            <Box m={1} p={1} borderRadius={5} bgcolor='secondary.light'>
               <TaskList list={list} />
             </Box>
           </Grid>
         );
       })}
       <Grid item lg={2} md={3} sm={4} xs={6}>
-        <AddTaskButton />
+        <AddTaskButton board={board} />
       </Grid>
     </Grid>
   );
