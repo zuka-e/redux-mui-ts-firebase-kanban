@@ -12,9 +12,13 @@ import { removeCard } from '../../store/tasksSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    paper: {
+      // ポップオーバーで現れる部分のクラス名
+      '& > .MuiPopover-paper': {
+        border: '1px solid #cb2431',
+      },
+    },
     typography: {
-      color: '#cb2431',
-      backgroundColor: '#fafbfc',
       padding: theme.spacing(2),
     },
     fullWidth: {
@@ -73,6 +77,7 @@ const DeleteCardButton: React.FC<{ cardId: string }> = ({ cardId }) => {
         Delete
       </Button>
       <Popover
+        className={classes.paper}
         id={id}
         open={open}
         anchorEl={anchorEl}

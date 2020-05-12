@@ -18,7 +18,7 @@ import { addCard, addList } from '../../store/tasksSlice';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     input: {
-      backgroundColor: '#fff',
+      backgroundColor: theme.palette.background.paper,
       borderRadius: '4px',
       marginBottom: theme.spacing(1),
     },

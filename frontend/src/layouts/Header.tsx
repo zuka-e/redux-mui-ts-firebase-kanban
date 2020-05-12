@@ -6,10 +6,11 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
 import MenuIcon from '@material-ui/icons/Menu';
 import { Menu, MenuItem } from '@material-ui/core';
 
-import { ThemeContext } from './ThemeProvider';
+import { ThemeContext, themes } from './ThemeProvider';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -62,16 +63,14 @@ const Header: React.FC = () => {
             open={Boolean(anchorEl)}
             onClose={handleClose}
           >
-            <MenuItem onClick={handleClose}>CLOSE</MenuItem>
-            <MenuItem onClick={() => context.toggleTheme('default')}>
-              Default
+            <MenuItem onClick={handleClose}>
+              <CloseIcon />
             </MenuItem>
-            <MenuItem onClick={() => context.toggleTheme('light')}>
-              Light
-            </MenuItem>
-            <MenuItem onClick={() => context.toggleTheme('dark')}>
-              Dark
-            </MenuItem>
+            {themes.map((theme, index) => (
+              <MenuItem key={index} onClick={() => context.toggleTheme(theme)}>
+                {theme}
+              </MenuItem>
+            ))}
           </Menu>
           <Typography variant='h6' className={classes.title}>
             Todos
