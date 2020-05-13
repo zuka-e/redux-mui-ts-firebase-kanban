@@ -94,6 +94,18 @@ const tasksSlice = createSlice({
       state.lists = { ...state.lists, [taskListId]: newList };
       state.boards[taskBoardId].taskListIds.push(taskListId);
     },
+
+    editList(
+      state: State,
+      action: PayloadAction<{
+        taskListId: string;
+        title: string;
+      }>
+    ) {
+      const { taskListId, title } = action.payload;
+      const list = state.lists[taskListId];
+      list.title = title;
+    },
   },
 });
 
@@ -103,6 +115,7 @@ export const {
   editCard,
   toggleCard,
   addList,
+  editList,
 } = tasksSlice.actions;
 
 export default tasksSlice;

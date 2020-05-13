@@ -10,15 +10,24 @@ import { ITaskList } from '../Types';
 import TaskCard from './TaskCard';
 import { AddTaskButton } from './AddTaskButton';
 import SelectFilter from './SelectFilter';
+import TitleForm from './TitleForm';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       cursor: 'pointer', // マウスポインターを指にする
       '&:hover': {
-        borderRadius: '5px',
+        borderRadius: theme.spacing(0.5),
         border: `1px solid ${theme.palette.info.main}`,
       },
+    },
+    title: {
+      color: theme.palette.info.main,
+      fontWeight: 'bold',
+      wordBreak: 'break-word',
+      padding: theme.spacing(1),
+      backgroundColor: theme.palette.background.paper,
+      borderRadius: theme.spacing(0.5),
     },
   })
 );
@@ -35,6 +44,8 @@ type TodoFilter = typeof TodoFilter[keyof typeof TodoFilter];
 
 const TaskList: React.FC<ITaskList> = ({ list }) => {
   const classes = useStyles();
+  const [isEditingTitle, setIsEditingTitle] = useState(false);
+  const [editingTitle, setEditingTitle] = useState(list.title);
   const [filterQuery, setfilterQuery] = useState<TodoFilter>(TodoFilter.NONE);
   const { cards } = useSelector((state: RootState) => state.task);
 
@@ -50,11 +61,34 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
     setfilterQuery(event.target.value as TodoFilter); // unknown型から変換
   };
 
+  const toggleTitleForm = () => {
+    setIsEditingTitle(!isEditingTitle);
+  };
+
+  const handleClickAway = () => {
+    setIsEditingTitle(false);
+  };
+
   return (
     <React.Fragment>
-      <Typography color='textPrimary' gutterBottom>
-        {list.title}
-      </Typography>
+      {isEditingTitle ? (
+        <TitleForm
+          toggleForm={toggleTitleForm}
+          handleClickAway={handleClickAway}
+          listId={list.id}
+          editingTitle={editingTitle}
+          setEditingTitle={setEditingTitle}
+        />
+      ) : (
+        <Typography
+          className={`${classes.title} ${classes.root}`}
+          gutterBottom
+          onClick={toggleTitleForm}
+        >
+          {list.title}
+        </Typography>
+      )}
+
       <SelectFilter filterQuery={filterQuery} handleChange={handleChange} />
       {/* 表示する'card'を絞込後のものにする */}
       {filteredCardIds.map((cardId) => (
