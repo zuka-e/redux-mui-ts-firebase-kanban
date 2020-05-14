@@ -20,13 +20,15 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     card: {
       margin: theme.spacing(1),
-      padding: theme.spacing(1, 0.5, 0.5),
+      padding: theme.spacing(1),
       backgroundColor: theme.palette.secondary.light,
       borderRadius: theme.spacing(0.5),
     },
     input: {
-      backgroundColor: theme.palette.background.paper,
-      borderRadius: theme.spacing(0.5),
+      '& > * > input': {
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: theme.spacing(0.5),
+      },
     },
   })
 );
@@ -83,6 +85,7 @@ export const AddTaskButton: React.FC<Props> = (props) => {
             variant='outlined'
             autoFocus
             placeholder='Enter a title.'
+            helperText='2-20 characters'
             defaultValue={title} // 'state'保持
             onChange={handleChange}
           />

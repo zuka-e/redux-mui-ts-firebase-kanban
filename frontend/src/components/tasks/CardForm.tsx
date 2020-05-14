@@ -67,7 +67,7 @@ const CardForm: React.FC<FormProps> = (props) => {
         <TextField
           autoFocus
           fullWidth
-          multiline
+          multiline={Boolean(body)}
           rows={body && 3}
           variant='outlined'
           helperText={title && '2-20 characters'}
@@ -75,6 +75,7 @@ const CardForm: React.FC<FormProps> = (props) => {
           onChange={handleChange}
         />
         <Button
+          color='primary'
           variant='contained'
           startIcon={<SaveIcon />}
           onClick={handleSubmit}

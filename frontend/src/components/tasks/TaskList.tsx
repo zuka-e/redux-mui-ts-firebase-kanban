@@ -75,7 +75,7 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
         <TitleForm
           toggleForm={toggleTitleForm}
           handleClickAway={handleClickAway}
-          listId={list.id}
+          list={list}
           editingTitle={editingTitle}
           setEditingTitle={setEditingTitle}
         />
