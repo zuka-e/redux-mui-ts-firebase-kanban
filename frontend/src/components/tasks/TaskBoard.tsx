@@ -22,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const TaskBoard: React.FC = () => {
   const classes = useStyles();
-  const { lists, boards } = useSelector((state: RootState) => state.task);
+  const { lists, boards } = useSelector((state: RootState) => state.tasks);
   const { boardId } = useParams(); // URLパラメータ取得
   const board = boards[boardId];
   if (!board) {

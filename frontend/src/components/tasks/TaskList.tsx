@@ -47,7 +47,7 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editingTitle, setEditingTitle] = useState(list.title);
   const [filterQuery, setfilterQuery] = useState<TodoFilter>(TodoFilter.NONE);
-  const { cards } = useSelector((state: RootState) => state.task);
+  const { cards } = useSelector((state: RootState) => state.tasks);
 
   // 表示するデータを変更するロジック('filterQuery'の変更は別で行う)
   const filteredCardIds = list.taskCardIds.filter((cardId) => {

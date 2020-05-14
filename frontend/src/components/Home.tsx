@@ -8,7 +8,7 @@ import { RootState } from '../store/rootReducer';
 import { boardOrder } from './tasks/initial-data';
 
 const Home: React.FC = () => {
-  const { boards } = useSelector((state: RootState) => state.task);
+  const { boards } = useSelector((state: RootState) => state.tasks);
   return (
     <Grid container>
       {boardOrder.map((boardID) => {
