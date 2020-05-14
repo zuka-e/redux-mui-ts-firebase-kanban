@@ -2,14 +2,26 @@ import React from 'react';
 
 import { useSelector } from 'react-redux';
 import { Link, useParams } from 'react-router-dom';
-import { Grid, Box } from '@material-ui/core';
+import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { Grid, Card } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
 import TaskList from './TaskList';
 import { AddTaskButton } from './AddTaskButton';
 import { RootState } from '../../store/rootReducer';
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+      backgroundColor: theme.palette.secondary.light,
+    },
+  })
+);
+
 const TaskBoard: React.FC = () => {
+  const classes = useStyles();
   const { lists, boards } = useSelector((state: RootState) => state.task);
   const { boardId } = useParams(); // URLパラメータ取得
   const board = boards[boardId];
@@ -29,9 +41,9 @@ const TaskBoard: React.FC = () => {
         const list = lists[listId];
         return (
           <Grid item lg={2} md={3} sm={4} xs={6} key={list.id}>
-            <Box m={1} p={1} borderRadius={5} bgcolor='secondary.light'>
+            <Card className={classes.root}>
               <TaskList list={list} />
-            </Box>
+            </Card>
           </Grid>
         );
       })}

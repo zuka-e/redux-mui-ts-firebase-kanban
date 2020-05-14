@@ -22,11 +22,12 @@ import DeleteCardButton from './DeleteCardButton';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     endBtn: {
-      justifyContent: 'flex-end',
+      justifyContent: 'flex-end', // 右寄せ
     },
     text: {
       marginLeft: theme.spacing(1.5),
-      whiteSpace: 'pre-wrap',
+      whiteSpace: 'pre-wrap', // 入力されたスペースをそのまま表示
+      cursor: 'pointer', // 指型ポインター
     },
   })
 );

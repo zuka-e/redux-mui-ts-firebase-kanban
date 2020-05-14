@@ -18,10 +18,15 @@ import { ITaskList, ITaskBoard } from '../Types';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    card: {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1, 0.5, 0.5),
+      backgroundColor: theme.palette.secondary.light,
+      borderRadius: theme.spacing(0.5),
+    },
     input: {
       backgroundColor: theme.palette.background.paper,
-      borderRadius: '4px',
-      marginBottom: theme.spacing(1),
+      borderRadius: theme.spacing(0.5),
     },
   })
 );
@@ -68,18 +73,16 @@ export const AddTaskButton: React.FC<Props> = (props) => {
     return (
       <ClickAwayListener onClickAway={handleClickAway}>
         <Box // 'List'追加時フォームの'Card'との差別化
+          className={!list ? classes.card : undefined}
+          boxShadow={!list ? 1 : undefined}
           component='form' // CSS加工しつつフォームタグに
           onSubmit={handleSubmit} // returnキーの挙動
-          m={list ? 'auto' : 1}
-          p={list ? 'auto' : 1}
-          borderRadius={list ? 'inherit' : 5}
-          bgcolor={list ? 'inherit' : 'secondary.light'}
         >
           <TextField
             className={classes.input}
             variant='outlined'
             autoFocus
-            placeholder='Input a title.'
+            placeholder='Enter a title.'
             defaultValue={title} // 'state'保持
             onChange={handleChange}
           />
