@@ -26,9 +26,17 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     input: {
       '& > * > input': {
+        padding: theme.spacing(1),
         backgroundColor: theme.palette.background.paper,
         borderRadius: theme.spacing(0.5),
       },
+    },
+    button: {
+      justifyContent: 'flex-start',
+      width: `calc(100% - ${theme.spacing(2)}px)`,
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+      backgroundColor: 'rgb(0,0,0,0.1)',
     },
   })
 );
@@ -98,7 +106,7 @@ export const AddTaskButton: React.FC<Props> = (props) => {
           >
             Add
           </Button>
-          <IconButton aria-label='close' onClick={handleClick}>
+          <IconButton size='small' aria-label='close' onClick={handleClick}>
             <CloseIcon />
           </IconButton>
         </Box>
@@ -111,11 +119,15 @@ export const AddTaskButton: React.FC<Props> = (props) => {
     return renderNewCardInput();
   } else {
     return (
-      <Box component='div' pt={1}>
-        <Button startIcon={<AddIcon />} size='small' onClick={handleClick}>
-          {list ? 'Add new card' : 'Add new list'}
-        </Button>
-      </Box>
+      <Button
+        className={!list ? classes.button : undefined}
+        startIcon={<AddIcon />}
+        size='small'
+        fullWidth={Boolean(!list)}
+        onClick={handleClick}
+      >
+        {list ? 'Add new card' : 'Add new list'}
+      </Button>
     );
   }
 };

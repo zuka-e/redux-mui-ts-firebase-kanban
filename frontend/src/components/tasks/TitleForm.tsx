@@ -116,7 +116,7 @@ const TitleForm: React.FC<FormProps> = (props) => {
         >
           Save
         </Button>
-        <IconButton aria-label='close' onClick={handleClose}>
+        <IconButton size='small' aria-label='close' onClick={handleClose}>
           <CloseIcon />
         </IconButton>
       </Box>

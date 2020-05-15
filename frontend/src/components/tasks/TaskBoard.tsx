@@ -41,7 +41,7 @@ const TaskBoard: React.FC = () => {
         const list = lists[listId];
         return (
           <Grid item lg={2} md={3} sm={4} xs={6} key={list.id}>
-            <Card className={classes.root}>
+            <Card className={classes.root} elevation={7}>
               <TaskList list={list} />
             </Card>
           </Grid>

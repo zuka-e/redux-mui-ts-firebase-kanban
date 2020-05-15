@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 
 import { useSelector } from 'react-redux';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import { Box } from '@material-ui/core';
 
 import { RootState } from '../../store/rootReducer';
 import { ITaskList } from '../Types';
@@ -15,19 +16,24 @@ import TitleForm from './TitleForm';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      cursor: 'pointer', // マウスポインターを指にする
+      cursor: 'pointer',
       '&:hover': {
-        borderRadius: theme.spacing(0.5),
-        border: `1px solid ${theme.palette.info.main}`,
+        backgroundColor: 'rgb(0,0,0,0.025)',
       },
     },
-    title: {
-      color: theme.palette.info.main,
+    header: {
+      flex: 'auto',
+      fontSize: '1.2em',
       fontWeight: 'bold',
-      wordBreak: 'break-word',
-      padding: theme.spacing(1),
-      backgroundColor: theme.palette.background.paper,
       borderRadius: theme.spacing(0.5),
+    },
+    board: {
+      backgroundColor: theme.palette.background.paper,
+    },
+    card: {
+      '& > p': {
+        padding: theme.spacing(1),
+      },
     },
   })
 );
@@ -80,20 +86,26 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
           setEditingTitle={setEditingTitle}
         />
       ) : (
-        <Typography
-          className={`${classes.title} ${classes.root}`}
-          gutterBottom
-          onClick={toggleTitleForm}
+        <Box
+          className={classes.card}
+          display='flex'
+          justifyContent='space-between'
         >
-          {list.title}
-        </Typography>
+          <Typography
+            className={`${classes.root} ${classes.header}`}
+            onClick={toggleTitleForm}
+          >
+            {list.title}
+          </Typography>
+        </Box>
       )}
 
       <SelectFilter filterQuery={filterQuery} handleChange={handleChange} />
-      {/* 表示する'card'を絞込後のものにする */}
       {filteredCardIds.map((cardId) => (
-        <Box className={classes.root} my={1} key={cardId}>
-          <TaskCard card={cards[cardId]} />
+        <Box bgcolor='background.paper' mb={1} key={cardId}>
+          <Paper className={`${classes.root} ${classes.card}`}>
+            <TaskCard card={cards[cardId]} />
+          </Paper>
         </Box>
       ))}
       <AddTaskButton list={list} />
