@@ -81,7 +81,11 @@ export const AddTaskButton: React.FC<Props> = (props) => {
   // 'Card'追加用フィールドを表示する関数(表示有無は'React.FC'内で変更)
   const renderNewCardInput = () => {
     return (
-      <ClickAwayListener onClickAway={handleClickAway}>
+      <ClickAwayListener
+        mouseEvent='onMouseDown' // マウス押したタイミングで判定
+        touchEvent='onTouchStart'
+        onClickAway={handleClickAway}
+      >
         <Box // 'List'追加時フォームの'Card'との差別化
           className={!list ? classes.card : undefined}
           boxShadow={!list ? 1 : undefined}

@@ -86,7 +86,11 @@ const TitleForm: React.FC<FormProps> = (props) => {
   };
 
   return (
-    <ClickAwayListener onClickAway={handleClickAway}>
+    <ClickAwayListener
+      mouseEvent='onMouseDown' // マウス押したタイミングで判定
+      touchEvent='onTouchStart'
+      onClickAway={handleClickAway}
+    >
       <Box
         component='form'
         className={classes.card}
