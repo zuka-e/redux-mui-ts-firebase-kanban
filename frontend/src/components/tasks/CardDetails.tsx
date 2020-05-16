@@ -17,13 +17,11 @@ import SubjectIcon from '@material-ui/icons/Subject';
 import { ITaskCard } from '../Types';
 import { toggleCard } from '../../store/tasksSlice';
 import CardForm from './CardForm';
-import DeleteCardButton from './DeleteCardButton';
+import PopoverButton from './PopoverButton';
+import DeleteButton from './DeleteButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    endBtn: {
-      justifyContent: 'flex-end', // 右寄せ
-    },
     text: {
       marginLeft: theme.spacing(1.5),
       whiteSpace: 'pre-wrap', // 入力されたスペースをそのまま表示
@@ -117,8 +115,10 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
           </Typography>
         )}
       </CardContent>
-      <CardActions className={classes.endBtn} disableSpacing>
-        <DeleteCardButton cardId={card.id} />
+      <CardActions style={{ justifyContent: 'flex-end' }} disableSpacing>
+        <PopoverButton type='danger' buttonText='Delete'>
+          <DeleteButton target='card' id={card.id} />
+        </PopoverButton>
       </CardActions>
     </Card>
   );
