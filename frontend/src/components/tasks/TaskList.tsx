@@ -12,6 +12,7 @@ import TaskCard from './TaskCard';
 import { AddTaskButton } from './AddTaskButton';
 import SelectFilter from './SelectFilter';
 import TitleForm from './TitleForm';
+import ListMenuButton from './ListMenuButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -97,12 +98,13 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
           >
             {list.title}
           </Typography>
+          <ListMenuButton listId={list.id} />
         </Box>
       )}
 
       <SelectFilter filterQuery={filterQuery} handleChange={handleChange} />
       {filteredCardIds.map((cardId) => (
-        <Box bgcolor='background.paper' mb={1} key={cardId}>
+        <Box bgcolor='background.paper' borderRadius={4} mb={1} key={cardId}>
           <Paper className={`${classes.root} ${classes.card}`}>
             <TaskCard card={cards[cardId]} />
           </Paper>

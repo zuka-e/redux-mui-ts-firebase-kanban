@@ -106,6 +106,16 @@ const tasksSlice = createSlice({
       const list = state.lists[taskListId];
       list.title = title;
     },
+
+    removeList(state: State, action: PayloadAction<{ taskListId: string }>) {
+      const listId = action.payload.taskListId;
+      const boardId = state.lists[listId].taskBoardId;
+      delete state.lists[listId]; // 'list'自体の削除
+      const newListIds = state.boards[boardId].taskListIds.filter(
+        (id) => id !== listId
+      );
+      state.boards[boardId].taskListIds = newListIds; // 'board'からの参照を削除
+    },
   },
 });
 
@@ -116,6 +126,7 @@ export const {
   toggleCard,
   addList,
   editList,
+  removeList,
 } = tasksSlice.actions;
 
 export default tasksSlice;
