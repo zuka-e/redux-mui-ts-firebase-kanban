@@ -20,11 +20,15 @@ import { ITaskList } from '../Types';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    card: {
-      padding: theme.spacing(1, 0.5, 0.5),
-      backgroundColor: theme.palette.background.paper,
-      borderRadius: theme.spacing(0.5),
-      border: `1px solid ${theme.palette.primary.main}`,
+    input: {
+      '& > .MuiFormLabel-root.Mui-focused': {
+        color: theme.palette.text.secondary,
+      },
+      '& > * > input': {
+        padding: theme.spacing(1),
+        backgroundColor: theme.palette.background.paper,
+        borderRadius: theme.spacing(0.5),
+      },
     },
   })
 );
@@ -91,22 +95,18 @@ const TitleForm: React.FC<FormProps> = (props) => {
       touchEvent='onTouchStart'
       onClickAway={handleClickAway}
     >
-      <Box
-        component='form'
-        className={classes.card}
-        boxShadow={1}
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <Box component='form' my={1} onSubmit={handleSubmit(onSubmit)}>
         <TextField
+          className={classes.input}
           name='title'
           autoFocus
           fullWidth
           variant='outlined'
           label={list.title} // 現在のタイトル表示
+          InputLabelProps={{ margin: 'dense' }} // classes.inputに対応
           placeholder='Enter a title'
           value={editingTitle}
           helperText={errors?.title?.message || '2-20 characters'}
-          FormHelperTextProps={{ variant: 'standard' }}
           error={Boolean(errors.title)}
           inputRef={register(validation)}
           onChange={handleChange}
