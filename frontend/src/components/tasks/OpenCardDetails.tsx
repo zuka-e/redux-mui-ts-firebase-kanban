@@ -12,6 +12,7 @@ import CardDetails from './CardDetails';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
+      padding: 0,
       border: `2px solid ${theme.palette.info.light}`,
       borderRadius: theme.spacing(0.5),
       '& > *': { boxShadow: 'none' }, // 直下の'paper'の影を消す

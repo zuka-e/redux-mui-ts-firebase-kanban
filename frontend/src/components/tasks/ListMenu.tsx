@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
+import { makeStyles } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -14,14 +14,12 @@ import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 import DeleteButton from './DeleteButton';
 import { Box } from '@material-ui/core';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    header: {
-      display: 'flex',
-      justifyContent: 'space-between',
-    },
-  })
-);
+const useStyles = makeStyles({
+  header: {
+    display: 'flex',
+    justifyContent: 'space-between',
+  },
+});
 
 // メニューでできる操作を表したオブジェクト
 const Item = {
@@ -79,21 +77,21 @@ const ListMenu: React.FC<ListMenuProps> = (props) => {
       }
     >
       <Divider />
-      <Box mx={1.5}>
-        {selectedItem === Item.DELETE ? (
+      {selectedItem === Item.DELETE ? (
+        <Box mx={1}>
           <DeleteButton
             message='All cards in the list will also be deleted'
             target={'list'}
             id={listId}
           />
-        ) : (
-          <List disablePadding dense>
-            <ListItem button onClick={() => handleClick(Item.DELETE)}>
-              <ListItemText primary='Delete the List' />
-            </ListItem>
-          </List>
-        )}
-      </Box>
+        </Box>
+      ) : (
+        <List disablePadding dense>
+          <ListItem button onClick={() => handleClick(Item.DELETE)}>
+            <ListItemText primary='Delete the List' />
+          </ListItem>
+        </List>
+      )}
     </List>
   );
 };

@@ -22,8 +22,11 @@ import DeleteButton from './DeleteButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    content: {
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+    },
     text: {
-      marginLeft: theme.spacing(1.5),
       whiteSpace: 'pre-wrap', // 入力されたスペースをそのまま表示
       cursor: 'pointer', // 指型ポインター
     },
@@ -62,14 +65,14 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
 
   return (
     <Card>
-      <CardActions>
+      <CardContent>
         <FormControlLabel // 'label'のある'checkbox'
           control={<Checkbox checked={card.done} onChange={handleCheck} />}
           label={card.done ? 'Finished!' : 'Unfinished.'}
         />
-      </CardActions>
+      </CardContent>
       <CardContent>
-        <IconButton onClick={toggleTitleForm}>
+        <IconButton size='small' onClick={toggleTitleForm}>
           <AssignmentIcon />
         </IconButton>
         {isEditingTitle ? ( // 編集かどうかで表示の分岐
@@ -93,7 +96,7 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
         )}
       </CardContent>
       <CardContent>
-        <IconButton onClick={toggleBodyForm}>
+        <IconButton size='small' onClick={toggleBodyForm}>
           <SubjectIcon />
         </IconButton>
         {isEditingBody ? ( // 編集中かどうかで表示の分岐
