@@ -13,8 +13,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 
-import { addCard, addList } from '../../store/tasksSlice';
-import { ITaskList, ITaskBoard } from '../Types';
+import { addCard, addList, addBoard } from '../../store/tasksSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -42,12 +41,15 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  board?: ITaskBoard['taskBoardId'];
-  list?: ITaskList['taskBordId'];
+  card?: boolean;
+  list?: boolean;
+  board?: boolean;
+  boardId?: string;
+  listId?: string;
 }
 
 export const AddTaskButton: React.FC<Props> = (props) => {
-  const { board, list } = props;
+  const { card, list, board, boardId, listId } = props;
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState('');
@@ -61,10 +63,12 @@ export const AddTaskButton: React.FC<Props> = (props) => {
   const handleSubmit = (e: React.FormEvent<HTMLElement>) => {
     e.preventDefault(); // 'form submission canceled'防止
     if (title === '') return; // title空欄時は処理を行わない
-    if (list) {
-      dispatch(addCard({ taskListId: list.id, title: title }));
+    if (card && listId) {
+      dispatch(addCard({ taskListId: listId, title: title }));
+    } else if (list && boardId) {
+      dispatch(addList({ taskBoardId: boardId, title: title }));
     } else if (board) {
-      dispatch(addList({ taskBoardId: board.id, title: title }));
+      dispatch(addBoard({ title: title }));
     }
     setTitle('');
     setIsEditing(false);
@@ -87,14 +91,15 @@ export const AddTaskButton: React.FC<Props> = (props) => {
         onClickAway={handleClickAway}
       >
         <Box // 'List'追加時フォームの'Card'との差別化
-          className={!list ? classes.card : undefined}
-          boxShadow={!list ? 1 : undefined}
+          className={!card ? classes.card : undefined}
+          boxShadow={!card ? 1 : undefined}
           component='form' // CSS加工しつつフォームタグに
           onSubmit={handleSubmit} // returnキーの挙動
         >
           <TextField
             className={classes.input}
             variant='outlined'
+            fullWidth
             autoFocus
             placeholder='Enter a title.'
             helperText='2-20 characters'
@@ -124,13 +129,13 @@ export const AddTaskButton: React.FC<Props> = (props) => {
   } else {
     return (
       <Button
-        className={!list ? classes.button : undefined}
+        className={!card ? classes.button : undefined}
         startIcon={<AddIcon />}
         size='small'
-        fullWidth={Boolean(!list)}
+        fullWidth={Boolean(!card)}
         onClick={handleClick}
       >
-        {list ? 'Add new card' : 'Add new list'}
+        Add new {card ? 'card' : list ? 'list' : 'board'}
       </Button>
     );
   }

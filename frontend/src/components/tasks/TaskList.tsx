@@ -123,8 +123,7 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
             </Box>
           )
       )}
-      ))}
-      <AddTaskButton list={list} />
+      <AddTaskButton card listId={list.id} />
     </React.Fragment>
   );
 };
