@@ -23,8 +23,10 @@
     "react-dom": "^16.13.0",
     "react-hook-form": "^5.7.2",
     "react-redux": "^7.2.0",
+    "react-redux-firebase": "^3.4.0",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.0",
+    "redux-firestore": "^0.13.0",
     "redux-thunk": "^2.3.0",
     "styled-components": "^5.1.0",
     "typescript": "~3.7.2"

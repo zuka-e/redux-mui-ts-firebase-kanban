@@ -2,19 +2,22 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import { Provider } from 'react-redux';
+import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 
 import * as serviceWorker from './serviceWorker';
 import App from './components/App';
-import store from './store/store';
+import store, { rrfProps } from './store/store';
 import ThemeProvider from './layouts/ThemeProvider';
 import './index.css';
 
 ReactDOM.render(
   // store を全コンポーネントで利用する設定
   <Provider store={store}>
-    <ThemeProvider>
-      <App />
-    </ThemeProvider>
+    <ReactReduxFirebaseProvider {...rrfProps}>
+      <ThemeProvider>
+        <App />
+      </ThemeProvider>
+    </ReactReduxFirebaseProvider>
   </Provider>,
   document.getElementById('root')
 );

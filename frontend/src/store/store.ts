@@ -1,11 +1,26 @@
-import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
-import rootReducer, { RootState } from "./rootReducer";
+import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import { createFirestoreInstance } from 'redux-firestore';
+
+import firebase from '../config/firebase';
+import rootReducer, { RootState } from './rootReducer';
 
 // reducer に rootReducer の登録
 // Thunk: 'Redux-Toolkit'ではデフォルトの'middleware' -> applyMiddleware()不要
 const store = configureStore({
   reducer: rootReducer,
 });
+
+const rrfConfig = {
+  userProfile: 'users',
+  useFirestoreForProfile: true,
+};
+
+export const rrfProps = {
+  firebase: firebase,
+  config: rrfConfig,
+  dispatch: store.dispatch,
+  createFirestoreInstance,
+};
 
 export type AppDispatch = typeof store.dispatch;
 
