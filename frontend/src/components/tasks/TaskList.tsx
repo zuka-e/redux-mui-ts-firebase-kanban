@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 
 import { useSelector } from 'react-redux';
+import { isLoaded } from 'react-redux-firebase';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
+import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { RootState } from '../../store/rootReducer';
-import { ITaskList } from '../Types';
+import { ITaskCard, ITaskList } from '../Types';
 import TaskCard from './TaskCard';
 import { AddTaskButton } from './AddTaskButton';
 import SelectFilter from './SelectFilter';
@@ -54,11 +56,12 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editingTitle, setEditingTitle] = useState(list.title);
   const [filterQuery, setfilterQuery] = useState<TodoFilter>(TodoFilter.NONE);
-  const { cards } = useSelector((state: RootState) => state.tasks);
+  const cards = useSelector(
+    (state: RootState) => state.firestore.ordered.cards as ITaskCard['id'][]
+  );
 
   // 表示するデータを変更するロジック('filterQuery'の変更は別で行う)
-  const filteredCardIds = list.taskCardIds.filter((cardId) => {
-    const card = cards[cardId];
+  const filteredCards = cards.filter((card) => {
     if (filterQuery === TodoFilter.TODO) return !card.done;
     else if (filterQuery === TodoFilter.DONE) return card.done;
     else return true;
@@ -75,7 +78,9 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
   const handleClickAway = () => {
     setIsEditingTitle(false);
   };
-
+  if (!isLoaded(cards)) {
+    return <LinearProgress variant='query' color='secondary' />;
+  }
   return (
     <React.Fragment>
       {isEditingTitle ? (
@@ -103,12 +108,21 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
       )}
 
       <SelectFilter filterQuery={filterQuery} handleChange={handleChange} />
-      {filteredCardIds.map((cardId) => (
-        <Box bgcolor='background.paper' borderRadius={4} mb={1} key={cardId}>
-          <Paper className={`${classes.root} ${classes.card}`}>
-            <TaskCard card={cards[cardId]} />
-          </Paper>
-        </Box>
+      {filteredCards.map(
+        (card) =>
+          card.taskListId === list.id && (
+            <Box
+              bgcolor='background.paper'
+              borderRadius={4}
+              mb={1}
+              key={card.id}
+            >
+              <Paper className={`${classes.root} ${classes.card}`}>
+                <TaskCard card={card} />
+              </Paper>
+            </Box>
+          )
+      )}
       ))}
       <AddTaskButton list={list} />
     </React.Fragment>

@@ -1,18 +1,25 @@
 import React from 'react';
 
 import { useSelector } from 'react-redux';
+import { isLoaded } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
-import { Grid, Box, Typography } from '@material-ui/core';
+import { Grid, Box, Typography, LinearProgress } from '@material-ui/core';
 
 import { RootState } from '../store/rootReducer';
-import { boardOrder } from './tasks/initial-data';
+import { AddTaskButton } from './tasks/AddTaskButton';
+import { ITaskBoard } from './Types';
 
 const Home: React.FC = () => {
-  const { boards } = useSelector((state: RootState) => state.tasks);
+  const boards = useSelector(
+    (state: RootState) => state.firestore.ordered.boards as ITaskBoard['id'][]
+  );
+
+  if (!isLoaded(boards)) {
+    return <LinearProgress variant='query' color='secondary' />;
+  }
   return (
     <Grid container>
-      {boardOrder.map((boardID) => {
-        const board = boards[boardID];
+      {boards.map((board) => {
         return (
           <Grid item lg={3} sm={4} xs={6} key={board.id}>
             <Link to={`/boards/${board.id}`} style={{ textDecoration: 'none' }}>
