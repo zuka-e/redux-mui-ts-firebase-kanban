@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  card: ITaskCard['taskCardId'];
+  card: ITaskCard['id'];
   open: boolean; // 'Dialog'開閉状態は親が持つ
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }

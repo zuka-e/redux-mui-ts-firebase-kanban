@@ -2,7 +2,6 @@ export interface ITaskBoard {
   [taskBoardId: string]: {
     id: string;
     title: string;
-    taskListIds: string[];
   };
 }
 export interface ITaskList {
@@ -10,7 +9,6 @@ export interface ITaskList {
     taskBoardId: string;
     id: string;
     title: string;
-    taskCardIds: string[];
   };
 }
 export interface ITaskCard {

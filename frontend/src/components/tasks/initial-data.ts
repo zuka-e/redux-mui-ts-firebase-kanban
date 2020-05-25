@@ -9,7 +9,6 @@ export const taskBoards: ITaskBoard = {
   'board-1': {
     id: 'board-1',
     title: 'board-title-1',
-    taskListIds: ['list-1', 'list-3', 'list-4'],
   },
 };
 
@@ -18,19 +17,16 @@ export const taskLists: ITaskList = {
     taskBoardId: 'board-1',
     id: 'list-1',
     title: 'list-title1',
-    taskCardIds: ['card-1', 'card-2', 'card-4'],
   },
   'list-3': {
     taskBoardId: 'board-1',
     id: 'list-3',
     title: 'list-title3',
-    taskCardIds: [],
   },
   'list-4': {
     taskBoardId: 'board-1',
     id: 'list-4',
     title: 'list-title4',
-    taskCardIds: ['card-3'],
   },
 };
 

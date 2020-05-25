@@ -8,21 +8,14 @@ import {
 } from '../components/tasks/initial-data';
 
 interface State {
-  cardNum: number;
   cards: ITaskCard;
-  listNum: number;
   lists: ITaskList;
-  boardNum: number;
   boards: ITaskBoard;
 }
-
 const initialState: State = {
-  cardNum: 4,
-  cards: taskCards,
-  listNum: 5,
-  lists: taskLists,
-  boardNum: 1,
-  boards: taskBoards,
+  cards: {},
+  lists: {},
+  boards: {},
 };
 
 const tasksSlice = createSlice({

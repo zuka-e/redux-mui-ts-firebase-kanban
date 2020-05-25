@@ -16,9 +16,9 @@ import { editCard } from '../../store/tasksSlice';
 
 type FormProps = {
   // 任意属性を利用して、複数のフォームに対応させる
-  cardId: ITaskCard['taskCardId']['id'];
-  title?: ITaskCard['taskCardId']['title'];
-  body?: ITaskCard['taskCardId']['body'];
+  cardId: ITaskCard['id']['id'];
+  title?: ITaskCard['id']['title'];
+  body?: ITaskCard['id']['body'];
   editingTitle?: string;
   setEditingTitle?: React.Dispatch<React.SetStateAction<string>>;
   editingBody?: string;
