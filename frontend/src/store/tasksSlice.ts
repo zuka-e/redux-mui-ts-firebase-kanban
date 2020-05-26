@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ITaskCard, ITaskList, ITaskBoard } from '../components/Types';
 import { db } from '../config/firebase';
-import { AppThunk, AppDispatch, AppGetState } from './store';
+import { AppThunk } from './store';
 
 interface State {
   cards: ITaskCard;
@@ -23,17 +23,17 @@ const tasksSlice = createSlice({
   name: 'tasks',
   initialState,
   reducers: {
-    accessStart(state: State) {
+    accessStart(state) {
       state.loading = true;
       state.error = null;
     },
-    accessFailure(state: State, action: PayloadAction<string>) {
+    accessFailure(state, action: PayloadAction<string>) {
       state.loading = false;
       state.error = action.payload;
     },
     // awaitに続くコードが成功(Success)時に行う処理
     getDataSuccess(
-      state: State,
+      state,
       action: PayloadAction<{
         cards: ITaskCard;
         lists: ITaskList;
@@ -49,7 +49,7 @@ const tasksSlice = createSlice({
     },
 
     addCardSuccess(
-      state: State,
+      state,
       action: PayloadAction<{
         taskListId: string;
         id: string;
@@ -69,10 +69,7 @@ const tasksSlice = createSlice({
       state.error = null;
     },
 
-    removeCardSuccess(
-      state: State,
-      action: PayloadAction<{ taskCardId: string }>
-    ) {
+    removeCardSuccess(state, action: PayloadAction<{ taskCardId: string }>) {
       const cardId = action.payload.taskCardId;
       delete state.cards[cardId];
       state.loading = false;
@@ -80,7 +77,7 @@ const tasksSlice = createSlice({
     },
 
     editCardSuccess(
-      state: State,
+      state,
       action: PayloadAction<{
         taskCardId: string;
         title?: string;
@@ -95,10 +92,7 @@ const tasksSlice = createSlice({
       state.error = null;
     },
 
-    toggleCardSuccess(
-      state: State,
-      action: PayloadAction<{ taskCardId: string }>
-    ) {
+    toggleCardSuccess(state, action: PayloadAction<{ taskCardId: string }>) {
       const { taskCardId } = action.payload;
       const card = state.cards[taskCardId];
       card.done = !card.done;
@@ -107,7 +101,7 @@ const tasksSlice = createSlice({
     },
 
     addListSuccess: (
-      state: State,
+      state,
       action: PayloadAction<{ taskBoardId: string; id: string; title: string }>
     ) => {
       const { taskBoardId, id, title } = action.payload;
@@ -122,7 +116,7 @@ const tasksSlice = createSlice({
     },
 
     editListSuccess(
-      state: State,
+      state,
       action: PayloadAction<{
         taskListId: string;
         title: string;
@@ -134,10 +128,7 @@ const tasksSlice = createSlice({
       state.error = null;
     },
 
-    removeListSuccess(
-      state: State,
-      action: PayloadAction<{ taskListId: string }>
-    ) {
+    removeListSuccess(state, action: PayloadAction<{ taskListId: string }>) {
       const { taskListId } = action.payload;
       delete state.lists[taskListId];
       const cards = state.cards;
@@ -150,7 +141,7 @@ const tasksSlice = createSlice({
     },
 
     addBoardSuccess: (
-      state: State,
+      state,
       action: PayloadAction<{ id: string; title: string }>
     ) => {
       const { id, title } = action.payload;
@@ -186,7 +177,7 @@ const listsArray: ITaskList['id'][] = [];
 const boardsArray: ITaskBoard['id'][] = [];
 
 // 初回データの取得
-export const fetchData = (): AppThunk => async (dispatch: AppDispatch) => {
+export const fetchData = (): AppThunk => async (dispatch) => {
   try {
     dispatch(accessStart());
     await db
@@ -241,7 +232,7 @@ export const addCard = (props: {
   // キーワード引数のように振る舞う
   taskListId: string;
   title: string;
-}): AppThunk => async (dispatch: AppDispatch, getState: AppGetState) => {
+}): AppThunk => async (dispatch, getState) => {
   try {
     dispatch(accessStart());
     const { taskListId, title } = props;
@@ -263,8 +254,8 @@ export const addCard = (props: {
 };
 
 export const removeCard = (props: { taskCardId: string }): AppThunk => async (
-  dispatch: AppDispatch,
-  getState: AppGetState
+  dispatch,
+  getState
 ) => {
   try {
     const { taskCardId } = props;
@@ -289,8 +280,8 @@ interface editCardProps {
   body?: string;
 }
 export const editCard = (props: editCardProps): AppThunk => async (
-  dispatch: AppDispatch,
-  getState: AppGetState
+  dispatch,
+  getState
 ) => {
   try {
     dispatch(accessStart());
@@ -319,8 +310,8 @@ export const editCard = (props: editCardProps): AppThunk => async (
 };
 
 export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
-  dispatch: AppDispatch,
-  getState: AppGetState
+  dispatch,
+  getState
 ) => {
   try {
     dispatch(accessStart());
@@ -345,7 +336,7 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
 export const addList = (props: {
   taskBoardId: string;
   title: string;
-}): AppThunk => async (dispatch: AppDispatch) => {
+}): AppThunk => async (dispatch) => {
   try {
     dispatch(accessStart());
     const { taskBoardId, title } = props;
@@ -370,7 +361,7 @@ export const addList = (props: {
 export const editList = (props: {
   taskListId: string;
   title: string;
-}): AppThunk => async (dispatch: AppDispatch, getState: AppGetState) => {
+}): AppThunk => async (dispatch, getState) => {
   try {
     dispatch(accessStart());
     const { taskListId, title } = props;
@@ -390,8 +381,8 @@ export const editList = (props: {
 };
 
 export const removeList = (props: { taskListId: string }): AppThunk => async (
-  dispatch: AppDispatch,
-  getState: AppGetState
+  dispatch,
+  getState
 ) => {
   try {
     const { taskListId } = props;
@@ -411,7 +402,7 @@ export const removeList = (props: { taskListId: string }): AppThunk => async (
 };
 
 export const addBoard = (props: { title: string }): AppThunk => async (
-  dispatch: AppDispatch
+  dispatch
 ) => {
   try {
     dispatch(accessStart());
