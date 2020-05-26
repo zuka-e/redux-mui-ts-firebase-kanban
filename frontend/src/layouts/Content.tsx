@@ -1,15 +1,15 @@
 import React, { useEffect } from 'react';
 
 import { Switch, Route } from 'react-router-dom';
+import { useFirestoreConnect } from 'react-redux-firebase';
 
 import Home from '../components/Home';
 import TaskBoard from '../components/tasks/TaskBoard';
-import { useFirestoreConnect } from 'react-redux-firebase';
-import { useDispatch } from 'react-redux';
+import { useAppDispatch } from '../store/store';
 import { fetchData } from '../store/tasksSlice';
 
 const Content: React.FC = () => {
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // 初回アクセス時、データ取得
   useEffect(() => {

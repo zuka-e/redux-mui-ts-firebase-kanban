@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import { useDispatch } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Card,
@@ -15,6 +14,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import SubjectIcon from '@material-ui/icons/Subject';
 
 import { ITaskCard } from '../Types';
+import { useAppDispatch } from '../../store/store';
 import { toggleCard } from '../../store/tasksSlice';
 import CardForm from './CardForm';
 import PopoverButton from './PopoverButton';
@@ -40,7 +40,7 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
   const [isEditingBody, setIsEditingBody] = useState(false);
   const [editingTitle, setEditingTitle] = useState(card.title);
   const [editingBody, setEditingBody] = useState(card.body);
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // 'TaskCard.done'の切り替え
   const handleCheck = () => {

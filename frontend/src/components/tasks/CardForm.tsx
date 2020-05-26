@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { useDispatch } from 'react-redux';
 import {
   Box,
   Button,
@@ -12,6 +11,7 @@ import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 
 import { ITaskCard } from '../Types';
+import { useAppDispatch } from '../../store/store';
 import { editCard } from '../../store/tasksSlice';
 
 type FormProps = {
@@ -39,7 +39,7 @@ const CardForm: React.FC<FormProps> = (props) => {
     toggleForm,
     handleClickAway,
   } = props; // 親の状態を変化させるものは、親から受け取る
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (title) {

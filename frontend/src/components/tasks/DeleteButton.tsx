@@ -1,9 +1,9 @@
 import React from 'react';
 
-import { useDispatch } from 'react-redux';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Box, Typography, Button } from '@material-ui/core';
 
+import { useAppDispatch } from '../../store/store';
 import { removeCard, removeList } from '../../store/tasksSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,7 +33,7 @@ interface DeleteProps {
 const DeleteButton: React.FC<DeleteProps> = (props) => {
   const { message, target, id } = props;
   const classes = useStyles();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   const handleRemove = () => {
     if (target === 'list') {

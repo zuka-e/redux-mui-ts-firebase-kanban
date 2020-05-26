@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 
-import { useDispatch } from 'react-redux';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Box,
@@ -13,6 +12,7 @@ import AddIcon from '@material-ui/icons/Add';
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 
+import { useAppDispatch } from '../../store/store';
 import { addCard, addList, addBoard } from '../../store/tasksSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -53,7 +53,7 @@ export const AddTaskButton: React.FC<Props> = (props) => {
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
   const [title, setTitle] = useState('');
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // 入力内容保持
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

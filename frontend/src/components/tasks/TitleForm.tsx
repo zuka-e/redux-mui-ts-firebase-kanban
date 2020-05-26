@@ -1,6 +1,5 @@
 import React from 'react';
 
-import { useDispatch } from 'react-redux';
 import { useForm } from 'react-hook-form';
 import {
   TextField,
@@ -15,8 +14,9 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 
-import { editList } from '../../store/tasksSlice';
 import { ITaskList } from '../Types';
+import { useAppDispatch } from '../../store/store';
+import { editList } from '../../store/tasksSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -58,7 +58,7 @@ const TitleForm: React.FC<FormProps> = (props) => {
   } = props;
   const classes = useStyles();
   const { register, handleSubmit, errors } = useForm<FormData>();
-  const dispatch = useDispatch();
+  const dispatch = useAppDispatch();
 
   // バリデーションの種類とエラーメッセージ
   const validation = {
