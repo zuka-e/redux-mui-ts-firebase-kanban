@@ -23,6 +23,7 @@ export const rrfProps = {
 };
 
 export type AppDispatch = typeof store.dispatch;
+export type AppGetState = typeof store.getState;
 
 // ThunkAction<戻り値, 'getState'のタイプ, 追加の引数, 許容Actionタイプ> を設定
 export type AppThunk = ThunkAction<void, RootState, unknown, Action<string>>;
