@@ -1,6 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ITaskCard, ITaskList, ITaskBoard } from '../components/Types';
+import firebase from '../config/firebase';
 import { db } from '../config/firebase';
 import { AppThunk } from './store';
 
@@ -63,6 +64,8 @@ const tasksSlice = createSlice({
         title: title,
         done: false,
         body: '',
+        createdAt: firebase.firestore.Timestamp.now(),
+        updatedAt: firebase.firestore.Timestamp.now(),
       };
       state.cards = { ...state.cards, [id]: newCard };
       state.loading = false;
@@ -88,6 +91,7 @@ const tasksSlice = createSlice({
       const card = state.cards[taskCardId];
       if (title) card.title = title;
       if (body) card.body = body;
+      card.updatedAt = firebase.firestore.Timestamp.now();
       state.loading = false;
       state.error = null;
     },
@@ -109,6 +113,8 @@ const tasksSlice = createSlice({
         taskBoardId: taskBoardId,
         id: id,
         title: title,
+        createdAt: firebase.firestore.Timestamp.now(),
+        updatedAt: firebase.firestore.Timestamp.now(),
       };
       state.lists = { ...state.lists, [id]: newList };
       state.loading = false;
@@ -123,7 +129,9 @@ const tasksSlice = createSlice({
       }>
     ) {
       const { taskListId, title } = action.payload;
-      state.lists[taskListId].title = title;
+      const list = state.lists[taskListId];
+      list.title = title;
+      list.updatedAt = firebase.firestore.Timestamp.now();
       state.loading = false;
       state.error = null;
     },
@@ -148,6 +156,8 @@ const tasksSlice = createSlice({
       const newBoard = {
         id: id,
         title: title,
+        createdAt: firebase.firestore.Timestamp.now(),
+        updatedAt: firebase.firestore.Timestamp.now(),
       };
       state.boards = { ...state.boards, [id]: newBoard };
       state.loading = false;
@@ -186,10 +196,10 @@ export const fetchData = (): AppThunk => async (dispatch) => {
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
           // idを加えて配列に追加、型アサーションを付与
-          cardsArray.push({ ...doc.data(), id: doc.id } as ITaskCard['id']);
+          cardsArray.push({ id: doc.id, ...doc.data() } as ITaskCard['id']);
         });
       });
-    // ITaskCard['id'][] から ITaskCard への変換
+    // ITaskCard['id'][] (配列) から ITaskCard (オブジェクト) への変換
     // 例) [{id: '1', title: 'a'}, {...}] -> {'1': {id: '1', title: 'a'}, '2': {...}}
     // reduce(): 反復処理でaccumulator(acc)に結果を蓄積し最終結果を返す、初期値={}
     const cards = cardsArray.reduce((acc, card) => {
@@ -202,7 +212,7 @@ export const fetchData = (): AppThunk => async (dispatch) => {
       .get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          listsArray.push({ ...doc.data(), id: doc.id } as ITaskList['id']);
+          listsArray.push({ id: doc.id, ...doc.data() } as ITaskList['id']);
         });
       });
     const lists = listsArray.reduce((acc, list) => {
@@ -215,7 +225,7 @@ export const fetchData = (): AppThunk => async (dispatch) => {
       .get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          boardsArray.push({ ...doc.data(), id: doc.id } as ITaskBoard['id']);
+          boardsArray.push({ id: doc.id, ...doc.data() } as ITaskBoard['id']);
         });
       });
     const boards = boardsArray.reduce((acc, board) => {
@@ -243,6 +253,8 @@ export const addCard = (props: {
       .add({
         taskListId: taskListId,
         title: title,
+        createdAt: firebase.firestore.Timestamp.now(),
+        updatedAt: firebase.firestore.Timestamp.now(),
       })
       .then((docRef) => docRef.id);
     dispatch(
@@ -296,10 +308,12 @@ export const editCard = (props: editCardProps): AppThunk => async (
     title &&
       (await docRef.update({
         title: title,
+        updatedAt: firebase.firestore.Timestamp.now(),
       }));
     body &&
       (await docRef.update({
         body: body,
+        updatedAt: firebase.firestore.Timestamp.now(),
       }));
     dispatch(
       editCardSuccess({ taskCardId: taskCardId, title: title, body: body })
@@ -348,6 +362,8 @@ export const addList = (props: {
       .add({
         taskBoardId: taskBoardId,
         title: title,
+        createdAt: firebase.firestore.Timestamp.now(),
+        updatedAt: firebase.firestore.Timestamp.now(),
       })
       .then((docRef) => docRef.id);
     dispatch(
@@ -373,6 +389,7 @@ export const editList = (props: {
       .doc(taskListId);
     await docRef.update({
       title: title,
+      updatedAt: firebase.firestore.Timestamp.now(),
     });
     dispatch(editListSuccess({ taskListId: taskListId, title: title }));
   } catch (error) {
@@ -411,6 +428,8 @@ export const addBoard = (props: { title: string }): AppThunk => async (
       .collection('boards')
       .add({
         title: title,
+        createdAt: firebase.firestore.Timestamp.now(),
+        updatedAt: firebase.firestore.Timestamp.now(),
       })
       .then((docRef) => docRef.id);
     dispatch(addBoardSuccess({ id: docId, title: title }));

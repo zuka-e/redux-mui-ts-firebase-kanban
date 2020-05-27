@@ -20,15 +20,18 @@ const Content: React.FC = () => {
   useFirestoreConnect([
     {
       collection: 'boards',
+      orderBy: ['createdAt', 'asc'],
       storeAs: 'boards', // stateアクセス時の名前
     },
     {
       // 上位のコレクション指定せずアクセス可能
       collectionGroup: 'lists',
+      orderBy: ['createdAt', 'asc'],
       storeAs: 'lists',
     },
     {
       collectionGroup: 'cards',
+      orderBy: ['createdAt', 'desc'],
       storeAs: 'cards',
     },
   ]);

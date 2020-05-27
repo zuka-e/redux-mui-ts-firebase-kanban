@@ -1,4 +1,9 @@
-import { configureStore, ThunkAction, Action } from '@reduxjs/toolkit';
+import {
+  configureStore,
+  ThunkAction,
+  Action,
+  getDefaultMiddleware,
+} from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 import { createFirestoreInstance } from 'redux-firestore';
 
@@ -9,6 +14,10 @@ import rootReducer, { RootState } from './rootReducer';
 // Thunk: 'Redux-Toolkit'ではデフォルトの'middleware' -> applyMiddleware()不要
 const store = configureStore({
   reducer: rootReducer,
+  // 'A non-serializable value was detected in the state'を無視
+  middleware: getDefaultMiddleware({
+    serializableCheck: false,
+  }),
 });
 
 const rrfConfig = {
