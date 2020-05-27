@@ -89,9 +89,12 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
     <React.Fragment>
       {isEditingTitle ? (
         <TitleForm
+          method={'PATCH'}
+          list
+          id={list.id}
+          currentValue={list.title}
           toggleForm={toggleTitleForm}
           handleClickAway={handleClickAway}
-          list={list}
           editingTitle={editingTitle}
           setEditingTitle={setEditingTitle}
         />
@@ -127,7 +130,7 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
             </Box>
           )
       )}
-      <AddTaskButton card listId={list.id} />
+      <AddTaskButton card id={list.id} />
     </React.Fragment>
   );
 };

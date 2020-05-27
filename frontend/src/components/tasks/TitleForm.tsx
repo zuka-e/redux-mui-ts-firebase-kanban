@@ -14,12 +14,23 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 
-import { ITaskList } from '../Types';
 import { useAppDispatch } from '../../store/store';
-import { editList } from '../../store/tasksSlice';
+import {
+  editList,
+  addCard,
+  addList,
+  addBoard,
+  editCard,
+} from '../../store/tasksSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    formPaper: {
+      margin: theme.spacing(1),
+      padding: theme.spacing(1),
+      backgroundColor: theme.palette.secondary.light,
+      borderRadius: theme.spacing(0.5),
+    },
     input: {
       '& > .MuiFormLabel-root.Mui-focused': {
         color: theme.palette.text.secondary,
@@ -41,20 +52,30 @@ const FormData = {
 type FormData = typeof FormData;
 
 interface FormProps {
-  toggleForm: () => void;
-  handleClickAway: () => void;
-  list: ITaskList['taskListId'];
+  method: 'POST' | 'PATCH';
+  card?: boolean;
+  list?: boolean;
+  board?: boolean;
+  id?: string;
+  currentValue: string;
   editingTitle: string;
   setEditingTitle: React.Dispatch<React.SetStateAction<string>>;
+  toggleForm: () => void;
+  handleClickAway: () => void;
 }
 
 const TitleForm: React.FC<FormProps> = (props) => {
   const {
-    toggleForm,
-    handleClickAway,
+    method,
+    card,
     list,
+    board,
+    id,
+    currentValue,
     editingTitle,
     setEditingTitle,
+    toggleForm,
+    handleClickAway,
   } = props;
   const classes = useStyles();
   const { register, handleSubmit, errors } = useForm<FormData>();
@@ -79,13 +100,35 @@ const TitleForm: React.FC<FormProps> = (props) => {
 
   // 編集を破棄する
   const handleClose = () => {
-    setEditingTitle(list.title);
+    setEditingTitle(currentValue);
     toggleForm();
   };
 
   // 'submit'時に行う処理
   const onSubmit = (data: FormData) => {
-    dispatch(editList({ taskListId: list.id, title: data.title }));
+    if (currentValue === data.title) {
+      toggleForm();
+      return;
+    }
+    if (method === 'POST') {
+      if (card && id) {
+        dispatch(addCard({ taskListId: id, title: data.title }));
+      } else if (list && id) {
+        dispatch(addList({ taskBoardId: id, title: data.title }));
+      } else if (board) {
+        dispatch(addBoard({ title: data.title }));
+      }
+    } else if (method === 'PATCH') {
+      if (card && id) {
+        dispatch(editCard({ taskCardId: id, title: data.title }));
+      } else if (list && id) {
+        dispatch(editList({ taskListId: id, title: data.title }));
+      }
+      // else if (board) {
+      //   dispatch(editBoard({ title: title }));
+      // }
+    }
+    setEditingTitle('');
     toggleForm();
   };
 
@@ -95,14 +138,20 @@ const TitleForm: React.FC<FormProps> = (props) => {
       touchEvent='onTouchStart'
       onClickAway={handleClickAway}
     >
-      <Box component='form' my={1} onSubmit={handleSubmit(onSubmit)}>
+      <Box
+        className={method === 'POST' && !card ? classes.formPaper : undefined}
+        my={1}
+        boxShadow={method === 'POST' && !card ? 1 : undefined}
+        component='form'
+        onSubmit={handleSubmit(onSubmit)}
+      >
         <TextField
           className={classes.input}
           name='title'
           autoFocus
           fullWidth
           variant='outlined'
-          label={list.title} // 現在のタイトル表示
+          label={currentValue || undefined} // 現在のタイトル表示
           InputLabelProps={{ margin: 'dense' }} // classes.inputに対応
           placeholder='Enter a title'
           value={editingTitle}
@@ -118,7 +167,7 @@ const TitleForm: React.FC<FormProps> = (props) => {
           size='small'
           startIcon={<SaveIcon />}
         >
-          Save
+          {method === 'POST' ? 'Add' : 'Save'}
         </Button>
         <IconButton size='small' aria-label='close' onClick={handleClose}>
           <CloseIcon />

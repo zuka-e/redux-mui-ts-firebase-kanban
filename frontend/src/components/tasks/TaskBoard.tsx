@@ -44,7 +44,7 @@ const TaskBoard: React.FC = () => {
           )
       )}
       <Grid item lg={2} md={3} sm={4} xs={6}>
-        <AddTaskButton list boardId={boardId} />
+        <AddTaskButton list id={boardId} />
       </Grid>
     </Grid>
   );
