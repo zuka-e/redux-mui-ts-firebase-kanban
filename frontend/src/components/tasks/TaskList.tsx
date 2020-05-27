@@ -61,11 +61,14 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
   );
 
   // 表示するデータを変更するロジック('filterQuery'の変更は別で行う)
-  const filteredCards = cards.filter((card) => {
-    if (filterQuery === TodoFilter.TODO) return !card.done;
-    else if (filterQuery === TodoFilter.DONE) return card.done;
-    else return true;
-  });
+  const filterCards = () => {
+    const filteredCards = cards.filter((card) => {
+      if (filterQuery === TodoFilter.TODO) return !card.done;
+      else if (filterQuery === TodoFilter.DONE) return card.done;
+      else return true;
+    });
+    return filteredCards;
+  };
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setfilterQuery(event.target.value as TodoFilter); // unknown型から変換
@@ -78,6 +81,7 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
   const handleClickAway = () => {
     setIsEditingTitle(false);
   };
+
   if (!isLoaded(cards)) {
     return <LinearProgress variant='query' color='secondary' />;
   }
@@ -108,7 +112,7 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
       )}
 
       <SelectFilter filterQuery={filterQuery} handleChange={handleChange} />
-      {filteredCards.map(
+      {filterCards().map(
         (card) =>
           card.taskListId === list.id && (
             <Box
