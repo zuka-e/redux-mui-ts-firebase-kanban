@@ -11,7 +11,7 @@ import Content from '../layouts/Content';
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(5),
+      marginTop: theme.spacing(1),
     },
   })
 );
@@ -39,7 +39,12 @@ const App: React.FC = () => {
       <ThemeProvider theme={context.theme}>
         <CssBaseline />
         <Header />
-        <Container component='main' className={classes.root}>
+        <Container
+          component='main'
+          className={classes.root}
+          maxWidth={false}
+          disableGutters
+        >
           <Content />
         </Container>
       </ThemeProvider>

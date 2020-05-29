@@ -11,6 +11,7 @@ import MenuIcon from '@material-ui/icons/Menu';
 import { Menu, MenuItem } from '@material-ui/core';
 
 import { ThemeContext, themes } from './ThemeProvider';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -22,6 +23,10 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
+      flex: 'auto',
+      fontWeight: 'bold',
+      color: 'inherit',
+      textDecoration: 'none',
     },
   })
 );
@@ -72,9 +77,11 @@ const Header: React.FC = () => {
               </MenuItem>
             ))}
           </Menu>
-          <Typography variant='h6' className={classes.title}>
-            Todos
-          </Typography>
+          <Link to={'/'} className={classes.title}>
+            <Typography component='p' variant='h4'>
+              Title
+            </Typography>
+          </Link>
           <Button color='inherit'>(Login)</Button>
         </Toolbar>
       </AppBar>
