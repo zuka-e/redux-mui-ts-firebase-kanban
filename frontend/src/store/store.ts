@@ -21,6 +21,7 @@ const store = configureStore({
 });
 
 const rrfConfig = {
+  // 要: Firestore の セキュリティルールに'users'コレクションを追加
   userProfile: 'users',
   useFirestoreForProfile: true,
 };

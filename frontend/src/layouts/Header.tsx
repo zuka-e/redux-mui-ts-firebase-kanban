@@ -23,8 +23,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       flexGrow: 1,
-      flex: 'auto',
       fontWeight: 'bold',
+    },
+    link: {
       color: 'inherit',
       textDecoration: 'none',
     },
@@ -33,7 +34,6 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Header: React.FC = () => {
   const context = useContext(ThemeContext);
-
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -77,12 +77,16 @@ const Header: React.FC = () => {
               </MenuItem>
             ))}
           </Menu>
-          <Link to={'/'} className={classes.title}>
-            <Typography component='p' variant='h4'>
+          <Typography className={classes.root} component='p' variant='h4'>
+            <Link to={'/'} className={`${classes.title} ${classes.link}`}>
               Title
-            </Typography>
-          </Link>
-          <Button color='inherit'>(Login)</Button>
+            </Link>
+          </Typography>
+          <Button color='inherit'>
+            <Link to={'/login'} className={classes.link}>
+              Signin
+            </Link>
+          </Button>
         </Toolbar>
       </AppBar>
     </div>

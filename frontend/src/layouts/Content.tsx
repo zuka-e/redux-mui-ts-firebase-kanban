@@ -7,6 +7,7 @@ import Home from '../components/Home';
 import TaskBoard from '../components/tasks/TaskBoard';
 import { useAppDispatch } from '../store/store';
 import { fetchData } from '../store/tasksSlice';
+import Login from '../pages/Login';
 
 const Content: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -25,6 +26,7 @@ const Content: React.FC = () => {
     },
     {
       // 上位のコレクション指定せずアクセス可能
+      // コレクショングループ用のセキュリティルールも必要
       collectionGroup: 'lists',
       orderBy: ['createdAt', 'asc'],
       storeAs: 'lists',
@@ -43,6 +45,9 @@ const Content: React.FC = () => {
       </Route>
       <Route path='/boards/:boardId'>
         <TaskBoard />
+      </Route>
+      <Route exact path='/login'>
+        <Login />
       </Route>
     </Switch>
   );
