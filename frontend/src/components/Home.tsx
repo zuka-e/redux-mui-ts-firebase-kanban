@@ -7,7 +7,7 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Card, Typography, LinearProgress } from '@material-ui/core';
 
 import { RootState } from '../store/rootReducer';
-import { AddTaskButton } from './tasks/AddTaskButton';
+import AddTaskButton from './tasks/AddTaskButton';
 import { ITaskBoard } from './Types';
 
 const useStyles = makeStyles((theme: Theme) =>

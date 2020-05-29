@@ -11,7 +11,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 import { RootState } from '../../store/rootReducer';
 import { ITaskCard, ITaskList } from '../Types';
 import TaskCard from './TaskCard';
-import { AddTaskButton } from './AddTaskButton';
+import AddTaskButton from './AddTaskButton';
 import SelectFilter from './SelectFilter';
 import TitleForm from './TitleForm';
 import MenuButton from './MenuButton';

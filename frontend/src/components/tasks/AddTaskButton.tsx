@@ -25,7 +25,7 @@ interface Props {
   id?: string;
 }
 
-export const AddTaskButton: React.FC<Props> = (props) => {
+const AddTaskButton: React.FC<Props> = (props) => {
   const { card, list, board, id } = props;
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);
@@ -70,3 +70,5 @@ export const AddTaskButton: React.FC<Props> = (props) => {
     </React.Fragment>
   );
 };
+
+export default AddTaskButton;

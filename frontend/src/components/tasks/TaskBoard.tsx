@@ -9,7 +9,7 @@ import { Alert, AlertTitle } from '@material-ui/lab';
 
 import TaskList from './TaskList';
 import TitleForm from './TitleForm';
-import { AddTaskButton } from './AddTaskButton';
+import AddTaskButton from './AddTaskButton';
 import MenuButton from './MenuButton';
 import { RootState } from '../../store/rootReducer';
 import { ITaskBoard, ITaskList } from '../Types';
