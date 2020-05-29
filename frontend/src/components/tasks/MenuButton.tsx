@@ -6,6 +6,8 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import ListMenu from './ListMenu';
+import BoardMenu from './BoardMenu';
+import { Button } from '@material-ui/core';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -18,7 +20,15 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const ListMenuButton: React.FC<{ listId: string }> = ({ listId }) => {
+interface Props {
+  board?: boolean;
+  list?: boolean;
+  id: string;
+  variant?: 'text' | 'outlined' | 'contained';
+}
+
+const MenuButton: React.FC<Props> = (props) => {
+  const { board, list, id, variant } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -33,21 +43,33 @@ const ListMenuButton: React.FC<{ listId: string }> = ({ listId }) => {
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? 'list-menu' : undefined;
+  const htmlId = open ? 'list-menu' : undefined;
 
   return (
     <React.Fragment>
-      <IconButton // ポップオーバーさせるボタン
-        aria-describedby={id}
-        size='small'
-        onClick={handleClick}
-        aria-label='menu'
-      >
-        <MoreVertIcon />
-      </IconButton>
+      {variant ? (
+        <Button
+          variant={variant}
+          aria-describedby={htmlId}
+          onClick={handleClick}
+          aria-label='menu'
+        >
+          {props.children}
+        </Button>
+      ) : (
+        <IconButton // ポップオーバーさせるボタン
+          aria-describedby={htmlId}
+          size='small'
+          onClick={handleClick}
+          aria-label='menu'
+        >
+          <MoreVertIcon />
+        </IconButton>
+      )}
+
       <Popover
         className={classes.popover}
-        id={id}
+        id={htmlId}
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
@@ -60,10 +82,11 @@ const ListMenuButton: React.FC<{ listId: string }> = ({ listId }) => {
           horizontal: 'center',
         }}
       >
-        <ListMenu listId={listId} handleClose={handleClose} />
+        {list && <ListMenu listId={id} handleClose={handleClose} />}
+        {board && <BoardMenu boardId={id} handleClose={handleClose} />}
       </Popover>
     </React.Fragment>
   );
 };
 
-export default ListMenuButton;
+export default MenuButton;

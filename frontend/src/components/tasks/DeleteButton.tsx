@@ -4,7 +4,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Box, Typography, Button } from '@material-ui/core';
 
 import { useAppDispatch } from '../../store/store';
-import { removeCard, removeList } from '../../store/tasksSlice';
+import { removeCard, removeList, removeBoard } from '../../store/tasksSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -26,20 +26,23 @@ const useStyles = makeStyles((theme: Theme) =>
 
 interface DeleteProps {
   message?: string;
-  target: 'list' | 'card';
+  card?: boolean;
+  list?: boolean;
+  board?: boolean;
   id: string;
 }
 
 const DeleteButton: React.FC<DeleteProps> = (props) => {
-  const { message, target, id } = props;
+  const { message, card, list, board, id } = props;
   const classes = useStyles();
   const dispatch = useAppDispatch();
-
   const handleRemove = () => {
-    if (target === 'list') {
-      dispatch(removeList({ taskListId: id }));
-    } else if (target === 'card') {
+    if (card) {
       dispatch(removeCard({ taskCardId: id }));
+    } else if (list) {
+      dispatch(removeList({ taskListId: id }));
+    } else if (board) {
+      dispatch(removeBoard({ taskBoardId: id }));
     }
   };
 

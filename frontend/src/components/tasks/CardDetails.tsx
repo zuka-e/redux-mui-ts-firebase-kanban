@@ -120,7 +120,7 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
       </CardContent>
       <CardActions style={{ justifyContent: 'flex-end' }} disableSpacing>
         <PopoverButton type='danger' buttonText='Delete'>
-          <DeleteButton target='card' id={card.id} />
+          <DeleteButton card id={card.id} />
         </PopoverButton>
       </CardActions>
     </Card>

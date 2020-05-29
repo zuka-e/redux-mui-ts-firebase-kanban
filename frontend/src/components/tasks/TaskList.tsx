@@ -14,7 +14,7 @@ import TaskCard from './TaskCard';
 import { AddTaskButton } from './AddTaskButton';
 import SelectFilter from './SelectFilter';
 import TitleForm from './TitleForm';
-import ListMenuButton from './ListMenuButton';
+import MenuButton from './MenuButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -110,7 +110,7 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
           >
             {list.title}
           </Typography>
-          <ListMenuButton listId={list.id} />
+          <MenuButton list id={list.id} />
         </Box>
       )}
 

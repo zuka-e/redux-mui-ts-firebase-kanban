@@ -163,6 +163,38 @@ const tasksSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+
+    removeBoardSuccess(state, action: PayloadAction<{ taskBoardId: string }>) {
+      const { taskBoardId } = action.payload;
+      delete state.lists[taskBoardId];
+      const { lists, cards } = state;
+      // オブジェクト型での条件付き処理
+      Object.values(lists).forEach((list) => {
+        if (list.taskBoardId === taskBoardId) {
+          Object.values(cards).forEach(
+            (card) => card.taskListId === list.id && delete state.cards[card.id]
+          );
+          list.taskBoardId === taskBoardId && delete state.lists[list.id];
+        }
+      });
+      state.loading = false;
+      state.error = null;
+    },
+
+    editBoardSuccess(
+      state,
+      action: PayloadAction<{
+        taskBoardId: string;
+        title: string;
+      }>
+    ) {
+      const { taskBoardId, title } = action.payload;
+      const board = state.boards[taskBoardId];
+      board.title = title;
+      board.updatedAt = firebase.firestore.Timestamp.now();
+      state.loading = false;
+      state.error = null;
+    },
   },
 });
 
@@ -178,6 +210,8 @@ export const {
   editListSuccess,
   removeListSuccess,
   addBoardSuccess,
+  removeBoardSuccess,
+  editBoardSuccess,
 } = tasksSlice.actions;
 
 export default tasksSlice;
@@ -433,6 +467,51 @@ export const addBoard = (props: { title: string }): AppThunk => async (
       })
       .then((docRef) => docRef.id);
     dispatch(addBoardSuccess({ id: docId, title: title }));
+  } catch (error) {
+    dispatch(accessFailure(error));
+  }
+};
+
+export const removeBoard = (props: { taskBoardId: string }): AppThunk => async (
+  dispatch,
+  getState
+) => {
+  try {
+    const { taskBoardId } = props;
+    dispatch(accessStart());
+    const docRef = db.collection('boards').doc(taskBoardId);
+    await docRef.delete();
+    const listsRef = docRef.collection('lists');
+    const cardsRef = docRef.collection('cards');
+    const { lists, cards } = getState().tasks;
+    Object.values(lists).forEach((list) => {
+      if (list.taskBoardId === taskBoardId) {
+        Object.values(cards).forEach(
+          (card) =>
+            card.taskListId === list.id && cardsRef.doc(card.id).delete()
+        );
+        listsRef.doc(list.id).delete();
+      }
+    });
+    dispatch(removeBoardSuccess({ taskBoardId: taskBoardId }));
+  } catch (error) {
+    dispatch(accessFailure(error));
+  }
+};
+
+export const editBoard = (props: {
+  taskBoardId: string;
+  title: string;
+}): AppThunk => async (dispatch) => {
+  try {
+    dispatch(accessStart());
+    const { taskBoardId, title } = props;
+    const docRef = db.collection('boards').doc(taskBoardId);
+    await docRef.update({
+      title: title,
+      updatedAt: firebase.firestore.Timestamp.now(),
+    });
+    dispatch(editBoardSuccess({ taskBoardId: taskBoardId, title: title }));
   } catch (error) {
     dispatch(accessFailure(error));
   }

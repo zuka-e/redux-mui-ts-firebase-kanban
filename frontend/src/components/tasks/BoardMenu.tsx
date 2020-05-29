@@ -29,13 +29,13 @@ const Item = {
 
 type Item = typeof Item[keyof typeof Item];
 
-interface ListMenuProps {
-  listId: string;
+interface BoardMenuProps {
+  boardId: string;
   handleClose: () => void;
 }
 
-const ListMenu: React.FC<ListMenuProps> = (props) => {
-  const { listId, handleClose } = props;
+const BoardMenu: React.FC<BoardMenuProps> = (props) => {
+  const { boardId, handleClose } = props;
   const classes = useStyles();
   const [selectedItem, setSelectedItem] = useState<Item>(Item.HOME);
 
@@ -44,7 +44,7 @@ const ListMenu: React.FC<ListMenuProps> = (props) => {
     setSelectedItem(item);
   };
 
-  // 'ListMenu'の最初の表示に戻る
+  // 'BoardMenu'の最初の表示に戻る
   const handleBack = () => {
     setSelectedItem(Item.HOME);
   };
@@ -69,7 +69,7 @@ const ListMenu: React.FC<ListMenuProps> = (props) => {
               <KeyboardArrowLeftIcon />
             </IconButton>
           )}
-          List Menu
+          Board Menu
           <IconButton size='small' onClick={handleClose}>
             <CloseIcon />
           </IconButton>
@@ -80,15 +80,15 @@ const ListMenu: React.FC<ListMenuProps> = (props) => {
       {selectedItem === Item.DELETE ? (
         <Box mx={1}>
           <DeleteButton
-            message='All cards in the list will also be deleted'
-            list
-            id={listId}
+            message='All cards and lists in the board will also be deleted'
+            board
+            id={boardId}
           />
         </Box>
       ) : (
         <List disablePadding dense>
           <ListItem button onClick={() => handleClick(Item.DELETE)}>
-            <ListItemText primary='Delete the List' />
+            <ListItemText primary='Delete the board' />
           </ListItem>
         </List>
       )}
@@ -96,4 +96,4 @@ const ListMenu: React.FC<ListMenuProps> = (props) => {
   );
 };
 
-export default ListMenu;
+export default BoardMenu;

@@ -21,6 +21,7 @@ import {
   addList,
   addBoard,
   editCard,
+  editBoard,
 } from '../../store/tasksSlice';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -123,10 +124,9 @@ const TitleForm: React.FC<FormProps> = (props) => {
         dispatch(editCard({ taskCardId: id, title: data.title }));
       } else if (list && id) {
         dispatch(editList({ taskListId: id, title: data.title }));
+      } else if (board && id) {
+        dispatch(editBoard({ taskBoardId: id, title: data.title }));
       }
-      // else if (board) {
-      //   dispatch(editBoard({ title: title }));
-      // }
     }
     setEditingTitle('');
     toggleForm();
