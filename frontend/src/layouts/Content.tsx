@@ -7,6 +7,7 @@ import Home from '../components/Home';
 import TaskBoard from '../components/tasks/TaskBoard';
 import { useAppDispatch } from '../store/store';
 import { fetchData } from '../store/tasksSlice';
+import Error404 from '../pages/Error404';
 import Login from '../pages/Login';
 
 const Content: React.FC = () => {
@@ -48,6 +49,9 @@ const Content: React.FC = () => {
       </Route>
       <Route exact path='/login'>
         <Login />
+      </Route>
+      <Route path='/'>
+        <Error404 />
       </Route>
     </Switch>
   );
