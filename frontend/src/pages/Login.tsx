@@ -10,6 +10,11 @@ const useStyles = makeStyles((theme: Theme) =>
     content: {
       marginTop: '2%',
     },
+    eraseInnerPaperBorder: {
+      '& > *': {
+        boxShadow: 'none',
+      },
+    },
     alignCenter: {
       textAlign: 'center',
     },
@@ -26,7 +31,7 @@ const Login = () => {
   return (
     <Grid container justify='center' className={classes.content}>
       <Grid item lg={4} md={6} sm={8} xs={10}>
-        <Card id='auth-container'>
+        <Card id='auth-container' className={classes.eraseInnerPaperBorder}>
           <CardHeader
             className={classes.alignCenter}
             title='Sign in'
