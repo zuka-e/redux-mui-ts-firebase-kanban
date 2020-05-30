@@ -1,17 +1,23 @@
-import React, { useContext } from 'react';
+import React from 'react';
 
+import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
+import { pink } from '@material-ui/core/colors';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
+import { Menu, MenuItem, Avatar } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
+import PersonIcon from '@material-ui/icons/Person';
 import MenuIcon from '@material-ui/icons/Menu';
-import { Menu, MenuItem } from '@material-ui/core';
 
-import { ThemeContext, themes } from './ThemeProvider';
-import { Link } from 'react-router-dom';
+import firebase from '../config/firebase';
+import { RootState } from '../store/rootReducer';
+import OpenMenu from '../components/auth/OpenMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -21,6 +27,10 @@ const useStyles = makeStyles((theme: Theme) =>
     menuButton: {
       marginRight: theme.spacing(2),
     },
+    circleButton: {
+      borderRadius: '50%',
+      minWidth: 'unset',
+    },
     title: {
       flexGrow: 1,
       fontWeight: 'bold',
@@ -29,12 +39,16 @@ const useStyles = makeStyles((theme: Theme) =>
       color: 'inherit',
       textDecoration: 'none',
     },
+    pink: {
+      color: theme.palette.getContrastText(pink[500]),
+      backgroundColor: pink[500],
+    },
   })
 );
 
 const Header: React.FC = () => {
-
   const classes = useStyles();
+  const currentUser = useSelector((state: RootState) => state.firebase.auth);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
@@ -45,6 +59,28 @@ const Header: React.FC = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const renderSignInLink = () => (
+    <Link to={'/login'} className={classes.link}>
+      <Button color='inherit' startIcon={<AccountCircleIcon />}>
+        Signin
+      </Button>
+    </Link>
+  );
+
+  const renderAccountIcon = () => (
+    <OpenMenu>
+      <Button size='small' className={classes.circleButton}>
+        <Avatar
+          alt='avatar'
+          src={currentUser?.photoURL || undefined}
+          className={classes.pink}
+        >
+          {currentUser?.photoURL || <PersonIcon />}
+        </Avatar>
+      </Button>
+    </OpenMenu>
+  );
 
   return (
     <div className={classes.root}>
@@ -71,18 +107,15 @@ const Header: React.FC = () => {
             <MenuItem onClick={handleClose}>
               <CloseIcon />
             </MenuItem>
-
           </Menu>
           <Typography className={classes.root} component='p' variant='h4'>
             <Link to={'/'} className={`${classes.title} ${classes.link}`}>
               Title
             </Link>
           </Typography>
-          <Button color='inherit'>
-            <Link to={'/login'} className={classes.link}>
-              Signin
-            </Link>
-          </Button>
+          {firebase.auth().currentUser
+            ? renderAccountIcon()
+            : renderSignInLink()}
         </Toolbar>
       </AppBar>
     </div>
