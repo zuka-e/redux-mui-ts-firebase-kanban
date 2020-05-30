@@ -5,14 +5,14 @@ import firebase from '../config/firebase';
 import { db } from '../config/firebase';
 import { AppThunk } from './store';
 
-interface State {
+interface TasksState {
   cards: ITaskCard;
   lists: ITaskList;
   boards: ITaskBoard;
   loading: boolean;
   error: any;
 }
-const initialState: State = {
+const initialState: TasksState = {
   cards: {},
   lists: {},
   boards: {},
@@ -28,7 +28,7 @@ const tasksSlice = createSlice({
       state.loading = true;
       state.error = null;
     },
-    accessFailure(state, action: PayloadAction<string>) {
+    accessFailure(state, action: PayloadAction<any>) {
       state.loading = false;
       state.error = action.payload;
     },
