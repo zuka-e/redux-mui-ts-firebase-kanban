@@ -25,13 +25,13 @@ const App: React.FC = () => {
 
   // 'createContext()'で生成した'ThemeContext'を呼び出す
   const context = useContext(ThemeContext);
-  // 保存されたテーマがあれば適用する(localStorageから読み込む)
-  useEffect(() => {
-    const theme = localStorage.getItem('theme');
-    if (theme) {
-      context.toggleTheme(theme);
-    }
-  });
+  // // 保存されたテーマがあれば適用する(localStorageから読み込む)
+  // useEffect(() => {
+  //   const theme = localStorage.getItem('theme');
+  //   if (theme) {
+  //     context.toggleTheme(theme);
+  //   }
+  // });
 
   return (
     // 'material-ui'の配色カスタマイズ ('ThemeContext.theme'をセット)

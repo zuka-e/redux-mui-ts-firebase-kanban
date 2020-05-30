@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 const Header: React.FC = () => {
-  const context = useContext(ThemeContext);
+
   const classes = useStyles();
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -71,11 +71,7 @@ const Header: React.FC = () => {
             <MenuItem onClick={handleClose}>
               <CloseIcon />
             </MenuItem>
-            {themes.map((theme, index) => (
-              <MenuItem key={index} onClick={() => context.toggleTheme(theme)}>
-                {theme}
-              </MenuItem>
-            ))}
+
           </Menu>
           <Typography className={classes.root} component='p' variant='h4'>
             <Link to={'/'} className={`${classes.title} ${classes.link}`}>

@@ -154,7 +154,7 @@ export const ThemeContext = React.createContext<ThemeContext>({
 } as ThemeContext);
 
 const ThemeProvider: React.FC = (props) => {
-  const [theme, setTheme] = useState<Theme>(defaultTheme);
+  const [theme, setTheme] = useState<Theme>(greenTheme);
 
   // 利用側(イベント)で文字列(theme)渡す
   const toggleTheme = (theme: string) => {
