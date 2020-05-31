@@ -29,3 +29,7 @@ export interface ITaskCard {
     updatedAt: firebase.firestore.Timestamp;
   };
 }
+
+export const boardsArray: ITaskBoard['id'][] = []; // DBから取得するデータの配列
+export const listsArray: ITaskList['id'][] = [];
+export const cardsArray: ITaskCard['id'][] = [];

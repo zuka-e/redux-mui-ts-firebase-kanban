@@ -1,34 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ITaskCard, ITaskList, ITaskBoard } from '../models/Task';
-import { User } from 'firebase';
+import {
+  ITaskCard,
+  ITaskList,
+  ITaskBoard,
+  cardsArray,
+  listsArray,
+  boardsArray,
+} from '../models/Task';
+import { currentUser, isSignedIn, isOwnedBy } from '../models/Auth';
 import firebase from '../config/firebase';
 import { db } from '../config/firebase';
 import { AppThunk } from './store';
-import { setMessage, Message } from './appSlice';
-
-// オブザーバーの設定なしでは、'firebase.auth().currentUser'が、nullとなる
-export let currentUser: User;
-firebase.auth().onAuthStateChanged((user: User | null) => {
-  if (user) {
-    currentUser = user;
-  }
-});
-
-const NotSignedInWarning: Message = {
-  type: 'warning',
-  text: "You aren't signed in",
-};
-
-const PermissionError: Message = {
-  type: 'error',
-  text: "You don't have permission",
-};
-
-export const isSignedIn = () => !!currentUser;
-
-export const isOwnedBy = (userId: string) =>
-  isSignedIn() && userId === currentUser.uid;
+import { setMessage, NotSignedInWarning, PermissionError } from './appSlice';
 
 interface TasksState {
   cards: ITaskCard;
@@ -244,10 +228,6 @@ export const {
 } = tasksSlice.actions;
 
 export default tasksSlice;
-
-const cardsArray: ITaskCard['id'][] = []; // 取得データの配列
-const listsArray: ITaskList['id'][] = [];
-const boardsArray: ITaskBoard['id'][] = [];
 
 // 初回データの取得
 export const fetchData = (): AppThunk => async (dispatch) => {

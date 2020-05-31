@@ -8,6 +8,17 @@ export type Message = {
   type: Color;
   text: string;
 };
+
+export const NotSignedInWarning: Message = {
+  type: 'warning',
+  text: "You aren't signed in",
+};
+
+export const PermissionError: Message = {
+  type: 'error',
+  text: "You don't have permission",
+};
+
 interface AppState {
   message: Message | null;
   loading: boolean;
