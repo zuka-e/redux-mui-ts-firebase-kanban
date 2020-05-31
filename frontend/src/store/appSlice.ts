@@ -36,6 +36,9 @@ const appSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+    setMessage(state, action: PayloadAction<Message>) {
+      state.message = action.payload;
+    },
     deleteMessage(state) {
       state.message = null;
     },
@@ -46,6 +49,7 @@ export const {
   tryingToSignOut,
   signOutFailure,
   signOutSuccess,
+  setMessage,
   deleteMessage,
 } = appSlice.actions;
 

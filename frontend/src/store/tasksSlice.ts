@@ -1,9 +1,34 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import { ITaskCard, ITaskList, ITaskBoard } from '../components/Types';
+import { User } from 'firebase';
 import firebase from '../config/firebase';
 import { db } from '../config/firebase';
 import { AppThunk } from './store';
+import { setMessage, Message } from './appSlice';
+
+// オブザーバーの設定なしでは、'firebase.auth().currentUser'が、nullとなる
+export let currentUser: User;
+firebase.auth().onAuthStateChanged((user: User | null) => {
+  if (user) {
+    currentUser = user;
+  }
+});
+
+const NotSignedInWarning: Message = {
+  type: 'warning',
+  text: "You aren't signed in",
+};
+
+const PermissionError: Message = {
+  type: 'error',
+  text: "You don't have permission",
+};
+
+export const isSignedIn = () => !!currentUser;
+
+export const isOwnedBy = (userId: string) =>
+  isSignedIn() && userId === currentUser.uid;
 
 interface TasksState {
   cards: ITaskCard;
@@ -59,6 +84,8 @@ const tasksSlice = createSlice({
     ) {
       const { taskListId, id, title } = action.payload;
       const newCard = {
+        // 'currentUser'がいない('undefined'になる)場合、'addCard()'側でブロックする
+        userId: currentUser.uid,
         taskListId: taskListId,
         id: id,
         title: title,
@@ -110,6 +137,7 @@ const tasksSlice = createSlice({
     ) => {
       const { taskBoardId, id, title } = action.payload;
       const newList = {
+        userId: currentUser.uid,
         taskBoardId: taskBoardId,
         id: id,
         title: title,
@@ -154,6 +182,7 @@ const tasksSlice = createSlice({
     ) => {
       const { id, title } = action.payload;
       const newBoard = {
+        userId: currentUser.uid,
         id: id,
         title: title,
         createdAt: firebase.firestore.Timestamp.now(),
@@ -277,16 +306,23 @@ export const addCard = (props: {
   taskListId: string;
   title: string;
 }): AppThunk => async (dispatch, getState) => {
+  const { taskListId, title } = props;
+  // storeからデータ取得
+  const boardId = getState().tasks.lists[taskListId].taskBoardId;
+  const cardsRef = db.collection('boards').doc(boardId).collection('cards');
+  // ログインしていなければ処理を中断
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
   try {
     dispatch(accessStart());
-    const { taskListId, title } = props;
-    // storeからデータ取得
-    const boardId = getState().tasks.lists[taskListId].taskBoardId;
-    const cardsRef = db.collection('boards').doc(boardId).collection('cards');
     const docId = await cardsRef
       .add({
+        userId: currentUser.uid,
         taskListId: taskListId,
         title: title,
+        body: '',
         createdAt: firebase.firestore.Timestamp.now(),
         updatedAt: firebase.firestore.Timestamp.now(),
       })
@@ -303,11 +339,22 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
   dispatch,
   getState
 ) => {
+  const { taskCardId } = props;
+  const card = getState().tasks.cards[taskCardId];
+  const listId = card.taskListId;
+  const boardId = getState().tasks.lists[listId].taskBoardId;
+
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
+  // 所有者(データの'userId'が'currentUser'の'uid'と一致)でなければ処理を中断
+  if (!isOwnedBy(card.userId)) {
+    dispatch(setMessage(PermissionError));
+    return;
+  }
   try {
-    const { taskCardId } = props;
     dispatch(accessStart());
-    const listId = getState().tasks.cards[taskCardId].taskListId;
-    const boardId = getState().tasks.lists[listId].taskBoardId;
     const docRef = db
       .collection('boards')
       .doc(boardId)
@@ -329,11 +376,21 @@ export const editCard = (props: editCardProps): AppThunk => async (
   dispatch,
   getState
 ) => {
+  const { taskCardId, title, body } = props;
+  const card = getState().tasks.cards[taskCardId];
+  const listId = card.taskListId;
+  const boardId = getState().tasks.lists[listId].taskBoardId;
+
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
+  if (!isOwnedBy(card.userId)) {
+    dispatch(setMessage(PermissionError));
+    return;
+  }
   try {
     dispatch(accessStart());
-    const { taskCardId, title, body } = props;
-    const listId = getState().tasks.cards[taskCardId].taskListId;
-    const boardId = getState().tasks.lists[listId].taskBoardId;
     const docRef = db
       .collection('boards')
       .doc(boardId)
@@ -361,12 +418,21 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
   dispatch,
   getState
 ) => {
+  const { taskCardId } = props;
+  const card = getState().tasks.cards[taskCardId];
+  const listId = card.taskListId;
+  const boardId = getState().tasks.lists[listId].taskBoardId;
+
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
+  if (!isOwnedBy(card.userId)) {
+    dispatch(setMessage(PermissionError));
+    return;
+  }
   try {
     dispatch(accessStart());
-    const { taskCardId } = props;
-    const card = getState().tasks.cards[taskCardId];
-    const listId = card.taskListId;
-    const boardId = getState().tasks.lists[listId].taskBoardId;
     const docRef = db
       .collection('boards')
       .doc(boardId)
@@ -385,15 +451,21 @@ export const addList = (props: {
   taskBoardId: string;
   title: string;
 }): AppThunk => async (dispatch) => {
+  const { taskBoardId, title } = props;
+
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
   try {
     dispatch(accessStart());
-    const { taskBoardId, title } = props;
     const listsRef = db
       .collection('boards')
       .doc(taskBoardId)
       .collection('lists');
     const docId = await listsRef
       .add({
+        userId: currentUser.uid,
         taskBoardId: taskBoardId,
         title: title,
         createdAt: firebase.firestore.Timestamp.now(),
@@ -412,10 +484,20 @@ export const editList = (props: {
   taskListId: string;
   title: string;
 }): AppThunk => async (dispatch, getState) => {
+  const { taskListId, title } = props;
+  const list = getState().tasks.lists[taskListId];
+  const boardId = list.taskBoardId;
+
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
+  if (!isOwnedBy(list.userId)) {
+    dispatch(setMessage(PermissionError));
+    return;
+  }
   try {
     dispatch(accessStart());
-    const { taskListId, title } = props;
-    const boardId = getState().tasks.lists[taskListId].taskBoardId;
     const docRef = db
       .collection('boards')
       .doc(boardId)
@@ -435,14 +517,24 @@ export const removeList = (props: { taskListId: string }): AppThunk => async (
   dispatch,
   getState
 ) => {
+  const { taskListId } = props;
+  const list = getState().tasks.lists[taskListId];
+  const boardId = list.taskBoardId;
+  const listsRef = db.collection('boards').doc(boardId).collection('lists');
+  const cards = getState().tasks.cards;
+  const cardsRef = db.collection('boards').doc(boardId).collection('cards');
+
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
+  if (!isOwnedBy(list.userId)) {
+    dispatch(setMessage(PermissionError));
+    return;
+  }
   try {
-    const { taskListId } = props;
     dispatch(accessStart());
-    const boardId = getState().tasks.lists[taskListId].taskBoardId;
-    const listsRef = db.collection('boards').doc(boardId).collection('lists');
     await listsRef.doc(taskListId).delete();
-    const cards = getState().tasks.cards;
-    const cardsRef = db.collection('boards').doc(boardId).collection('cards');
     Object.values(cards).forEach(
       (card) => card.taskListId === taskListId && cardsRef.doc(card.id).delete()
     );
@@ -455,12 +547,18 @@ export const removeList = (props: { taskListId: string }): AppThunk => async (
 export const addBoard = (props: { title: string }): AppThunk => async (
   dispatch
 ) => {
+  const { title } = props;
+
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
   try {
     dispatch(accessStart());
-    const { title } = props;
     const docId = await db
       .collection('boards')
       .add({
+        userId: currentUser.uid,
         title: title,
         createdAt: firebase.firestore.Timestamp.now(),
         updatedAt: firebase.firestore.Timestamp.now(),
@@ -476,14 +574,24 @@ export const removeBoard = (props: { taskBoardId: string }): AppThunk => async (
   dispatch,
   getState
 ) => {
+  const { taskBoardId } = props;
+  const board = getState().tasks.boards[taskBoardId];
+  const docRef = db.collection('boards').doc(taskBoardId);
+  const listsRef = docRef.collection('lists');
+  const cardsRef = docRef.collection('cards');
+  const { lists, cards } = getState().tasks;
+
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
+  if (!isOwnedBy(board.userId)) {
+    dispatch(setMessage(PermissionError));
+    return;
+  }
   try {
-    const { taskBoardId } = props;
     dispatch(accessStart());
-    const docRef = db.collection('boards').doc(taskBoardId);
     await docRef.delete();
-    const listsRef = docRef.collection('lists');
-    const cardsRef = docRef.collection('cards');
-    const { lists, cards } = getState().tasks;
     Object.values(lists).forEach((list) => {
       if (list.taskBoardId === taskBoardId) {
         Object.values(cards).forEach(
@@ -502,11 +610,21 @@ export const removeBoard = (props: { taskBoardId: string }): AppThunk => async (
 export const editBoard = (props: {
   taskBoardId: string;
   title: string;
-}): AppThunk => async (dispatch) => {
+}): AppThunk => async (dispatch, getState) => {
+  const { taskBoardId, title } = props;
+  const board = getState().tasks.boards[taskBoardId];
+  const docRef = db.collection('boards').doc(taskBoardId);
+
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
+  if (!isOwnedBy(board.userId)) {
+    dispatch(setMessage(PermissionError));
+    return;
+  }
   try {
     dispatch(accessStart());
-    const { taskBoardId, title } = props;
-    const docRef = db.collection('boards').doc(taskBoardId);
     await docRef.update({
       title: title,
       updatedAt: firebase.firestore.Timestamp.now(),
