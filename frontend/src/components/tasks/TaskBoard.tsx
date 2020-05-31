@@ -53,6 +53,7 @@ const TaskBoard: React.FC = () => {
 
   const toggleTitleForm = () => {
     setIsEditingTitle(!isEditingTitle);
+    setEditingTitle(editingTitle || boards[boardId].title);
   };
 
   const handleClickAway = () => {
