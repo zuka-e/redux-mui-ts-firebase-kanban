@@ -14,6 +14,7 @@ import AssignmentIcon from '@material-ui/icons/Assignment';
 import SubjectIcon from '@material-ui/icons/Subject';
 
 import { ITaskCard } from '../../models/Task';
+import { isOwnedBy } from '../../models/Auth';
 import { useAppDispatch } from '../../store/store';
 import { toggleCard } from '../../store/tasksSlice';
 import CardForm from './CardForm';
@@ -68,6 +69,7 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
       <CardContent>
         <FormControlLabel // 'label'のある'checkbox'
           control={<Checkbox checked={card.done} onClick={handleClick} />}
+          disabled={!isOwnedBy(card.userId)}
           label={card.done ? 'Finished!' : 'Unfinished.'}
         />
       </CardContent>
@@ -75,7 +77,7 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
         <IconButton size='small' onClick={toggleTitleForm}>
           <AssignmentIcon />
         </IconButton>
-        {isEditingTitle ? ( // 編集かどうかで表示の分岐
+        {isEditingTitle && isOwnedBy(card.userId) ? ( // 編集かどうかで表示の分岐
           <CardForm // 状態を変化させるために必要な要素を渡す
             cardId={card.id}
             title
@@ -99,7 +101,7 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
         <IconButton size='small' onClick={toggleBodyForm}>
           <SubjectIcon />
         </IconButton>
-        {isEditingBody ? ( // 編集中かどうかで表示の分岐
+        {isEditingBody && isOwnedBy(card.userId) ? ( // 編集中かどうかで表示の分岐
           <CardForm
             cardId={card.id}
             body
@@ -119,9 +121,11 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
         )}
       </CardContent>
       <CardActions style={{ justifyContent: 'flex-end' }} disableSpacing>
-        <PopoverButton type='danger' buttonText='Delete'>
-          <DeleteButton card id={card.id} />
-        </PopoverButton>
+        {isOwnedBy(card.userId) && (
+          <PopoverButton type='danger' buttonText='Delete'>
+            <DeleteButton card id={card.id} />
+          </PopoverButton>
+        )}
       </CardActions>
     </Card>
   );

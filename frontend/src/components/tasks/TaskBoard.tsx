@@ -8,7 +8,7 @@ import { Grid, Card, LinearProgress, Typography, Box } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
 import { ITaskBoard, ITaskList } from '../../models/Task';
-import { isSignedIn } from '../../models/Auth';
+import { isSignedIn, isOwnedBy } from '../../models/Auth';
 import { RootState } from '../../store/rootReducer';
 import TaskList from './TaskList';
 import TitleForm from './TitleForm';
@@ -79,7 +79,7 @@ const TaskBoard: React.FC = () => {
     <Grid container>
       <Grid container justify='space-between' alignItems='center'>
         <Grid item sm={5} xs={9}>
-          {isEditingTitle ? (
+          {isEditingTitle && isOwnedBy(boards[boardId].userId) ? (
             <Box mx={1}>
               <TitleForm
                 method={'PATCH'}
@@ -104,11 +104,13 @@ const TaskBoard: React.FC = () => {
             </Typography>
           )}
         </Grid>
-        <Grid className={classes.flexEnd} item xs={2}>
-          <MenuButton variant={'outlined'} board id={boardId}>
-            menu
-          </MenuButton>
-        </Grid>
+        {isOwnedBy(boards[boardId].userId) && (
+          <Grid className={classes.flexEnd} item xs={2}>
+            <MenuButton variant={'outlined'} board id={boardId}>
+              menu
+            </MenuButton>
+          </Grid>
+        )}
       </Grid>
       {lists.map(
         (list) =>

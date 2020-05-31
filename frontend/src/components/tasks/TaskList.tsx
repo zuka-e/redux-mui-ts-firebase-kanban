@@ -10,7 +10,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { RootState } from '../../store/rootReducer';
 import { ITaskCard, ITaskList } from '../../models/Task';
-import { isSignedIn } from '../../models/Auth';
+import { isSignedIn, isOwnedBy } from '../../models/Auth';
 import TaskCard from './TaskCard';
 import AddTaskButton from './AddTaskButton';
 import SelectFilter from './SelectFilter';
@@ -88,7 +88,7 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
   }
   return (
     <React.Fragment>
-      {isEditingTitle ? (
+      {isEditingTitle && isOwnedBy(list.userId) ? (
         <TitleForm
           method={'PATCH'}
           list
@@ -111,7 +111,7 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
           >
             {list.title}
           </Typography>
-          <MenuButton list id={list.id} />
+          {isOwnedBy(list.userId) && <MenuButton list id={list.id} />}
         </Box>
       )}
 
@@ -131,6 +131,8 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
             </Box>
           )
       )}
+      {/* 'boards[list.boardId].userId'が'curretUser.uid'と異なっても'create'可 */}
+      {/* つまり他のユーザーの'board'に'list'及び'card'が作成可能 */}
       {isSignedIn() && <AddTaskButton card id={list.id} />}
     </React.Fragment>
   );
