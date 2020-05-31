@@ -4,7 +4,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import Box from '@material-ui/core/Box';
 
-import AccountMenu from './AcountMenu';
+import AccountMenu from './AccountMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,7 +54,7 @@ const OpenMenu: React.FC = (props) => {
           horizontal: 'center',
         }}
       >
-        {/* <AccountMenu handleClose={handleClose} /> */}
+        <AccountMenu handleClose={handleClose} />
       </Popover>
     </React.Fragment>
   );
