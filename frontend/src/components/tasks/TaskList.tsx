@@ -10,6 +10,7 @@ import LinearProgress from '@material-ui/core/LinearProgress';
 
 import { RootState } from '../../store/rootReducer';
 import { ITaskCard, ITaskList } from '../../models/Task';
+import { isSignedIn } from '../../models/Auth';
 import TaskCard from './TaskCard';
 import AddTaskButton from './AddTaskButton';
 import SelectFilter from './SelectFilter';
@@ -130,7 +131,7 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
             </Box>
           )
       )}
-      <AddTaskButton card id={list.id} />
+      {isSignedIn() && <AddTaskButton card id={list.id} />}
     </React.Fragment>
   );
 };

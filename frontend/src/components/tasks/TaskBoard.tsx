@@ -7,12 +7,13 @@ import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Card, LinearProgress, Typography, Box } from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
+import { ITaskBoard, ITaskList } from '../../models/Task';
+import { isSignedIn } from '../../models/Auth';
+import { RootState } from '../../store/rootReducer';
 import TaskList from './TaskList';
 import TitleForm from './TitleForm';
 import AddTaskButton from './AddTaskButton';
 import MenuButton from './MenuButton';
-import { RootState } from '../../store/rootReducer';
-import { ITaskBoard, ITaskList } from '../../models/Task';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -119,9 +120,11 @@ const TaskBoard: React.FC = () => {
             </Grid>
           )
       )}
-      <Grid item lg={2} md={3} sm={4} xs={6}>
-        <AddTaskButton list id={boardId} />
-      </Grid>
+      {isSignedIn() && (
+        <Grid item lg={2} md={3} sm={4} xs={6}>
+          <AddTaskButton list id={boardId} />
+        </Grid>
+      )}
     </Grid>
   );
 };

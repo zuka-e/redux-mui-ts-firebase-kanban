@@ -6,9 +6,10 @@ import { Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Card, Typography, LinearProgress } from '@material-ui/core';
 
+import { ITaskBoard } from '../models/Task';
+import { isSignedIn } from '../models/Auth';
 import { RootState } from '../store/rootReducer';
 import AddTaskButton from './tasks/AddTaskButton';
-import { ITaskBoard } from '../models/Task';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -54,9 +55,11 @@ const Home: React.FC = () => {
           </Grid>
         );
       })}
-      <Grid item lg={3} sm={4} xs={6}>
-        <AddTaskButton board />
-      </Grid>
+      {isSignedIn() && (
+        <Grid item lg={3} sm={4} xs={6}>
+          <AddTaskButton board />
+        </Grid>
+      )}
     </Grid>
   );
 };

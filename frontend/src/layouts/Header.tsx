@@ -15,7 +15,7 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PersonIcon from '@material-ui/icons/Person';
 import MenuIcon from '@material-ui/icons/Menu';
 
-import firebase from '../config/firebase';
+import { isSignedIn } from '../models/Auth';
 import { RootState } from '../store/rootReducer';
 import OpenMenu from '../components/auth/OpenMenu';
 
@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const Header: React.FC = () => {
   const classes = useStyles();
+  // 'firebase.auth().currenUser'取得のために'useSelector'が必要の模様
   const currentUser = useSelector((state: RootState) => state.firebase.auth);
 
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -73,10 +74,10 @@ const Header: React.FC = () => {
       <Button size='small' className={classes.circleButton}>
         <Avatar
           alt='avatar'
-          src={currentUser?.photoURL || undefined}
+          src={currentUser.photoURL || undefined}
           className={classes.pink}
         >
-          {currentUser?.photoURL || <PersonIcon />}
+          {currentUser.photoURL || <PersonIcon />}
         </Avatar>
       </Button>
     </OpenMenu>
@@ -113,9 +114,7 @@ const Header: React.FC = () => {
               Title
             </Link>
           </Typography>
-          {firebase.auth().currentUser
-            ? renderAccountIcon()
-            : renderSignInLink()}
+          {isSignedIn() ? renderAccountIcon() : renderSignInLink()}
         </Toolbar>
       </AppBar>
     </div>
