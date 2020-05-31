@@ -42,11 +42,11 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
   const [editingBody, setEditingBody] = useState(card.body);
   const dispatch = useAppDispatch();
 
-  // 'TaskCard.done'の切り替え
-  const handleCheck = () => {
+  // 'onChange'では'state'変更不可時にも操作できてしまう
+  const handleClick = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+    e.preventDefault();
     dispatch(toggleCard({ taskCardId: card.id }));
   };
-
   // 'title'用フォームの表示切り替え
   const toggleTitleForm = () => {
     setIsEditingTitle(!isEditingTitle);
@@ -67,7 +67,7 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
     <Card>
       <CardContent>
         <FormControlLabel // 'label'のある'checkbox'
-          control={<Checkbox checked={card.done} onChange={handleCheck} />}
+          control={<Checkbox checked={card.done} onClick={handleClick} />}
           label={card.done ? 'Finished!' : 'Unfinished.'}
         />
       </CardContent>
@@ -78,7 +78,7 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
         {isEditingTitle ? ( // 編集かどうかで表示の分岐
           <CardForm // 状態を変化させるために必要な要素を渡す
             cardId={card.id}
-            title={card.title}
+            title
             editingTitle={editingTitle}
             setEditingTitle={setEditingTitle}
             toggleForm={toggleTitleForm}
@@ -102,7 +102,7 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
         {isEditingBody ? ( // 編集中かどうかで表示の分岐
           <CardForm
             cardId={card.id}
-            body={card.body}
+            body
             editingBody={editingBody}
             setEditingBody={setEditingBody}
             toggleForm={toggleBodyForm}

@@ -17,8 +17,8 @@ import { editCard } from '../../store/tasksSlice';
 type FormProps = {
   // 任意属性を利用して、複数のフォームに対応させる
   cardId: ITaskCard['id']['id'];
-  title?: ITaskCard['id']['title'];
-  body?: ITaskCard['id']['body'];
+  title?: boolean;
+  body?: boolean;
   editingTitle?: string;
   setEditingTitle?: React.Dispatch<React.SetStateAction<string>>;
   editingBody?: string;
@@ -71,8 +71,8 @@ const CardForm: React.FC<FormProps> = (props) => {
         <TextField
           autoFocus
           fullWidth
-          multiline={Boolean(body)}
-          rows={body && 3}
+          multiline={!!body}
+          rows={body ? 3 : undefined}
           variant='outlined'
           helperText={title && '2-20 characters'}
           value={title ? editingTitle : editingBody}
