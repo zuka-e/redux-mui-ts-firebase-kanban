@@ -10,7 +10,7 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 
-import { ITaskCard } from '../Types';
+import { ITaskCard } from '../../models/Task';
 import { useAppDispatch } from '../../store/store';
 import { editCard } from '../../store/tasksSlice';
 

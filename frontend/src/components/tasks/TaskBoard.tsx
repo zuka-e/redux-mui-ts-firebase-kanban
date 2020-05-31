@@ -12,7 +12,7 @@ import TitleForm from './TitleForm';
 import AddTaskButton from './AddTaskButton';
 import MenuButton from './MenuButton';
 import { RootState } from '../../store/rootReducer';
-import { ITaskBoard, ITaskList } from '../Types';
+import { ITaskBoard, ITaskList } from '../../models/Task';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

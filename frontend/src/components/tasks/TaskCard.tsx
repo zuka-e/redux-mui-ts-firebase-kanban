@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import Typography from '@material-ui/core/Typography';
 
-import { ITaskCard } from '../Types';
+import { ITaskCard } from '../../models/Task';
 import OpenCardDetails from './OpenCardDetails';
 
 const TaskCard: React.FC<ITaskCard> = ({ card }) => {

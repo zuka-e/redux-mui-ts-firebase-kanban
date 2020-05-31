@@ -13,7 +13,7 @@ import {
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import SubjectIcon from '@material-ui/icons/Subject';
 
-import { ITaskCard } from '../Types';
+import { ITaskCard } from '../../models/Task';
 import { useAppDispatch } from '../../store/store';
 import { toggleCard } from '../../store/tasksSlice';
 import CardForm from './CardForm';

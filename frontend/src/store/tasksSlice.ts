@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-import { ITaskCard, ITaskList, ITaskBoard } from '../components/Types';
+import { ITaskCard, ITaskList, ITaskBoard } from '../models/Task';
 import { User } from 'firebase';
 import firebase from '../config/firebase';
 import { db } from '../config/firebase';
