@@ -7,10 +7,10 @@ import Home from '../components/Home';
 import TaskBoard from '../components/tasks/TaskBoard';
 import { useAppDispatch } from '../store/store';
 import { fetchData } from '../store/tasksSlice';
-import Error404 from '../pages/Error404';
+import NotFound404 from '../pages/NotFound404';
 import Login from '../pages/Login';
 
-const Content: React.FC = () => {
+const Routes: React.FC = () => {
   const dispatch = useAppDispatch();
 
   // 初回アクセス時、データ取得
@@ -51,10 +51,10 @@ const Content: React.FC = () => {
         <Login />
       </Route>
       <Route path='/'>
-        <Error404 />
+        <NotFound404 />
       </Route>
     </Switch>
   );
 };
 
-export default Content;
+export default Routes;

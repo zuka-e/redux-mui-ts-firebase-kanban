@@ -2,7 +2,7 @@ import React from 'react';
 import { useHistory } from 'react-router-dom';
 import { Container, Typography, Button } from '@material-ui/core';
 
-const Error404 = () => {
+const NotFound404 = () => {
   const history = useHistory();
 
   return (
@@ -22,4 +22,4 @@ const Error404 = () => {
   );
 };
 
-export default Error404;
+export default NotFound404;

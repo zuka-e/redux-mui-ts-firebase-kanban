@@ -9,7 +9,7 @@ import { RootState } from '../store/rootReducer';
 import { ThemeContext } from '../layouts/ThemeProvider';
 import Header from '../layouts/Header';
 import TemporaryMessage from '../layouts/TemporaryMessage';
-import Content from '../layouts/Content';
+import Routes from '../layouts/Routes';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -52,7 +52,7 @@ const App: React.FC = () => {
           {message && (
             <TemporaryMessage type={message.type} text={message.text} />
           )}
-          <Content />
+          <Routes />
         </Container>
       </ThemeProvider>
     </Router>
