@@ -13,7 +13,7 @@ import { ITaskCard, ITaskList } from '../../models/Task';
 import { isSignedIn, isOwnedBy } from '../../models/Auth';
 import TaskCard from './TaskCard';
 import AddTaskButton from './AddTaskButton';
-import SelectFilter from './SelectFilter';
+import LabeledSelect from '../templates/LabeledSelect';
 import TitleForm from './TitleForm';
 import MenuButton from './MenuButton';
 
@@ -115,7 +115,12 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
         </Box>
       )}
 
-      <SelectFilter filterQuery={filterQuery} handleChange={handleChange} />
+      <LabeledSelect
+        label='Filter'
+        options={TodoFilter}
+        selectedValue={filterQuery}
+        handleChange={handleChange}
+      />
       {filterCards().map(
         (card) =>
           card.taskListId === list.id && (

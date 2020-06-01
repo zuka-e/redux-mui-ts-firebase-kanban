@@ -5,8 +5,6 @@ import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
 
-import { TodoFilter } from './TaskList';
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     formControl: {
@@ -16,27 +14,31 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface FilterProps {
-  filterQuery: string;
+interface LabeledSelectProps {
+  label: string;
+  options: object;
+  selectedValue: string;
   handleChange: (e: React.ChangeEvent<{ value: unknown }>) => void;
 }
-const SelectFilter: React.FC<FilterProps> = (props) => {
-  const { filterQuery, handleChange } = props;
+const LabeledSelect: React.FC<LabeledSelectProps> = (props) => {
+  const { label, options, selectedValue, handleChange } = props;
   const classes = useStyles();
+
+  const htmlId = 'filter';
 
   return (
     <FormControl className={classes.formControl}>
-      <InputLabel id='card-filter'>Filter</InputLabel>
+      <InputLabel id={htmlId}>{label}</InputLabel>
       <Select
-        labelId='card-filter' // 'label'のid名と揃える
+        labelId={htmlId}
         id='filter-select'
-        value={filterQuery} // 非選択時表示文字
+        value={selectedValue} // 非選択時表示文字
         onChange={handleChange}
       >
-        {Object.values(TodoFilter).map((value) => (
+        {Object.values(options).map((option, index) => (
           // value属性の値をイベントで捕捉
-          <MenuItem key={value} value={value}>
-            {value}
+          <MenuItem key={index} value={option}>
+            {option}
           </MenuItem>
         ))}
       </Select>
@@ -44,4 +46,4 @@ const SelectFilter: React.FC<FilterProps> = (props) => {
   );
 };
 
-export default SelectFilter;
+export default LabeledSelect;

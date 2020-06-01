@@ -18,7 +18,7 @@ import { isOwnedBy } from '../../models/Auth';
 import { useAppDispatch } from '../../store/store';
 import { toggleCard } from '../../store/tasksSlice';
 import CardForm from './CardForm';
-import PopoverButton from './PopoverButton';
+import PopoverButton from '../templates/PopoverButton';
 import DeleteButton from './DeleteButton';
 
 const useStyles = makeStyles((theme: Theme) =>
