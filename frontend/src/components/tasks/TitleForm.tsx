@@ -128,7 +128,6 @@ const TitleForm: React.FC<FormProps> = (props) => {
         dispatch(editBoard({ taskBoardId: id, title: data.title }));
       }
     }
-    setEditingTitle('');
     toggleForm();
   };
 
