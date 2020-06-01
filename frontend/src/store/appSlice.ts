@@ -69,12 +69,20 @@ export default appSlice;
 export const signOut = (): AppThunk => async (dispatch) => {
   try {
     dispatch(tryingToSignOut());
-    firebase.auth().currentUser && (await firebase.auth().signOut());
-    const message = {
-      type: 'success',
-      text: 'Successfully signed out',
-    } as Message;
-    dispatch(signOutSuccess(message));
+    if (firebase.auth().currentUser) {
+      const message = {
+        type: 'success',
+        text: 'Successfully signed out',
+      } as Message;
+      await firebase.auth().signOut();
+      dispatch(signOutSuccess(message));
+    } else {
+      const message = {
+        type: 'info',
+        text: 'Already signed out',
+      } as Message;
+      dispatch(setMessage(message));
+    }
   } catch (error) {
     dispatch(signOutFailure(error));
   }

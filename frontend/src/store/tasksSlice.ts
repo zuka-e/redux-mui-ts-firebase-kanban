@@ -66,6 +66,7 @@ const tasksSlice = createSlice({
         title: string;
       }>
     ) {
+      if (!!!currentUser) return;
       const { taskListId, id, title } = action.payload;
       const newCard = {
         // 'currentUser'がいない('undefined'になる)場合、'addCard()'側でブロックする
@@ -119,6 +120,7 @@ const tasksSlice = createSlice({
       state,
       action: PayloadAction<{ taskBoardId: string; id: string; title: string }>
     ) => {
+      if (!!!currentUser) return;
       const { taskBoardId, id, title } = action.payload;
       const newList = {
         userId: currentUser.uid,
@@ -164,6 +166,7 @@ const tasksSlice = createSlice({
       state,
       action: PayloadAction<{ id: string; title: string }>
     ) => {
+      if (!!!currentUser) return;
       const { id, title } = action.payload;
       const newBoard = {
         userId: currentUser.uid,
@@ -299,7 +302,7 @@ export const addCard = (props: {
     dispatch(accessStart());
     const docId = await cardsRef
       .add({
-        userId: currentUser.uid,
+        userId: currentUser?.uid,
         taskListId: taskListId,
         title: title,
         body: '',
@@ -445,7 +448,7 @@ export const addList = (props: {
       .collection('lists');
     const docId = await listsRef
       .add({
-        userId: currentUser.uid,
+        userId: currentUser?.uid,
         taskBoardId: taskBoardId,
         title: title,
         createdAt: firebase.firestore.Timestamp.now(),
@@ -538,7 +541,7 @@ export const addBoard = (props: { title: string }): AppThunk => async (
     const docId = await db
       .collection('boards')
       .add({
-        userId: currentUser.uid,
+        userId: currentUser?.uid,
         title: title,
         createdAt: firebase.firestore.Timestamp.now(),
         updatedAt: firebase.firestore.Timestamp.now(),
