@@ -6,10 +6,10 @@ import { Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Card, Typography, LinearProgress } from '@material-ui/core';
 
-import { ITaskBoard } from '../models/Task';
-import { isSignedIn } from '../models/Auth';
-import { RootState } from '../store/rootReducer';
-import AddTaskButton from './tasks/AddTaskButton';
+import { ITaskBoard } from '../../models/Task';
+import { isSignedIn } from '../../models/Auth';
+import { RootState } from '../../store/rootReducer';
+import AddTaskButton from './AddTaskButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

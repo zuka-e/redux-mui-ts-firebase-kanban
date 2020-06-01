@@ -3,7 +3,7 @@ import React, { useEffect } from 'react';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { Grid, Card, CardHeader } from '@material-ui/core';
 
-import ui, { uiConfig } from '../config/firebaseui';
+import ui, { uiConfig } from '../../config/firebaseui';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

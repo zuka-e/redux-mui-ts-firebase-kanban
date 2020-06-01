@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import { ReactReduxFirebaseProvider } from 'react-redux-firebase';
 
 import * as serviceWorker from './serviceWorker';
-import App from './components/App';
+import App from './layouts/App';
 import store, { rrfProps } from './store/store';
 import ThemeProvider from './layouts/ThemeProvider';
 import './index.css';

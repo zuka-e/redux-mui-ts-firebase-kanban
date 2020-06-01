@@ -6,10 +6,10 @@ import { ThemeProvider, CssBaseline, Container } from '@material-ui/core';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 
 import { RootState } from '../store/rootReducer';
-import { ThemeContext } from '../layouts/ThemeProvider';
-import Header from '../layouts/Header';
-import TemporaryMessage from '../layouts/TemporaryMessage';
-import Routes from '../layouts/Routes';
+import { ThemeContext } from './ThemeProvider';
+import Header from './Header';
+import TemporaryMessage from './TemporaryMessage';
+import Routes from './Routes';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

@@ -3,12 +3,12 @@ import React, { useEffect } from 'react';
 import { Switch, Route } from 'react-router-dom';
 import { useFirestoreConnect } from 'react-redux-firebase';
 
-import Home from '../components/Home';
+import Home from '../components/tasks/Home';
 import TaskBoard from '../components/tasks/TaskBoard';
 import { useAppDispatch } from '../store/store';
 import { fetchData } from '../store/tasksSlice';
-import NotFound404 from '../pages/NotFound404';
-import Login from '../pages/Login';
+import NotFound404 from '../components/pages/NotFound404';
+import Login from '../components/pages/Login';
 
 const Routes: React.FC = () => {
   const dispatch = useAppDispatch();
