@@ -4,7 +4,15 @@ import { useSelector } from 'react-redux';
 import { isLoaded } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Card, Typography, LinearProgress } from '@material-ui/core';
+import {
+  Grid,
+  Card,
+  Typography,
+  LinearProgress,
+  CardActions,
+} from '@material-ui/core';
+import UpdateIcon from '@material-ui/icons/Update';
+import moment from 'moment';
 
 import { ITaskBoard } from '../../models/Task';
 import { isSignedIn } from '../../models/Auth';
@@ -21,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) =>
     link: {
       color: 'inherit',
       textDecoration: 'none',
+    },
+    flexEnd: {
+      justifyContent: 'flex-end',
     },
   })
 );
@@ -50,6 +61,10 @@ const Home: React.FC = () => {
                 >
                   {board.title}
                 </Typography>
+                <CardActions className={classes.flexEnd}>
+                  <UpdateIcon style={{ margin: 'auto 3px' }} />
+                  {moment(board.updatedAt.toDate().toString()).calendar()}
+                </CardActions>
               </Card>
             </Link>
           </Grid>
