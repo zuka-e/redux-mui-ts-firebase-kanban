@@ -19,6 +19,11 @@ export const PermissionError: Message = {
   text: "You don't have permission",
 };
 
+export const SuccessfullyDeleted: Message = {
+  type: 'info',
+  text: 'Successfully deleted',
+};
+
 interface AppState {
   message: Message | null;
   loading: boolean;

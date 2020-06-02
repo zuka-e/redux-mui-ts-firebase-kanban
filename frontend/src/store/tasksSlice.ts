@@ -12,7 +12,12 @@ import { currentUser, isSignedIn, isOwnedBy } from '../models/Auth';
 import firebase from '../config/firebase';
 import { db } from '../config/firebase';
 import { AppThunk } from './store';
-import { setMessage, NotSignedInWarning, PermissionError } from './appSlice';
+import {
+  setMessage,
+  NotSignedInWarning,
+  PermissionError,
+  SuccessfullyDeleted,
+} from './appSlice';
 
 interface TasksState {
   cards: ITaskCard;
@@ -345,6 +350,7 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
       .doc(taskCardId);
     await docRef.delete();
     dispatch(removeCardSuccess({ taskCardId: taskCardId }));
+    dispatch(setMessage(SuccessfullyDeleted));
   } catch (error) {
     dispatch(accessFailure(error));
   }
@@ -522,6 +528,7 @@ export const removeList = (props: { taskListId: string }): AppThunk => async (
       (card) => card.taskListId === taskListId && cardsRef.doc(card.id).delete()
     );
     dispatch(removeListSuccess({ taskListId: taskListId }));
+    dispatch(setMessage(SuccessfullyDeleted));
   } catch (error) {
     dispatch(accessFailure(error));
   }
@@ -585,6 +592,7 @@ export const removeBoard = (props: { taskBoardId: string }): AppThunk => async (
       }
     });
     dispatch(removeBoardSuccess({ taskBoardId: taskBoardId }));
+    dispatch(setMessage(SuccessfullyDeleted));
   } catch (error) {
     dispatch(accessFailure(error));
   }
