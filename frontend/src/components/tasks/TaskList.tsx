@@ -7,6 +7,8 @@ import Box from '@material-ui/core/Box';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { RootState } from '../../store/rootReducer';
 import { ITaskCard, ITaskList } from '../../models/Task';
@@ -15,7 +17,8 @@ import TaskCard from './TaskCard';
 import AddTaskButton from './AddTaskButton';
 import LabeledSelect from '../templates/LabeledSelect';
 import TitleForm from './TitleForm';
-import MenuButton from './MenuButton';
+import PopoverContent from '../templates/PopoverContent';
+import ListMenu from './ListMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -111,7 +114,17 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
           >
             {list.title}
           </Typography>
-          {isOwnedBy(list.userId) && <MenuButton list id={list.id} />}
+          {isOwnedBy(list.userId) && (
+            <PopoverContent
+              trigger={
+                <IconButton size='small'>
+                  <MoreVertIcon />
+                </IconButton>
+              }
+            >
+              <ListMenu listId={list.id} />
+            </PopoverContent>
+          )}
         </Box>
       )}
 

@@ -9,6 +9,8 @@ import {
   FormControlLabel,
   Typography,
   IconButton,
+  Button,
+  Box,
 } from '@material-ui/core';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import SubjectIcon from '@material-ui/icons/Subject';
@@ -18,7 +20,7 @@ import { isOwnedBy } from '../../models/Auth';
 import { useAppDispatch } from '../../store/store';
 import { toggleCard } from '../../store/tasksSlice';
 import CardForm from './CardForm';
-import PopoverButton from '../templates/PopoverButton';
+import PopoverContent from '../templates/PopoverContent';
 import DeleteButton from './DeleteButton';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -30,6 +32,15 @@ const useStyles = makeStyles((theme: Theme) =>
     text: {
       whiteSpace: 'pre-wrap', // 入力されたスペースをそのまま表示
       cursor: 'pointer', // 指型ポインター
+    },
+    danger: {
+      color: theme.palette.error.dark,
+      backgroundColor: '#fafbfc',
+      border: `1px solid ${theme.palette.error.dark}`,
+      '&:hover': {
+        color: '#fff',
+        backgroundColor: theme.palette.error.dark,
+      },
     },
   })
 );
@@ -122,9 +133,17 @@ const CardDetails: React.FC<ITaskCard> = ({ card }) => {
       </CardContent>
       <CardActions style={{ justifyContent: 'flex-end' }} disableSpacing>
         {isOwnedBy(card.userId) && (
-          <PopoverButton type='danger' buttonText='Delete'>
-            <DeleteButton card id={card.id} />
-          </PopoverButton>
+          <PopoverContent
+            trigger={
+              <Button className={classes.danger} variant='outlined'>
+                Delete
+              </Button>
+            }
+          >
+            <Box my={0.5} mx={1}>
+              <DeleteButton card id={card.id} />
+            </Box>
+          </PopoverContent>
         )}
       </CardActions>
     </Card>

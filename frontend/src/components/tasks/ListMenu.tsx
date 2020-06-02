@@ -8,7 +8,6 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
-import CloseIcon from '@material-ui/icons/Close';
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 
 import DeleteButton from './DeleteButton';
@@ -29,13 +28,8 @@ const Item = {
 
 type Item = typeof Item[keyof typeof Item];
 
-interface ListMenuProps {
-  listId: string;
-  handleClose: () => void;
-}
-
-const ListMenu: React.FC<ListMenuProps> = (props) => {
-  const { listId, handleClose } = props;
+const ListMenu: React.FC<{ listId: string }> = (props) => {
+  const { listId } = props;
   const classes = useStyles();
   const [selectedItem, setSelectedItem] = useState<Item>(Item.HOME);
 
@@ -70,9 +64,7 @@ const ListMenu: React.FC<ListMenuProps> = (props) => {
             </IconButton>
           )}
           List Menu
-          <IconButton size='small' onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
+          <div style={{ height: '30px', width: '30px' }} />
         </ListSubheader>
       }
     >

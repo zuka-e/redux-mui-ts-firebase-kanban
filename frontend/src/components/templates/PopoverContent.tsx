@@ -4,8 +4,6 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
 import Box from '@material-ui/core/Box';
 
-import AccountMenu from './AccountMenu';
-
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     popover: {
@@ -17,7 +15,8 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const OpenMenu: React.FC = (props) => {
+const PopoverContent: React.FC<{ trigger: any }> = (props) => {
+  const { trigger } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
     null
@@ -32,12 +31,12 @@ const OpenMenu: React.FC = (props) => {
   };
 
   const open = Boolean(anchorEl);
-  const htmlId = open ? 'list-menu' : undefined;
+  const htmlId = open ? 'menu' : undefined;
 
   return (
     <React.Fragment>
       <Box aria-describedby={htmlId} onClick={handleClick} aria-label='menu'>
-        {props.children}
+        {trigger}
       </Box>
       <Popover
         className={classes.popover}
@@ -54,10 +53,10 @@ const OpenMenu: React.FC = (props) => {
           horizontal: 'center',
         }}
       >
-        <AccountMenu handleClose={handleClose} />
+        {props.children}
       </Popover>
     </React.Fragment>
   );
 };
 
-export default OpenMenu;
+export default PopoverContent;

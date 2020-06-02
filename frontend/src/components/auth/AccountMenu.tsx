@@ -15,7 +15,6 @@ import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
-import CloseIcon from '@material-ui/icons/Close';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
 
@@ -43,8 +42,7 @@ const Item = {
 
 type Item = typeof Item[keyof typeof Item];
 
-const AccountMenu: React.FC<{ handleClose: () => void }> = (props) => {
-  const { handleClose } = props;
+const AccountMenu: React.FC = (props) => {
   const classes = useStyles();
   const [selectedItem, setSelectedItem] = useState<Item>(Item.HOME);
   const [isSignedIn, setIsSignedIn] = useState(true);
@@ -90,9 +88,8 @@ const AccountMenu: React.FC<{ handleClose: () => void }> = (props) => {
             </IconButton>
           )}
           {selectedItem}
-          <IconButton size='small' onClick={handleClose}>
-            <CloseIcon />
-          </IconButton>
+          {/* 位置調整 'IconButton'のサイズ */}
+          <div style={{ height: '30px', width: '30px' }} />
         </ListSubheader>
       }
     >

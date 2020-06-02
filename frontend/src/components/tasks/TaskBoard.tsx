@@ -4,7 +4,14 @@ import { useSelector } from 'react-redux';
 import { isLoaded, isEmpty } from 'react-redux-firebase';
 import { useParams, Link, Redirect } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
-import { Grid, Card, LinearProgress, Typography, Box } from '@material-ui/core';
+import {
+  Grid,
+  Card,
+  LinearProgress,
+  Typography,
+  Box,
+  Button,
+} from '@material-ui/core';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
 import { ITaskBoard, ITaskList } from '../../models/Task';
@@ -13,7 +20,8 @@ import { RootState } from '../../store/rootReducer';
 import TaskList from './TaskList';
 import TitleForm from './TitleForm';
 import AddTaskButton from './AddTaskButton';
-import MenuButton from './MenuButton';
+import PopoverContent from '../templates/PopoverContent';
+import BoardMenu from './BoardMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -106,9 +114,9 @@ const TaskBoard: React.FC = () => {
         </Grid>
         {isOwnedBy(boards[boardId].userId) && (
           <Grid className={classes.flexEnd} item xs={2}>
-            <MenuButton variant={'outlined'} board id={boardId}>
-              menu
-            </MenuButton>
+            <PopoverContent trigger={<Button variant='outlined'>menu</Button>}>
+              <BoardMenu boardId={boardId} />
+            </PopoverContent>
           </Grid>
         )}
       </Grid>

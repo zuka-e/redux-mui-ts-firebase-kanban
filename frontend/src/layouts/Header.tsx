@@ -17,7 +17,8 @@ import MenuIcon from '@material-ui/icons/Menu';
 
 import { isSignedIn } from '../models/Auth';
 import { RootState } from '../store/rootReducer';
-import OpenMenu from '../components/auth/OpenMenu';
+import PopoverContent from '../components/templates/PopoverContent';
+import AccountMenu from '../components/auth/AccountMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -70,17 +71,23 @@ const Header: React.FC = () => {
   );
 
   const renderAccountIcon = () => (
-    <OpenMenu>
-      <Button size='small' className={classes.circleButton}>
-        <Avatar
-          alt='avatar'
-          src={currentUser.photoURL || undefined}
-          className={classes.pink}
-        >
-          {currentUser.photoURL || <PersonIcon />}
-        </Avatar>
-      </Button>
-    </OpenMenu>
+    <PopoverContent
+      trigger={
+        (
+          <Button size='small' className={classes.circleButton}>
+            <Avatar
+              alt='avatar'
+              src={currentUser.photoURL || undefined}
+              className={classes.pink}
+            >
+              {currentUser.photoURL || <PersonIcon />}
+            </Avatar>
+          </Button>
+        ) as object
+      }
+    >
+      <AccountMenu />
+    </PopoverContent>
   );
 
   return (
