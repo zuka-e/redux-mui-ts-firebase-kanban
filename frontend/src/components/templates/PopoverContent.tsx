@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Popover from '@material-ui/core/Popover';
@@ -15,12 +15,65 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const PopoverContent: React.FC<{ trigger: any }> = (props) => {
-  const { trigger } = props;
+interface PopoverOrigin {
+  vertical: 'top' | 'center' | 'bottom' | number;
+  horizontal: 'left' | 'center' | 'right' | number;
+}
+
+type PopoverPosition = 'top' | 'right' | 'bottom' | 'left';
+
+const PopoverContent: React.FC<{ trigger: any; position?: PopoverPosition }> = (
+  props
+) => {
+  const { trigger, position } = props;
   const classes = useStyles();
-  const [anchorEl, setAnchorEl] = React.useState<HTMLButtonElement | null>(
-    null
-  );
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
+
+  let anchorOrigin: PopoverOrigin;
+  let transformOrigin: PopoverOrigin;
+
+  switch (position) {
+    case 'top':
+      anchorOrigin = {
+        vertical: 'top',
+        horizontal: 'center',
+      };
+      transformOrigin = {
+        vertical: 'bottom',
+        horizontal: 'center',
+      };
+      break;
+    case 'right':
+      anchorOrigin = {
+        vertical: 'top',
+        horizontal: 'right',
+      };
+      transformOrigin = {
+        vertical: 'top',
+        horizontal: 'left',
+      };
+      break;
+    case 'bottom':
+      anchorOrigin = {
+        vertical: 'top',
+        horizontal: 'right',
+      };
+      transformOrigin = {
+        vertical: 'top',
+        horizontal: 'left',
+      };
+      break;
+    default:
+      anchorOrigin = {
+        vertical: 'bottom',
+        horizontal: 'center',
+      };
+      transformOrigin = {
+        vertical: 'top',
+        horizontal: 'center',
+      };
+      break;
+  }
 
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
     setAnchorEl(event.currentTarget);
@@ -44,14 +97,8 @@ const PopoverContent: React.FC<{ trigger: any }> = (props) => {
         open={open}
         anchorEl={anchorEl}
         onClose={handleClose}
-        anchorOrigin={{
-          vertical: 'bottom',
-          horizontal: 'center',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'center',
-        }}
+        anchorOrigin={anchorOrigin}
+        transformOrigin={transformOrigin}
       >
         {props.children}
       </Popover>
