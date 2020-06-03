@@ -30,8 +30,13 @@ const useStyles = makeStyles((theme: Theme) =>
       color: 'inherit',
       textDecoration: 'none',
     },
-    flexEnd: {
+    cmtime: {
+      display: 'flex',
       justifyContent: 'flex-end',
+      color: theme.palette.text.hint,
+      [theme.breakpoints.down('xs')]: {
+        padding: 0,
+      },
     },
   })
 );
@@ -61,9 +66,9 @@ const Home: React.FC = () => {
                 >
                   {board.title}
                 </Typography>
-                <CardActions className={classes.flexEnd}>
+                <CardActions className={classes.cmtime}>
                   <UpdateIcon style={{ margin: 'auto 3px' }} />
-                  {moment(board.updatedAt.toDate().toString()).calendar()}
+                  {moment(board.updatedAt.toDate()).calendar()}
                 </CardActions>
               </Card>
             </Link>
