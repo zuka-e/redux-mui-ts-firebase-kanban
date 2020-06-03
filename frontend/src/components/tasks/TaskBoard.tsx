@@ -11,7 +11,11 @@ import {
   Typography,
   Box,
   Button,
+  Hidden,
+  Tooltip,
 } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
+import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { Alert, AlertTitle } from '@material-ui/lab';
 
 import { ITaskBoard, ITaskList } from '../../models/Task';
@@ -33,12 +37,17 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       width: 'fit-content',
       padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
-      margin: `0 ${theme.spacing(1)}px`,
       borderRadius: theme.spacing(1),
       cursor: 'pointer',
       '&:hover': {
         backgroundColor: 'rgb(0,0,0,0.05)',
       },
+    },
+    flexAuto: {
+      display: 'flex',
+      flex: 'auto',
+      margin: `auto ${theme.spacing(1)}px`,
+      overflow: 'overlay',
     },
     flexEnd: {
       display: 'flex',
@@ -69,6 +78,22 @@ const TaskBoard: React.FC = () => {
     setIsEditingTitle(false);
   };
 
+  const ResponsiveMenuButton = () => (
+    // 画面サイズによって何れかを表示する
+    <React.Fragment>
+      <Hidden smDown>
+        <Button variant='outlined'>Menu</Button>
+      </Hidden>
+      <Hidden mdUp xsDown>
+        <Tooltip title='Menu' placement='bottom'>
+          <IconButton>
+            <MoreVertIcon />
+          </IconButton>
+        </Tooltip>
+      </Hidden>
+    </React.Fragment>
+  );
+
   if (!isLoaded(lists) || !isLoaded(boards)) {
     return <LinearProgress variant='query' color='secondary' />;
   }
@@ -85,10 +110,10 @@ const TaskBoard: React.FC = () => {
   }
   return (
     <Grid container>
-      <Grid container justify='space-between' alignItems='center'>
-        <Grid item sm={5} xs={9}>
+      <Grid container justify='space-between'>
+        <Grid item className={classes.flexAuto}>
           {isEditingTitle && isOwnedBy(boards[boardId].userId) ? (
-            <Box mx={1}>
+            <Box mt={1}>
               <TitleForm
                 method={'PATCH'}
                 board
@@ -113,8 +138,8 @@ const TaskBoard: React.FC = () => {
           )}
         </Grid>
         {isOwnedBy(boards[boardId].userId) && (
-          <Grid className={classes.flexEnd} item xs={2}>
-            <PopoverContent trigger={<Button variant='outlined'>menu</Button>}>
+          <Grid item className={classes.flexEnd} style={{ marginTop: '4px' }}>
+            <PopoverContent trigger={<ResponsiveMenuButton />}>
               <BoardMenu boardId={boardId} />
             </PopoverContent>
           </Grid>

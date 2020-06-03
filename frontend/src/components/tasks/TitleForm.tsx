@@ -139,7 +139,6 @@ const TitleForm: React.FC<FormProps> = (props) => {
     >
       <Box
         className={method === 'POST' && !card ? classes.formPaper : undefined}
-        my={1}
         boxShadow={method === 'POST' && !card ? 1 : undefined}
         component='form'
         onSubmit={handleSubmit(onSubmit)}
