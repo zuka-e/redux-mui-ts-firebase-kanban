@@ -1,22 +1,32 @@
 import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
+import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import KeyboardArrowLeftIcon from '@material-ui/icons/KeyboardArrowLeft';
 import MenuOpenIcon from '@material-ui/icons/MenuOpen';
+import DeleteIcon from '@material-ui/icons/Delete';
 
 import DeleteButton from './DeleteButton';
-import { Box } from '@material-ui/core';
 
 const useStyles = makeStyles({
   header: {
     display: 'flex',
     justifyContent: 'space-between',
+  },
+  flexIcon: {
+    margin: 'auto 0',
+  },
+  listItemIcons: {
+    '& > * > .MuiListItemIcon-root': {
+      minWidth: '35px',
+    },
   },
 });
 
@@ -59,7 +69,11 @@ const BoardMenu: React.FC<{ boardId: string }> = (props) => {
               <MenuOpenIcon />
             </IconButton>
           ) : (
-            <IconButton size='small' onClick={handleBack}>
+            <IconButton
+              className={classes.flexIcon}
+              size='small'
+              onClick={handleBack}
+            >
               <KeyboardArrowLeftIcon />
             </IconButton>
           )}
@@ -78,8 +92,11 @@ const BoardMenu: React.FC<{ boardId: string }> = (props) => {
           />
         </Box>
       ) : (
-        <List disablePadding dense>
+        <List className={classes.listItemIcons} disablePadding>
           <ListItem button onClick={() => handleClick(Item.DELETE)}>
+            <ListItemIcon>
+              <DeleteIcon />
+            </ListItemIcon>
             <ListItemText primary='Delete the board' />
           </ListItem>
         </List>

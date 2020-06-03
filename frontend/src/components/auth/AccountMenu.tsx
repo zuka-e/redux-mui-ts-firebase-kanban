@@ -27,6 +27,9 @@ const useStyles = makeStyles({
     display: 'flex',
     justifyContent: 'space-between',
   },
+  flexIcon: {
+    margin: 'auto 0',
+  },
   listItemIcons: {
     '& > * > .MuiListItemIcon-root': {
       minWidth: '35px',
@@ -83,7 +86,11 @@ const AccountMenu: React.FC = (props) => {
               <MenuOpenIcon />
             </IconButton>
           ) : (
-            <IconButton size='small' onClick={handleBack}>
+            <IconButton
+              className={classes.flexIcon}
+              size='small'
+              onClick={handleBack}
+            >
               <KeyboardArrowLeftIcon />
             </IconButton>
           )}
@@ -109,22 +116,20 @@ const AccountMenu: React.FC = (props) => {
           </Button>
         </Box>
       ) : (
-        <React.Fragment>
-          <List className={classes.listItemIcons} disablePadding>
-            <ListItem component='div'>
-              <ListItemIcon>
-                <AccountCircleIcon />
-              </ListItemIcon>
-              <ListItemText primary={currentUser.displayName || 'No names'} />
-            </ListItem>
-            <ListItem button onClick={() => handleClick(Item.SIGN_OUT)}>
-              <ListItemIcon>
-                <ExitToAppIcon />
-              </ListItemIcon>
-              <ListItemText primary={Item.SIGN_OUT} />
-            </ListItem>
-          </List>
-        </React.Fragment>
+        <List className={classes.listItemIcons} disablePadding>
+          <ListItem component='div'>
+            <ListItemIcon>
+              <AccountCircleIcon />
+            </ListItemIcon>
+            <ListItemText primary={currentUser.displayName || 'No names'} />
+          </ListItem>
+          <ListItem button onClick={() => handleClick(Item.SIGN_OUT)}>
+            <ListItemIcon>
+              <ExitToAppIcon />
+            </ListItemIcon>
+            <ListItemText primary={Item.SIGN_OUT} />
+          </ListItem>
+        </List>
       )}
     </List>
   );

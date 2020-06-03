@@ -61,7 +61,6 @@ const AddTaskButton: React.FC<Props> = (props) => {
           className={!card ? classes.button : undefined}
           startIcon={<AddIcon />}
           size='small'
-          fullWidth={Boolean(!card)}
           onClick={toggleForm}
         >
           Add new {card ? 'card' : list ? 'list' : 'board'}
