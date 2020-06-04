@@ -52,5 +52,5 @@ penv/
 .devcontainer/
 .vscode/
 .vscode-server/
-frontend/.gitignore
+
 
