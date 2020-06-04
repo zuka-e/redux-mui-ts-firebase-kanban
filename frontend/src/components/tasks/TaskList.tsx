@@ -42,6 +42,24 @@ const useStyles = makeStyles((theme: Theme) =>
         padding: theme.spacing(1),
       },
     },
+    scrollbar: {
+      overflowX: 'hidden',
+      overflowY: 'hidden',
+      '&:hover': {
+        overflowX: 'auto',
+        overflowY: 'auto',
+      },
+      '&::-webkit-scrollbar': {
+        width: '5px',
+        height: '1px',
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: '#eee',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: '#ccc',
+      },
+    },
   })
 );
 
@@ -134,21 +152,23 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
         selectedValue={filterQuery}
         handleChange={handleChange}
       />
-      {filterCards().map(
-        (card) =>
-          card.taskListId === list.id && (
-            <Box
-              bgcolor='background.paper'
-              borderRadius={4}
-              mb={1}
-              key={card.id}
-            >
-              <Paper className={`${classes.root} ${classes.card}`}>
-                <TaskCard card={card} />
-              </Paper>
-            </Box>
-          )
-      )}
+      <Box className={classes.scrollbar} maxHeight='250px'>
+        {filterCards().map(
+          (card) =>
+            card.taskListId === list.id && (
+              <Box
+                bgcolor='background.paper'
+                borderRadius={4}
+                mb={1}
+                key={card.id}
+              >
+                <Paper className={`${classes.root} ${classes.card}`}>
+                  <TaskCard card={card} />
+                </Paper>
+              </Box>
+            )
+        )}
+      </Box>
       {/* 'boards[list.boardId].userId'が'curretUser.uid'と異なっても'create'可 */}
       {/* つまり他のユーザーの'board'に'list'及び'card'が作成可能 */}
       {isSignedIn() && <AddTaskButton card id={list.id} />}

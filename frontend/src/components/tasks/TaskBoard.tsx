@@ -55,10 +55,13 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     scrollbar: {
       overflowX: 'hidden',
+      overflowY: 'hidden',
       '&:hover': {
         overflowX: 'auto',
+        overflowY: 'auto',
       },
       '&::-webkit-scrollbar': {
+        width: '5px',
         height: '1px',
       },
       '&::-webkit-scrollbar-track': {
