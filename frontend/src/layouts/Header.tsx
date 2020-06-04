@@ -181,17 +181,15 @@ const Header: React.FC = () => {
   const renderAccountIcon = () => (
     <PopoverContent
       trigger={
-        (
-          <Button size='small' className={classes.circleButton}>
-            <Avatar
-              alt='avatar'
-              src={currentUser.photoURL || undefined}
-              className={classes.pink}
-            >
-              {currentUser.photoURL || <PersonIcon />}
-            </Avatar>
-          </Button>
-        ) as object
+        <Button size='small' className={classes.circleButton}>
+          <Avatar
+            alt='avatar'
+            src={currentUser.photoURL || undefined}
+            className={classes.pink}
+          >
+            {currentUser.photoURL || <PersonIcon />}
+          </Avatar>
+        </Button>
       }
     >
       <AccountMenu />
