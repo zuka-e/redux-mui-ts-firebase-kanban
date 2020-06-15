@@ -15,6 +15,7 @@ export interface ITaskList {
     title: string;
     createdAt: firebase.firestore.Timestamp;
     updatedAt: firebase.firestore.Timestamp;
+    cards: ITaskCard['id'][];
   };
 }
 export interface ITaskCard {

@@ -85,13 +85,16 @@ const tasksSlice = createSlice({
         updatedAt: firebase.firestore.Timestamp.now(),
       };
       state.cards = { ...state.cards, [id]: newCard };
+      state.lists[taskListId].cards.push(newCard);
       state.loading = false;
       state.error = null;
     },
 
     removeCardSuccess(state, action: PayloadAction<{ taskCardId: string }>) {
       const cardId = action.payload.taskCardId;
+      const listId = state.cards[cardId].taskListId;
       delete state.cards[cardId];
+      state.lists[listId].cards.filter((card) => card.id !== cardId);
       state.loading = false;
       state.error = null;
     },
@@ -106,9 +109,22 @@ const tasksSlice = createSlice({
     ) {
       const { taskCardId, title, body } = action.payload;
       const card = state.cards[taskCardId];
-      if (title) card.title = title;
-      if (body) card.body = body;
-      card.updatedAt = firebase.firestore.Timestamp.now();
+      const listId = card.taskListId;
+      const cardOfList = state.lists[listId].cards.find(
+        (card) => card.id === taskCardId
+      );
+      if (cardOfList) {
+        if (title) {
+          card.title = title;
+          cardOfList.title = title;
+        }
+        if (body) {
+          card.body = body;
+          cardOfList.body = body;
+        }
+        card.updatedAt = firebase.firestore.Timestamp.now();
+        cardOfList.updatedAt = card.updatedAt;
+      }
       state.loading = false;
       state.error = null;
     },
@@ -116,7 +132,12 @@ const tasksSlice = createSlice({
     toggleCardSuccess(state, action: PayloadAction<{ taskCardId: string }>) {
       const { taskCardId } = action.payload;
       const card = state.cards[taskCardId];
+      const listId = card.taskListId;
+      const cardOfList = state.lists[listId].cards.find(
+        (card) => card.id === taskCardId
+      );
       card.done = !card.done;
+      if (cardOfList) cardOfList.done = !card.done;
       state.loading = false;
       state.error = null;
     },
@@ -134,6 +155,7 @@ const tasksSlice = createSlice({
         title: title,
         createdAt: firebase.firestore.Timestamp.now(),
         updatedAt: firebase.firestore.Timestamp.now(),
+        cards: [],
       };
       state.lists = { ...state.lists, [id]: newList };
       state.loading = false;
@@ -158,9 +180,8 @@ const tasksSlice = createSlice({
     removeListSuccess(state, action: PayloadAction<{ taskListId: string }>) {
       const { taskListId } = action.payload;
       delete state.lists[taskListId];
-      const cards = state.cards;
       // オブジェクト型での条件付き処理
-      Object.values(cards).forEach(
+      Object.values(state.cards).forEach(
         (card) => card.taskListId === taskListId && delete state.cards[card.id]
       );
       state.loading = false;
@@ -188,11 +209,10 @@ const tasksSlice = createSlice({
     removeBoardSuccess(state, action: PayloadAction<{ taskBoardId: string }>) {
       const { taskBoardId } = action.payload;
       delete state.lists[taskBoardId];
-      const { lists, cards } = state;
       // オブジェクト型での条件付き処理
-      Object.values(lists).forEach((list) => {
+      Object.values(state.lists).forEach((list) => {
         if (list.taskBoardId === taskBoardId) {
-          Object.values(cards).forEach(
+          Object.values(state.cards).forEach(
             (card) => card.taskListId === list.id && delete state.cards[card.id]
           );
           list.taskBoardId === taskBoardId && delete state.lists[list.id];
@@ -298,6 +318,7 @@ export const addCard = (props: {
   // storeからデータ取得
   const boardId = getState().tasks.lists[taskListId].taskBoardId;
   const cardsRef = db.collection('boards').doc(boardId).collection('cards');
+  const listsRef = db.collection('boards').doc(boardId).collection('lists');
   // ログインしていなければ処理を中断
   if (!isSignedIn()) {
     dispatch(setMessage(NotSignedInWarning));
@@ -314,7 +335,17 @@ export const addCard = (props: {
         createdAt: firebase.firestore.Timestamp.now(),
         updatedAt: firebase.firestore.Timestamp.now(),
       })
-      .then((docRef) => docRef.id);
+      .then((docRef) =>
+        docRef.get().then(function (doc) {
+          listsRef.doc(taskListId).update({
+            cards: firebase.firestore.FieldValue.arrayUnion({
+              id: doc.id,
+              ...doc.data(),
+            }),
+          });
+          return doc.id;
+        })
+      );
     dispatch(
       addCardSuccess({ taskListId: taskListId, id: docId, title: title })
     );
@@ -331,6 +362,7 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
   const card = getState().tasks.cards[taskCardId];
   const listId = card.taskListId;
   const boardId = getState().tasks.lists[listId].taskBoardId;
+  const listsRef = db.collection('boards').doc(boardId).collection('lists');
 
   if (!isSignedIn()) {
     dispatch(setMessage(NotSignedInWarning));
@@ -349,6 +381,12 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
       .collection('cards')
       .doc(taskCardId);
     await docRef.delete();
+    const newCards = getState().tasks.lists[listId].cards.filter(
+      (card) => card.id !== taskCardId
+    );
+    await listsRef.doc(listId).update({
+      cards: newCards,
+    });
     dispatch(removeCardSuccess({ taskCardId: taskCardId }));
     dispatch(setMessage(SuccessfullyDeleted));
   } catch (error) {
@@ -457,6 +495,7 @@ export const addList = (props: {
         userId: currentUser?.uid,
         taskBoardId: taskBoardId,
         title: title,
+        cards: [],
         createdAt: firebase.firestore.Timestamp.now(),
         updatedAt: firebase.firestore.Timestamp.now(),
       })

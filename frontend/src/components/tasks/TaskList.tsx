@@ -1,17 +1,12 @@
 import React, { useState } from 'react';
 
-import { useSelector } from 'react-redux';
-import { isLoaded } from 'react-redux-firebase';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
-import LinearProgress from '@material-ui/core/LinearProgress';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
-import { RootState } from '../../store/rootReducer';
-import { ITaskCard, ITaskList } from '../../models/Task';
+import { ITaskList } from '../../models/Task';
 import { isSignedIn, isOwnedBy } from '../../models/Auth';
 import TaskCard from './TaskCard';
 import AddTaskButton from './AddTaskButton';
@@ -55,24 +50,30 @@ export const TodoFilter = {
 // TodoFilter.values の union型  "All" | "Todo" | "Done"
 type TodoFilter = typeof TodoFilter[keyof typeof TodoFilter];
 
-const TaskList: React.FC<ITaskList> = ({ list }) => {
+export interface TaskListProps {
+  list: ITaskList['id'];
+  listIndex: number;
+  moveCard: (
+    dragIndex: number,
+    hoverIndex: number,
+    dragListIndex: number,
+    hoverListIndex: number
+  ) => void;
+}
+
+const TaskList: React.FC<TaskListProps> = (props) => {
+  const { list, listIndex, moveCard } = props;
   const classes = useStyles();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editingTitle, setEditingTitle] = useState(list.title);
   const [filterQuery, setfilterQuery] = useState<TodoFilter>(TodoFilter.NONE);
-  const cards = useSelector(
-    (state: RootState) => state.firestore.ordered.cards as ITaskCard['id'][]
-  );
 
   // 表示するデータを変更するロジック('filterQuery'の変更は別で行う)
-  const filterCards = () => {
-    const filteredCards = cards.filter((card) => {
-      if (filterQuery === TodoFilter.TODO) return !card.done;
-      else if (filterQuery === TodoFilter.DONE) return card.done;
-      else return true;
-    });
-    return filteredCards;
-  };
+  const filteredCards = list.cards.filter((card) => {
+    if (filterQuery === TodoFilter.TODO) return !card.done;
+    else if (filterQuery === TodoFilter.DONE) return card.done;
+    else return true;
+  });
 
   const handleChange = (event: React.ChangeEvent<{ value: unknown }>) => {
     setfilterQuery(event.target.value as TodoFilter); // unknown型から変換
@@ -86,9 +87,6 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
     setIsEditingTitle(false);
   };
 
-  if (!isLoaded(cards)) {
-    return <LinearProgress variant='query' color='secondary' />;
-  }
   return (
     <React.Fragment>
       {isEditingTitle && isOwnedBy(list.userId) ? (
@@ -134,21 +132,21 @@ const TaskList: React.FC<ITaskList> = ({ list }) => {
         selectedValue={filterQuery}
         handleChange={handleChange}
       />
-      {filterCards().map(
-        (card) =>
-          card.taskListId === list.id && (
-            <Box
-              bgcolor='background.paper'
-              borderRadius={4}
-              mb={1}
-              key={card.id}
-            >
-              <Paper className={`${classes.root} ${classes.card}`}>
-                <TaskCard card={card} />
-              </Paper>
-            </Box>
-          )
-      )}
+      {filteredCards.map((card, i) => (
+        <Box
+          bgcolor='background.paper'
+          borderRadius={4}
+          mb={1}
+          key={card.id} // i だとmonitor機能しない(isDragging変化しない)
+        >
+          <TaskCard
+            card={card}
+            index={i}
+            listIndex={listIndex}
+            moveCard={moveCard}
+          />
+        </Box>
+      ))}
       {/* 'boards[list.boardId].userId'が'curretUser.uid'と異なっても'create'可 */}
       {/* つまり他のユーザーの'board'に'list'及び'card'が作成可能 */}
       {isSignedIn() && <AddTaskButton card id={list.id} />}

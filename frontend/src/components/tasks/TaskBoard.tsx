@@ -1,13 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
+import produce from 'immer';
 import { useSelector } from 'react-redux';
-import { isLoaded, isEmpty } from 'react-redux-firebase';
-import { useParams, Link, Redirect } from 'react-router-dom';
+import { isEmpty } from 'react-redux-firebase';
+import { useParams, Redirect } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import {
   Grid,
   Card,
-  LinearProgress,
   Typography,
   Box,
   Button,
@@ -16,7 +16,6 @@ import {
 } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
-import { Alert, AlertTitle } from '@material-ui/lab';
 
 import { ITaskBoard, ITaskList } from '../../models/Task';
 import { isSignedIn, isOwnedBy } from '../../models/Auth';
@@ -69,6 +68,27 @@ const TaskBoard: React.FC = () => {
     (state: RootState) => state.firestore.ordered.lists as ITaskList['id'][]
   );
 
+  const [sortedLists, setSortedLists] = useState<ITaskList['id'][]>(lists);
+
+  useEffect(() => {
+    setSortedLists(lists.filter((list) => list.taskBoardId === boardId));
+  }, [boardId, lists]);
+
+  const moveCard = (
+    dragListIndex: number,
+    hoverListIndex: number,
+    dragIndex: number,
+    hoverIndex: number
+  ) => {
+    setSortedLists(
+      produce(sortedLists, (draft) => {
+        const dragged = draft[dragListIndex].cards[dragIndex];
+        draft[dragListIndex].cards.splice(dragIndex, 1);
+        draft[hoverListIndex].cards.splice(hoverIndex, 0, dragged);
+      })
+    );
+  };
+
   const toggleTitleForm = () => {
     setIsEditingTitle(!isEditingTitle);
     setEditingTitle(editingTitle || boards[boardId].title);
@@ -94,19 +114,8 @@ const TaskBoard: React.FC = () => {
     </React.Fragment>
   );
 
-  if (!isLoaded(lists) || !isLoaded(boards)) {
-    return <LinearProgress variant='query' color='secondary' />;
-  }
-
   if (isEmpty(boards) || isEmpty(boards[boardId])) {
-    return (
-      <Alert severity='error'>
-        <Redirect to='/' />
-        <AlertTitle>Error</AlertTitle>
-        Board not fonud.&nbsp;
-        <Link to='/'>HOME</Link>
-      </Alert>
-    );
+    return <Redirect to='/' />;
   }
   return (
     <Grid container>
@@ -145,16 +154,13 @@ const TaskBoard: React.FC = () => {
           </Grid>
         )}
       </Grid>
-      {lists.map(
-        (list) =>
-          list.taskBoardId === boardId && (
-            <Grid item lg={2} md={3} sm={4} xs={6} key={list.id}>
-              <Card className={classes.paper} elevation={7}>
-                <TaskList list={list} />
-              </Card>
-            </Grid>
-          )
-      )}
+      {sortedLists.map((list, i) => (
+        <Grid item lg={2} md={3} sm={4} xs={6} key={list.id}>
+          <Card className={classes.paper} elevation={7}>
+            <TaskList list={list} listIndex={i} moveCard={moveCard} />
+          </Card>
+        </Grid>
+      ))}
       {isSignedIn() && (
         <Grid item lg={2} md={3} sm={4} xs={6}>
           <AddTaskButton list id={boardId} />
