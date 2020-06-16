@@ -1,36 +1,35 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
-import { Color } from '@material-ui/lab';
 
 import { AppThunk } from './store';
 import firebase from '../config/firebase';
 
-export type Message = {
-  type: Color;
-  text: string;
+export type Notification = {
+  type: 'success' | 'info' | 'warning' | 'error';
+  message: string;
 };
 
-export const NotSignedInWarning: Message = {
+export const NotSignedInWarning: Notification = {
   type: 'warning',
-  text: "You aren't signed in",
+  message: "You aren't signed in",
 };
 
-export const PermissionError: Message = {
+export const PermissionError: Notification = {
   type: 'error',
-  text: "You don't have permission",
+  message: "You don't have permission",
 };
 
-export const SuccessfullyDeleted: Message = {
+export const SuccessfullyDeleted: Notification = {
   type: 'info',
-  text: 'Successfully deleted',
+  message: 'Successfully deleted',
 };
 
 interface AppState {
-  message: Message | null;
+  notification: Notification | null;
   loading: boolean;
   error: any;
 }
 const initialState: AppState = {
-  message: null,
+  notification: null,
   loading: false,
   error: null,
 };
@@ -47,16 +46,16 @@ const appSlice = createSlice({
       state.loading = false;
       state.error = action.payload;
     },
-    signOutSuccess(state, action: PayloadAction<Message>) {
-      state.message = action.payload;
+    signOutSuccess(state, action: PayloadAction<Notification>) {
+      state.notification = action.payload;
       state.loading = false;
       state.error = null;
     },
-    setMessage(state, action: PayloadAction<Message>) {
-      state.message = action.payload;
+    setNotification(state, action: PayloadAction<Notification>) {
+      state.notification = action.payload;
     },
-    deleteMessage(state) {
-      state.message = null;
+    deleteNotification(state) {
+      state.notification = null;
     },
   },
 });
@@ -65,8 +64,8 @@ export const {
   tryingToSignOut,
   signOutFailure,
   signOutSuccess,
-  setMessage,
-  deleteMessage,
+  setNotification,
+  deleteNotification,
 } = appSlice.actions;
 
 export default appSlice;
@@ -75,18 +74,18 @@ export const signOut = (): AppThunk => async (dispatch) => {
   try {
     dispatch(tryingToSignOut());
     if (firebase.auth().currentUser) {
-      const message = {
+      const notification: Notification = {
         type: 'success',
-        text: 'Successfully signed out',
-      } as Message;
+        message: 'Successfully signed out',
+      };
       await firebase.auth().signOut();
-      dispatch(signOutSuccess(message));
+      dispatch(signOutSuccess(notification));
     } else {
-      const message = {
+      const notification: Notification = {
         type: 'info',
-        text: 'Already signed out',
-      } as Message;
-      dispatch(setMessage(message));
+        message: 'Already signed out',
+      };
+      dispatch(setNotification(notification));
     }
   } catch (error) {
     dispatch(signOutFailure(error));

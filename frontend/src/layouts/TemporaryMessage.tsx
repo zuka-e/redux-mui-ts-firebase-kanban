@@ -4,10 +4,10 @@ import Snackbar from '@material-ui/core/Snackbar';
 import MuiAlert, { AlertProps } from '@material-ui/lab/Alert';
 
 import { useAppDispatch } from '../store/store';
-import { Message, deleteMessage } from '../store/appSlice';
+import { Notification, deleteNotification } from '../store/appSlice';
 
-const TemporaryMessage: React.FC<Message> = (props) => {
-  const { type, text } = props;
+const TemporaryMessage: React.FC<Notification> = (props) => {
+  const { type, message } = props;
   const [open, setOpen] = React.useState(true);
   const dispatch = useAppDispatch();
 
@@ -15,7 +15,7 @@ const TemporaryMessage: React.FC<Message> = (props) => {
   // 'autoHideDuration'の長さで'false'となり、messageを削除する
   // ('useEffect'を使わないと警告が出る)
   useEffect(() => {
-    open === false && dispatch(deleteMessage());
+    open === false && dispatch(deleteNotification());
   }, [dispatch, open]);
 
   const Alert = (props: AlertProps) => {
@@ -37,7 +37,7 @@ const TemporaryMessage: React.FC<Message> = (props) => {
       onClose={handleClose}
     >
       <Alert onClose={handleClose} severity={type}>
-        {text}
+        {message}
       </Alert>
     </Snackbar>
   );

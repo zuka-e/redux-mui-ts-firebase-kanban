@@ -47,12 +47,29 @@ const useStyles = makeStyles((theme: Theme) =>
       display: 'flex',
       flex: 'auto',
       margin: `auto ${theme.spacing(1)}px`,
-      overflow: 'overlay',
     },
     flexEnd: {
       display: 'flex',
       justifyContent: 'flex-end',
       margin: `auto ${theme.spacing(1)}px`,
+    },
+    scrollbar: {
+      overflowX: 'hidden',
+      overflowY: 'hidden',
+      '&:hover': {
+        overflowX: 'auto',
+        overflowY: 'auto',
+      },
+      '&::-webkit-scrollbar': {
+        width: '5px',
+        height: '1px',
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: '#eee',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: '#ccc',
+      },
     },
   })
 );
@@ -84,7 +101,7 @@ const TaskBoard: React.FC = () => {
       <Hidden smDown>
         <Button variant='outlined'>Menu</Button>
       </Hidden>
-      <Hidden mdUp xsDown>
+      <Hidden mdUp>
         <Tooltip title='Menu' placement='bottom'>
           <IconButton>
             <MoreVertIcon />
@@ -110,8 +127,8 @@ const TaskBoard: React.FC = () => {
   }
   return (
     <Grid container>
-      <Grid container justify='space-between'>
-        <Grid item className={classes.flexAuto}>
+      <Grid container justify='space-between' wrap='nowrap'>
+        <Grid item className={`${classes.flexAuto} ${classes.scrollbar}`}>
           {isEditingTitle && isOwnedBy(boards[boardId].userId) ? (
             <Box mt={1}>
               <TitleForm

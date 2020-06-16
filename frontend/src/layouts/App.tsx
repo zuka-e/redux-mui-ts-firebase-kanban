@@ -33,7 +33,9 @@ const useStyles = makeStyles((theme: Theme) =>
 
 const App: React.FC = () => {
   const classes = useStyles();
-  const message = useSelector((state: RootState) => state.app.message);
+  const notification = useSelector(
+    (state: RootState) => state.app.notification
+  );
   const [ready, setReady] = useState(false);
 
   // useEffect(() => {
@@ -71,8 +73,11 @@ const App: React.FC = () => {
           maxWidth={false}
           disableGutters
         >
-          {message && (
-            <TemporaryMessage type={message.type} text={message.text} />
+          {notification && (
+            <TemporaryMessage
+              type={notification.type}
+              message={notification.message}
+            />
           )}
           <Routes />
         </Container>

@@ -2,7 +2,7 @@ import React from 'react';
 
 import { useSelector } from 'react-redux';
 import { isLoaded } from 'react-redux-firebase';
-import { Link, useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { pink } from '@material-ui/core/colors';
 import { Backdrop, CircularProgress } from '@material-ui/core';
@@ -23,14 +23,12 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import PersonIcon from '@material-ui/icons/Person';
 import MenuIcon from '@material-ui/icons/Menu';
 import ListIcon from '@material-ui/icons/List';
-import MoreHorizIcon from '@material-ui/icons/MoreHoriz';
 
 import { ITaskBoard } from '../models/Task';
 import { isSignedIn } from '../models/Auth';
 import { RootState } from '../store/rootReducer';
 import PopoverContent from '../components/templates/PopoverContent';
 import AccountMenu from '../components/auth/AccountMenu';
-import BoardMenu from '../components/tasks/BoardMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -76,7 +74,6 @@ const useStyles = makeStyles((theme: Theme) =>
 const Header: React.FC = () => {
   const classes = useStyles();
   const [state, setState] = React.useState(false);
-  const { boardId } = useParams();
 
   // 'firebase.auth().currenUser'取得のために'useSelector'が必要の模様
   const currentUser = useSelector((state: RootState) => state.firebase.auth);
@@ -152,19 +149,6 @@ const Header: React.FC = () => {
               ))}
             </List>
           </PopoverContent>
-          <PopoverContent
-            position='right'
-            trigger={
-              <ListItem button>
-                <ListItemIcon>
-                  <MoreHorizIcon />
-                </ListItemIcon>
-                <ListItemText primary='Other' />
-              </ListItem>
-            }
-          >
-            <BoardMenu boardId={boardId} />
-          </PopoverContent>
         </List>
       </List>
     </div>
@@ -181,17 +165,15 @@ const Header: React.FC = () => {
   const renderAccountIcon = () => (
     <PopoverContent
       trigger={
-        (
-          <Button size='small' className={classes.circleButton}>
-            <Avatar
-              alt='avatar'
-              src={currentUser.photoURL || undefined}
-              className={classes.pink}
-            >
-              {currentUser.photoURL || <PersonIcon />}
-            </Avatar>
-          </Button>
-        ) as object
+        <Button size='small' className={classes.circleButton}>
+          <Avatar
+            alt='avatar'
+            src={currentUser.photoURL || undefined}
+            className={classes.pink}
+          >
+            {currentUser.photoURL || <PersonIcon />}
+          </Avatar>
+        </Button>
       }
     >
       <AccountMenu />
