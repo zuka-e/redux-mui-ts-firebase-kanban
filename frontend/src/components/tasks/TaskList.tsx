@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 
+import { useDrop } from 'react-dnd';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
+import { ItemTypes, DragItem } from '../../models/DragItem';
 import { ITaskList } from '../../models/Task';
 import { isSignedIn, isOwnedBy } from '../../models/Auth';
 import TaskCard from './TaskCard';
@@ -68,6 +70,22 @@ const TaskList: React.FC<TaskListProps> = (props) => {
   const [editingTitle, setEditingTitle] = useState(list.title);
   const [filterQuery, setfilterQuery] = useState<TodoFilter>(TodoFilter.NONE);
 
+  const [, drop] = useDrop({
+    accept: ItemTypes.CARD,
+    hover(item: DragItem) {
+      const dragListIndex = item.listIndex;
+      const hoverListIndex = listIndex;
+      const dragIndex = item.index;
+      const hoverIndex = 0;
+      if (dragListIndex === hoverListIndex) {
+        return;
+      }
+      moveCard(dragListIndex, hoverListIndex, dragIndex, hoverIndex);
+      item.index = hoverIndex;
+      item.listIndex = hoverListIndex;
+    },
+  });
+
   // 表示するデータを変更するロジック('filterQuery'の変更は別で行う)
   const filteredCards = list.cards.filter((card) => {
     if (filterQuery === TodoFilter.TODO) return !card.done;
@@ -88,7 +106,7 @@ const TaskList: React.FC<TaskListProps> = (props) => {
   };
 
   return (
-    <React.Fragment>
+    <div ref={drop}>
       {isEditingTitle && isOwnedBy(list.userId) ? (
         <TitleForm
           method={'PATCH'}
@@ -150,7 +168,7 @@ const TaskList: React.FC<TaskListProps> = (props) => {
       {/* 'boards[list.boardId].userId'が'curretUser.uid'と異なっても'create'可 */}
       {/* つまり他のユーザーの'board'に'list'及び'card'が作成可能 */}
       {isSignedIn() && <AddTaskButton card id={list.id} />}
-    </React.Fragment>
+    </div>
   );
 };
 export default TaskList;
