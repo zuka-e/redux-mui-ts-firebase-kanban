@@ -17,6 +17,7 @@ import {
   NotSignedInWarning,
   PermissionError,
   SuccessfullyDeleted,
+  SuccessfullyUpdated,
 } from './appSlice';
 
 interface TasksState {
@@ -472,6 +473,40 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
   } catch (error) {
     dispatch(accessFailure(error));
   }
+};
+
+export const sortCard = (props: {
+  taskBoardId: string;
+  taskListArray: ITaskList['id'][];
+}): AppThunk => async (dispatch, getState) => {
+  const { taskBoardId, taskListArray } = props;
+  const board = getState().tasks.boards[taskBoardId];
+
+  if (!isSignedIn()) {
+    dispatch(setMessage(NotSignedInWarning));
+    return;
+  }
+  if (!isOwnedBy(board.userId)) {
+    dispatch(setMessage(PermissionError));
+    return;
+  }
+
+  try {
+    dispatch(accessStart());
+  } catch (error) {
+    dispatch(accessFailure(error));
+  }
+  taskListArray.map(async (list) => {
+    const docRef = db
+      .collection('boards')
+      .doc(taskBoardId)
+      .collection('lists')
+      .doc(list.id);
+    await docRef.update({
+      cards: list.cards,
+    });
+  });
+  dispatch(setMessage(SuccessfullyUpdated));
 };
 
 export const addList = (props: {

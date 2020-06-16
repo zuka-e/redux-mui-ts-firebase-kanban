@@ -24,6 +24,11 @@ export const SuccessfullyDeleted: Message = {
   text: 'Successfully deleted',
 };
 
+export const SuccessfullyUpdated: Message = {
+  type: 'success',
+  text: 'Successfully updated',
+};
+
 interface AppState {
   message: Message | null;
   loading: boolean;
