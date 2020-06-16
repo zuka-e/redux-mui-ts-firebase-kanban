@@ -1,0 +1,43 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function isSignedIn() {
+      return request.auth != null;
+    }
+    function isOwned() {
+      return
+        isSignedIn()
+        && request.auth.uid == resource.data.userId;
+    }
+  	// Required by rrfConfig: userProfile:'users'
+		match /users/{userId} {
+      allow read: if isSignedIn();
+      allow write: if request.auth.uid == userId;
+      allow create: if request.auth.uid == null;
+    }
+
+    match /boards/{boardId} {
+      allow create: if isSignedIn();
+      allow update, delete: if isOwned();
+      allow read: if true;
+
+    match /lists/{listId} {
+        allow create: if isSignedIn();
+        allow update, delete: if isOwned();
+        allow read: if true;
+      }
+      match /cards/{cardId} {
+        allow create: if isSignedIn();
+        allow update, delete: if isOwned();
+        allow read: if true;
+      }
+    }
+
+    match /{path=**}/lists/{list} {
+      allow read: if true;
+    }
+    match /{path=**}/cards/{cardId} {
+      allow read: if true;
+    }
+  }
+}
