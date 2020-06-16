@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 
 import {
   useDrag,
@@ -7,9 +7,11 @@ import {
   DropTargetMonitor,
   XYCoord,
 } from 'react-dnd';
+import { getEmptyImage } from 'react-dnd-html5-backend';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
 
+import { ItemTypes, DragItem } from '../../models/DragItem';
 import { ITaskCard } from '../../models/Task';
 import OpenCardDetails from './OpenCardDetails';
 
@@ -28,17 +30,6 @@ const useStyles = makeStyles((theme: Theme) =>
     },
   })
 );
-
-export const ItemTypes = {
-  CARD: 'card',
-};
-
-export interface DragItem {
-  type: string;
-  index: number;
-  listIndex: number;
-  id: string;
-}
 
 export interface TaskCardProps {
   card: ITaskCard['id'];
@@ -59,10 +50,10 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
 
   const ref = useRef<HTMLDivElement>(null);
 
-  const [{ isDragging }, drag] = useDrag({
+  const [{ isDragging }, drag, preview] = useDrag({
     item: {
       type: ItemTypes.CARD,
-      id: card.id,
+      data: card,
       index: index,
       listIndex: listIndex,
     },
@@ -70,6 +61,11 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
       isDragging: monitor.isDragging(),
     }),
   });
+
+  useEffect(() => {
+    // drag時の元のイメージをなくす、CustomDragLayerで設定
+    preview(getEmptyImage(), { captureDraggingState: true });
+  }, [preview]);
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
@@ -82,7 +78,6 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
       const hoverListIndex = listIndex;
       const dragIndex = item.index;
       const hoverIndex = index;
-      console.log(dragListIndex, hoverListIndex, dragIndex, hoverIndex);
       // TaskCard コンポーネントでドラッグ可能領域を設定している-> cardsが0だとdrop不可
 
       // Don't replace items with themselves

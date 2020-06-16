@@ -20,6 +20,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { ITaskBoard, ITaskList } from '../../models/Task';
 import { isSignedIn, isOwnedBy } from '../../models/Auth';
 import { RootState } from '../../store/rootReducer';
+import CustomDragLayer from './CustomDragLayer';
 import TaskList from './TaskList';
 import TitleForm from './TitleForm';
 import AddTaskButton from './AddTaskButton';
@@ -154,6 +155,7 @@ const TaskBoard: React.FC = () => {
           </Grid>
         )}
       </Grid>
+      <CustomDragLayer />
       {sortedLists.map((list, i) => (
         <Grid item lg={2} md={3} sm={4} xs={6} key={list.id}>
           <Card className={classes.paper} elevation={7}>
