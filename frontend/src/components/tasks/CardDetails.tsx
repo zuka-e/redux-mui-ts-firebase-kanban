@@ -45,7 +45,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const CardDetails: React.FC<TaskCards> = ({ card }) => {
+interface CardDetailsProps {
+  card: TaskCards['id'];
+}
+
+const CardDetails: React.FC<CardDetailsProps> = (props) => {
+  const { card } = props;
   const classes = useStyles();
   // 子のフォームを再レンダーしても値を保持するため、状態を持たせる
   const [isEditingTitle, setIsEditingTitle] = useState(false);

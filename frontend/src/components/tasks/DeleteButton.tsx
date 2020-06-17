@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface DeleteProps {
+interface DeleteButtonProps {
   message?: string;
   card?: boolean;
   list?: boolean;
@@ -32,7 +32,7 @@ interface DeleteProps {
   id: string;
 }
 
-const DeleteButton: React.FC<DeleteProps> = (props) => {
+const DeleteButton: React.FC<DeleteButtonProps> = (props) => {
   const { message, card, list, board, id } = props;
   const classes = useStyles();
   const dispatch = useAppDispatch();

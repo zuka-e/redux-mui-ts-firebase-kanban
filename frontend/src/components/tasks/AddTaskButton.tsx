@@ -18,14 +18,14 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface Props {
+interface AddTaskButtonProps {
   card?: boolean;
   list?: boolean;
   board?: boolean;
   id?: string;
 }
 
-const AddTaskButton: React.FC<Props> = (props) => {
+const AddTaskButton: React.FC<AddTaskButtonProps> = (props) => {
   const { card, list, board, id } = props;
   const classes = useStyles();
   const [isEditing, setIsEditing] = useState(false);

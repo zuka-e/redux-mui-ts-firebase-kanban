@@ -26,12 +26,12 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface Props {
+interface OpenCardButtonProps {
   card: TaskCards['id'];
   open: boolean; // 'Dialog'開閉状態は親が持つ
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
-const OpenCardButton: React.FC<Props> = (props) => {
+const OpenCardButton: React.FC<OpenCardButtonProps> = (props) => {
   const { card, open, setOpen } = props;
   const classes = useStyles();
 

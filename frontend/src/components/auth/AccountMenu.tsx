@@ -45,7 +45,7 @@ const Item = {
 
 type Item = typeof Item[keyof typeof Item];
 
-const AccountMenu: React.FC = (props) => {
+const AccountMenu: React.FC = () => {
   const classes = useStyles();
   const [selectedItem, setSelectedItem] = useState<Item>(Item.HOME);
   const [isSignedIn, setIsSignedIn] = useState(true);

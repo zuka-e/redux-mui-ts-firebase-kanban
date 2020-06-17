@@ -15,20 +15,21 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-interface PopoverOrigin {
-  vertical: 'top' | 'center' | 'bottom' | number;
-  horizontal: 'left' | 'center' | 'right' | number;
+type PopoverPosition = 'top' | 'right' | 'bottom' | 'left';
+interface PopoverContentProps {
+  trigger: any;
+  position?: PopoverPosition;
 }
 
-type PopoverPosition = 'top' | 'right' | 'bottom' | 'left';
-
-const PopoverContent: React.FC<{ trigger: any; position?: PopoverPosition }> = (
-  props
-) => {
+const PopoverContent: React.FC<PopoverContentProps> = (props) => {
   const { trigger, position } = props;
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null);
 
+  interface PopoverOrigin {
+    vertical: 'top' | 'center' | 'bottom' | number;
+    horizontal: 'left' | 'center' | 'right' | number;
+  }
   let anchorOrigin: PopoverOrigin;
   let transformOrigin: PopoverOrigin;
 
