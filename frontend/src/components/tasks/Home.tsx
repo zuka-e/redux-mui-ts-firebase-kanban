@@ -14,7 +14,7 @@ import {
 import UpdateIcon from '@material-ui/icons/Update';
 import moment from 'moment';
 
-import { ITaskBoard } from '../../models/Task';
+import { TaskBoards } from '../../models/Task';
 import { isSignedIn } from '../../models/Auth';
 import { RootState } from '../../store/rootReducer';
 import AddTaskButton from './AddTaskButton';
@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme: Theme) =>
 const Home: React.FC = () => {
   const classes = useStyles();
   const boards = useSelector(
-    (state: RootState) => state.firestore.ordered.boards as ITaskBoard['id'][]
+    (state: RootState) => state.firestore.ordered.boards as TaskBoards['id'][]
   );
 
   if (!isLoaded(boards)) {

@@ -6,7 +6,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import { IconButton } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
 
-import { ITaskCard } from '../../models/Task';
+import { TaskCards } from '../../models/Task';
 import CardDetails from './CardDetails';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  card: ITaskCard['id'];
+  card: TaskCards['id'];
   open: boolean; // 'Dialog'開閉状態は親が持つ
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }

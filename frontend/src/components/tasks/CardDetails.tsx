@@ -15,7 +15,7 @@ import {
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import SubjectIcon from '@material-ui/icons/Subject';
 
-import { ITaskCard } from '../../models/Task';
+import { TaskCards } from '../../models/Task';
 import { isOwnedBy } from '../../models/Auth';
 import { useAppDispatch } from '../../store/store';
 import { toggleCard } from '../../store/tasksSlice';
@@ -45,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const CardDetails: React.FC<ITaskCard> = ({ card }) => {
+const CardDetails: React.FC<TaskCards> = ({ card }) => {
   const classes = useStyles();
   // 子のフォームを再レンダーしても値を保持するため、状態を持たせる
   const [isEditingTitle, setIsEditingTitle] = useState(false);

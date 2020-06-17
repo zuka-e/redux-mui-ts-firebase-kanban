@@ -10,13 +10,13 @@ import {
 import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 
-import { ITaskCard } from '../../models/Task';
+import { TaskCards } from '../../models/Task';
 import { useAppDispatch } from '../../store/store';
 import { editCard } from '../../store/tasksSlice';
 
 type FormProps = {
   // 任意属性を利用して、複数のフォームに対応させる
-  cardId: ITaskCard['id']['id'];
+  cardId: TaskCards['id']['id'];
   title?: boolean;
   body?: boolean;
   editingTitle?: string;

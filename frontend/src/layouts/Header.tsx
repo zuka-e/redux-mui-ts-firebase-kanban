@@ -24,7 +24,7 @@ import PersonIcon from '@material-ui/icons/Person';
 import MenuIcon from '@material-ui/icons/Menu';
 import ListIcon from '@material-ui/icons/List';
 
-import { ITaskBoard } from '../models/Task';
+import { TaskBoards } from '../models/Task';
 import { isSignedIn } from '../models/Auth';
 import { RootState } from '../store/rootReducer';
 import PopoverContent from '../components/templates/PopoverContent';
@@ -78,7 +78,7 @@ const Header: React.FC = () => {
   // 'firebase.auth().currenUser'取得のために'useSelector'が必要の模様
   const currentUser = useSelector((state: RootState) => state.firebase.auth);
   const boards = useSelector(
-    (state: RootState) => state.firestore.ordered.boards as ITaskBoard['id'][]
+    (state: RootState) => state.firestore.ordered.boards as TaskBoards['id'][]
   );
 
   const toggleDrawer = (open: boolean) => (

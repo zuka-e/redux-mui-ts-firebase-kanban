@@ -12,7 +12,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
 
 import { ItemTypes, DragItem } from '../../models/DragItem';
-import { ITaskCard } from '../../models/Task';
+import { TaskCards } from '../../models/Task';
 import OpenCardDetails from './OpenCardDetails';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -32,7 +32,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export interface TaskCardProps {
-  card: ITaskCard['id'];
+  card: TaskCards['id'];
   index: number;
   listIndex: number;
   moveCard: (

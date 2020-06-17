@@ -1,9 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 import {
-  ITaskCard,
-  ITaskList,
-  ITaskBoard,
+  TaskCards,
+  TaskLists,
+  TaskBoards,
   cardsArray,
   listsArray,
   boardsArray,
@@ -21,9 +21,9 @@ import {
 } from './appSlice';
 
 interface TasksState {
-  cards: ITaskCard;
-  lists: ITaskList;
-  boards: ITaskBoard;
+  cards: TaskCards;
+  lists: TaskLists;
+  boards: TaskBoards;
   loading: boolean;
   error: any;
 }
@@ -51,9 +51,9 @@ const tasksSlice = createSlice({
     getDataSuccess(
       state,
       action: PayloadAction<{
-        cards: ITaskCard;
-        lists: ITaskList;
-        boards: ITaskBoard;
+        cards: TaskCards;
+        lists: TaskLists;
+        boards: TaskBoards;
       }>
     ) {
       const { cards, lists, boards } = action.payload;
@@ -268,42 +268,42 @@ export const fetchData = (): AppThunk => async (dispatch) => {
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
           // idを加えて配列に追加、型アサーションを付与
-          cardsArray.push({ id: doc.id, ...doc.data() } as ITaskCard['id']);
+          cardsArray.push({ id: doc.id, ...doc.data() } as TaskCards['id']);
         });
       });
-    // ITaskCard['id'][] (配列) から ITaskCard (オブジェクト) への変換
+    // TaskCards['id'][] (配列) から TaskCards (オブジェクト) への変換
     // 例) [{id: '1', title: 'a'}, {...}] -> {'1': {id: '1', title: 'a'}, '2': {...}}
     // reduce(): 反復処理でaccumulator(acc)に結果を蓄積し最終結果を返す、初期値={}
     const cards = cardsArray.reduce((acc, card) => {
       acc[card.id] = card;
       return acc;
-    }, {} as ITaskCard);
+    }, {} as TaskCards);
 
     await db
       .collectionGroup('lists')
       .get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          listsArray.push({ id: doc.id, ...doc.data() } as ITaskList['id']);
+          listsArray.push({ id: doc.id, ...doc.data() } as TaskLists['id']);
         });
       });
     const lists = listsArray.reduce((acc, list) => {
       acc[list.id] = list;
       return acc;
-    }, {} as ITaskList);
+    }, {} as TaskLists);
 
     await db
       .collection('boards')
       .get()
       .then(function (querySnapshot) {
         querySnapshot.forEach(function (doc) {
-          boardsArray.push({ id: doc.id, ...doc.data() } as ITaskBoard['id']);
+          boardsArray.push({ id: doc.id, ...doc.data() } as TaskBoards['id']);
         });
       });
     const boards = boardsArray.reduce((acc, board) => {
       acc[board.id] = board;
       return acc;
-    }, {} as ITaskBoard);
+    }, {} as TaskBoards);
     dispatch(getDataSuccess({ cards, lists, boards }));
   } catch (error) {
     dispatch(accessFailure(error));
@@ -477,7 +477,7 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
 
 export const sortCard = (props: {
   taskBoardId: string;
-  taskListArray: ITaskList['id'][];
+  taskListArray: TaskLists['id'][];
 }): AppThunk => async (dispatch, getState) => {
   const { taskBoardId, taskListArray } = props;
   const board = getState().tasks.boards[taskBoardId];

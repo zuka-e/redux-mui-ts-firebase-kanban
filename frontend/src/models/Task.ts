@@ -1,4 +1,4 @@
-export interface ITaskBoard {
+export interface TaskBoards {
   [taskBoardId: string]: {
     userId: string;
     id: string;
@@ -7,7 +7,7 @@ export interface ITaskBoard {
     updatedAt: firebase.firestore.Timestamp;
   };
 }
-export interface ITaskList {
+export interface TaskLists {
   [taskListId: string]: {
     userId: string;
     taskBoardId: string;
@@ -15,10 +15,10 @@ export interface ITaskList {
     title: string;
     createdAt: firebase.firestore.Timestamp;
     updatedAt: firebase.firestore.Timestamp;
-    cards: ITaskCard['id'][];
+    cards: TaskCards['id'][];
   };
 }
-export interface ITaskCard {
+export interface TaskCards {
   [taskCardId: string]: {
     userId: string;
     taskListId: string;
@@ -31,6 +31,6 @@ export interface ITaskCard {
   };
 }
 
-export const boardsArray: ITaskBoard['id'][] = []; // DBから取得するデータの配列
-export const listsArray: ITaskList['id'][] = [];
-export const cardsArray: ITaskCard['id'][] = [];
+export const boardsArray: TaskBoards['id'][] = []; // DBから取得するデータの配列
+export const listsArray: TaskLists['id'][] = [];
+export const cardsArray: TaskCards['id'][] = [];

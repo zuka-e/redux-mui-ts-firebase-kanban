@@ -8,7 +8,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { ItemTypes, DragItem } from '../../models/DragItem';
-import { ITaskList } from '../../models/Task';
+import { TaskLists } from '../../models/Task';
 import { isSignedIn, isOwnedBy } from '../../models/Auth';
 import TaskCard from './TaskCard';
 import AddTaskButton from './AddTaskButton';
@@ -71,7 +71,7 @@ export const TodoFilter = {
 type TodoFilter = typeof TodoFilter[keyof typeof TodoFilter];
 
 export interface TaskListProps {
-  list: ITaskList['id'];
+  list: TaskLists['id'];
   listIndex: number;
   moveCard: (
     dragIndex: number,

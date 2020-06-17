@@ -20,7 +20,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import DoneIcon from '@material-ui/icons/Done';
 import CancelIcon from '@material-ui/icons/Cancel';
 
-import { ITaskBoard, ITaskList } from '../../models/Task';
+import { TaskBoards, TaskLists } from '../../models/Task';
 import { isSignedIn, isOwnedBy } from '../../models/Auth';
 import { RootState } from '../../store/rootReducer';
 import { useAppDispatch } from '../../store/store';
@@ -95,12 +95,12 @@ const TaskBoard: React.FC = () => {
   const dispatch = useAppDispatch();
   const { boardId } = useParams(); // URLパラメータ取得
   const boards = useSelector(
-    (state: RootState) => state.firestore.data.boards as ITaskBoard
+    (state: RootState) => state.firestore.data.boards as TaskBoards
   );
   const lists = useSelector(
-    (state: RootState) => state.firestore.ordered.lists as ITaskList['id'][]
+    (state: RootState) => state.firestore.ordered.lists as TaskLists['id'][]
   );
-  const [sortedLists, setSortedLists] = useState<ITaskList['id'][]>(lists);
+  const [sortedLists, setSortedLists] = useState<TaskLists['id'][]>(lists);
 
   useEffect(() => {
     setSortedLists(lists.filter((list) => list.taskBoardId === boardId));
