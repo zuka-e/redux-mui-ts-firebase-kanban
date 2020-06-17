@@ -8,25 +8,24 @@ export type Notification = {
   message: string;
 };
 
-export const NotSignedInWarning: Notification = {
-  type: 'warning',
-  message: "You aren't signed in",
-};
-
-export const PermissionError: Notification = {
-  type: 'error',
-  message: "You don't have permission",
-};
-
-export const SuccessfullyDeleted: Notification = {
-  type: 'info',
-  message: 'Successfully deleted',
-};
-
-export const SuccessfullyUpdated: Notification = {
-  type: 'success',
-  message: 'Successfully updated',
-};
+export const Notification = {
+  NotSignedInWarning: {
+    type: 'warning',
+    message: "You aren't signed in",
+  },
+  PermissionError: {
+    type: 'error',
+    message: "You don't have permission",
+  },
+  SuccessfullyDeleted: {
+    type: 'warning',
+    message: 'Successfully deleted',
+  },
+  SuccessfullyUpdated: {
+    type: 'success',
+    message: 'Successfully updated',
+  },
+} as const;
 
 interface AppState {
   notification: Notification | null;

@@ -12,13 +12,7 @@ import { currentUser, isSignedIn, isOwnedBy } from '../models/Auth';
 import firebase from '../config/firebase';
 import { db } from '../config/firebase';
 import { AppThunk } from './store';
-import {
-  setNotification,
-  NotSignedInWarning,
-  PermissionError,
-  SuccessfullyDeleted,
-  SuccessfullyUpdated,
-} from './appSlice';
+import { Notification, setNotification } from './appSlice';
 
 interface TasksState {
   cards: TaskCards;
@@ -325,7 +319,7 @@ export const addCard = (props: {
   const listsRef = db.collection('boards').doc(boardId).collection('lists');
   // ログインしていなければ処理を中断
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   try {
@@ -369,12 +363,12 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
   const listsRef = db.collection('boards').doc(boardId).collection('lists');
 
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   // 所有者(データの'userId'が'currentUser'の'uid'と一致)でなければ処理を中断
   if (!isOwnedBy(card.userId)) {
-    dispatch(setNotification(PermissionError));
+    dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
@@ -392,7 +386,7 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
       cards: newCards,
     });
     dispatch(removeCardSuccess({ taskCardId: taskCardId }));
-    dispatch(setNotification(SuccessfullyDeleted));
+    dispatch(setNotification(Notification.SuccessfullyDeleted));
   } catch (error) {
     dispatch(accessFailure(error));
   }
@@ -413,11 +407,11 @@ export const editCard = (props: editCardProps): AppThunk => async (
   const boardId = getState().tasks.lists[listId].taskBoardId;
 
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   if (!isOwnedBy(card.userId)) {
-    dispatch(setNotification(PermissionError));
+    dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
@@ -455,11 +449,11 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
   const boardId = getState().tasks.lists[listId].taskBoardId;
 
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   if (!isOwnedBy(card.userId)) {
-    dispatch(setNotification(PermissionError));
+    dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
@@ -486,11 +480,11 @@ export const sortCard = (props: {
   const board = getState().tasks.boards[taskBoardId];
 
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   if (!isOwnedBy(board.userId)) {
-    dispatch(setNotification(PermissionError));
+    dispatch(setNotification(Notification.PermissionError));
     return;
   }
 
@@ -509,7 +503,7 @@ export const sortCard = (props: {
       cards: list.cards,
     });
   });
-  dispatch(setNotification(SuccessfullyUpdated));
+  dispatch(setNotification(Notification.SuccessfullyUpdated));
 };
 
 export const addList = (props: {
@@ -519,7 +513,7 @@ export const addList = (props: {
   const { taskBoardId, title } = props;
 
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   try {
@@ -555,11 +549,11 @@ export const editList = (props: {
   const boardId = list.taskBoardId;
 
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   if (!isOwnedBy(list.userId)) {
-    dispatch(setNotification(PermissionError));
+    dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
@@ -591,11 +585,11 @@ export const removeList = (props: { taskListId: string }): AppThunk => async (
   const cardsRef = db.collection('boards').doc(boardId).collection('cards');
 
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   if (!isOwnedBy(list.userId)) {
-    dispatch(setNotification(PermissionError));
+    dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
@@ -605,7 +599,7 @@ export const removeList = (props: { taskListId: string }): AppThunk => async (
       (card) => card.taskListId === taskListId && cardsRef.doc(card.id).delete()
     );
     dispatch(removeListSuccess({ taskListId: taskListId }));
-    dispatch(setNotification(SuccessfullyDeleted));
+    dispatch(setNotification(Notification.SuccessfullyDeleted));
   } catch (error) {
     dispatch(accessFailure(error));
   }
@@ -617,7 +611,7 @@ export const addBoard = (props: { title: string }): AppThunk => async (
   const { title } = props;
 
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   try {
@@ -649,11 +643,11 @@ export const removeBoard = (props: { taskBoardId: string }): AppThunk => async (
   const { lists, cards } = getState().tasks;
 
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   if (!isOwnedBy(board.userId)) {
-    dispatch(setNotification(PermissionError));
+    dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
@@ -669,7 +663,7 @@ export const removeBoard = (props: { taskBoardId: string }): AppThunk => async (
       }
     });
     dispatch(removeBoardSuccess({ taskBoardId: taskBoardId }));
-    dispatch(setNotification(SuccessfullyDeleted));
+    dispatch(setNotification(Notification.SuccessfullyDeleted));
   } catch (error) {
     dispatch(accessFailure(error));
   }
@@ -684,11 +678,11 @@ export const editBoard = (props: {
   const docRef = db.collection('boards').doc(taskBoardId);
 
   if (!isSignedIn()) {
-    dispatch(setNotification(NotSignedInWarning));
+    dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   if (!isOwnedBy(board.userId)) {
-    dispatch(setNotification(PermissionError));
+    dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
