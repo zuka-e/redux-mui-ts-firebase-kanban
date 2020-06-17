@@ -23,6 +23,11 @@ export const SuccessfullyDeleted: Notification = {
   message: 'Successfully deleted',
 };
 
+export const SuccessfullyUpdated: Notification = {
+  type: 'success',
+  message: 'Successfully updated',
+};
+
 interface AppState {
   notification: Notification | null;
   loading: boolean;

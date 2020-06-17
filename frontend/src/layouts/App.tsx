@@ -2,6 +2,8 @@ import React, { useContext, useState } from 'react';
 
 import { useSelector } from 'react-redux';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { DndProvider } from 'react-dnd';
+import { HTML5Backend } from 'react-dnd-html5-backend';
 import {
   ThemeProvider,
   CssBaseline,
@@ -38,10 +40,6 @@ const App: React.FC = () => {
   );
   const [ready, setReady] = useState(false);
 
-  // useEffect(() => {
-  //   document.title = `Task Board`;
-  // }, []);
-
   // 'createContext()'で生成した'ThemeContext'を呼び出す
   const context = useContext(ThemeContext);
   // // 保存されたテーマがあれば適用する(localStorageから読み込む)
@@ -65,22 +63,24 @@ const App: React.FC = () => {
     // 'material-ui'の配色カスタマイズ ('ThemeContext.theme'をセット)
     <Router>
       <ThemeProvider theme={context.theme}>
-        <CssBaseline />
-        <Header />
-        <Container
-          component='main'
-          className={classes.root}
-          maxWidth={false}
-          disableGutters
-        >
-          {notification && (
-            <TemporaryMessage
-              type={notification.type}
-              message={notification.message}
-            />
-          )}
-          <Routes />
-        </Container>
+        <DndProvider backend={HTML5Backend}>
+          <CssBaseline />
+          <Header />
+          <Container
+            component='main'
+            className={classes.root}
+            maxWidth={false}
+            disableGutters
+          >
+            {notification && (
+              <TemporaryMessage
+                type={notification.type}
+                message={notification.message}
+              />
+            )}
+            <Routes />
+          </Container>
+        </DndProvider>
       </ThemeProvider>
     </Router>
   );
