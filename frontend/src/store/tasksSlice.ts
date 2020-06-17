@@ -274,7 +274,7 @@ export const fetchData = (): AppThunk => async (dispatch) => {
           cardsArray.push({ id: doc.id, ...doc.data() } as TaskCards['id']);
         });
       });
-    // TaskCards['id'][] (配列) から TaskCards (オブジェクト) への変換
+    // TaskCardsArray (配列) から TaskCards (オブジェクト) への変換
     // 例) [{id: '1', title: 'a'}, {...}] -> {'1': {id: '1', title: 'a'}, '2': {...}}
     // reduce(): 反復処理でaccumulator(acc)に結果を蓄積し最終結果を返す、初期値={}
     const cards = cardsArray.reduce((acc, card) => {
@@ -480,7 +480,7 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
 
 export const sortCard = (props: {
   taskBoardId: string;
-  taskListArray: TaskLists['id'][];
+  taskListArray: TaskListsArray;
 }): AppThunk => async (dispatch, getState) => {
   const { taskBoardId, taskListArray } = props;
   const board = getState().tasks.boards[taskBoardId];

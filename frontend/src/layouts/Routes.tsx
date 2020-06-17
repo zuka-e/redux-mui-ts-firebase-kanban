@@ -11,19 +11,23 @@ import NotFound404 from '../components/pages/NotFound404';
 import Login from '../components/pages/Login';
 import { LinearProgress } from '@material-ui/core';
 import { useSelector } from 'react-redux';
-import { TaskBoards, TaskLists, TaskCards } from '../models/Task';
+import {
+  TaskBoardsArray,
+  TaskListsArray,
+  TaskCardsArray,
+} from '../models/Task';
 import { RootState } from '../store/rootReducer';
 
 const Routes: React.FC = () => {
   const dispatch = useAppDispatch();
   const boards = useSelector(
-    (state: RootState) => state.firestore.ordered.boards as TaskBoards['id'][]
+    (state: RootState) => state.firestore.ordered.boards as TaskBoardsArray
   );
   const lists = useSelector(
-    (state: RootState) => state.firestore.ordered.lists as TaskLists['id'][]
+    (state: RootState) => state.firestore.ordered.lists as TaskListsArray
   );
   const cards = useSelector(
-    (state: RootState) => state.firestore.ordered.cards as TaskCards['id'][]
+    (state: RootState) => state.firestore.ordered.cards as TaskCardsArray
   );
 
   // 初回アクセス時、データ取得
