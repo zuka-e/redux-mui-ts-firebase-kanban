@@ -31,6 +31,6 @@ export interface TaskCards {
   };
 }
 
-export const boardsArray: TaskBoards['id'][] = []; // DBから取得するデータの配列
-export const listsArray: TaskLists['id'][] = [];
-export const cardsArray: TaskCards['id'][] = [];
+export type TaskBoardsArray = TaskBoards['id'][];
+export type TaskListsArray = TaskLists['id'][];
+export type TaskCardsArray = TaskCards['id'][];

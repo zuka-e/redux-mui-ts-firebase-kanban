@@ -4,9 +4,9 @@ import {
   TaskCards,
   TaskLists,
   TaskBoards,
-  cardsArray,
-  listsArray,
-  boardsArray,
+  TaskCardsArray,
+  TaskListsArray,
+  TaskBoardsArray,
 } from '../models/Task';
 import { currentUser, isSignedIn, isOwnedBy } from '../models/Auth';
 import firebase from '../config/firebase';
@@ -261,6 +261,9 @@ export default tasksSlice;
 // 初回データの取得
 export const fetchData = (): AppThunk => async (dispatch) => {
   try {
+    const cardsArray: TaskCardsArray = []; // DBから取得するデータの配列
+    const listsArray: TaskListsArray = [];
+    const boardsArray: TaskBoardsArray = [];
     dispatch(accessStart());
     await db
       .collectionGroup('cards')
