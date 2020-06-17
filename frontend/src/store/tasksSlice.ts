@@ -314,12 +314,18 @@ export const addCard = (props: {
 }): AppThunk => async (dispatch, getState) => {
   const { taskListId, title } = props;
   // storeからデータ取得
-  const boardId = getState().tasks.lists[taskListId].taskBoardId;
+  const list = getState().tasks.lists[taskListId];
+  const boardId = list.taskBoardId;
   const cardsRef = db.collection('boards').doc(boardId).collection('cards');
   const listsRef = db.collection('boards').doc(boardId).collection('lists');
   // ログインしていなければ処理を中断
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
+    return;
+  }
+  // listの変更を伴うため所有が必要
+  if (!isOwnedBy(list.userId)) {
+    dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
@@ -359,7 +365,8 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
   const { taskCardId } = props;
   const card = getState().tasks.cards[taskCardId];
   const listId = card.taskListId;
-  const boardId = getState().tasks.lists[listId].taskBoardId;
+  const list = getState().tasks.lists[listId];
+  const boardId = list.taskBoardId;
   const listsRef = db.collection('boards').doc(boardId).collection('lists');
 
   if (!isSignedIn()) {
@@ -367,7 +374,7 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
     return;
   }
   // 所有者(データの'userId'が'currentUser'の'uid'と一致)でなければ処理を中断
-  if (!isOwnedBy(card.userId)) {
+  if (!isOwnedBy(card.userId) || !isOwnedBy(list.userId)) {
     dispatch(setNotification(Notification.PermissionError));
     return;
   }
@@ -404,13 +411,14 @@ export const editCard = (props: editCardProps): AppThunk => async (
   const { taskCardId, title, body } = props;
   const card = getState().tasks.cards[taskCardId];
   const listId = card.taskListId;
-  const boardId = getState().tasks.lists[listId].taskBoardId;
+  const list = getState().tasks.lists[listId];
+  const boardId = list.taskBoardId;
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
-  if (!isOwnedBy(card.userId)) {
+  if (!isOwnedBy(card.userId) || !isOwnedBy(list.userId)) {
     dispatch(setNotification(Notification.PermissionError));
     return;
   }
@@ -446,13 +454,14 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
   const { taskCardId } = props;
   const card = getState().tasks.cards[taskCardId];
   const listId = card.taskListId;
-  const boardId = getState().tasks.lists[listId].taskBoardId;
+  const list = getState().tasks.lists[listId];
+  const boardId = list.taskBoardId;
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
-  if (!isOwnedBy(card.userId)) {
+  if (!isOwnedBy(card.userId) || !isOwnedBy(list.userId)) {
     dispatch(setNotification(Notification.PermissionError));
     return;
   }

@@ -9,7 +9,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 
 import { ItemTypes, DragItem } from '../../models/DragItem';
 import { TaskLists } from '../../models/Task';
-import { isSignedIn, isOwnedBy } from '../../models/Auth';
+import { isOwnedBy } from '../../models/Auth';
 import TaskCard from './TaskCard';
 import AddTaskButton from './AddTaskButton';
 import LabeledSelect from '../templates/LabeledSelect';
@@ -185,9 +185,7 @@ const TaskList: React.FC<TaskListProps> = (props) => {
           </Box>
         ))}
       </Box>
-      {/* 'boards[list.boardId].userId'が'curretUser.uid'と異なっても'create'可 */}
-      {/* つまり他のユーザーの'board'に'list'及び'card'が作成可能 */}
-      {isSignedIn() && <AddTaskButton card id={list.id} />}
+      {isOwnedBy(list.userId) && <AddTaskButton card id={list.id} />}
     </div>
   );
 };
