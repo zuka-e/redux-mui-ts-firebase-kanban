@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 
 import { useDrop } from 'react-dnd';
 import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
@@ -10,6 +10,7 @@ import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { ItemTypes, DragItem } from '../../models/DragItem';
 import { TaskLists } from '../../models/Task';
 import { isOwnedBy } from '../../models/Auth';
+import { DragContext } from '../../context/DragContext';
 import TaskCard from './TaskCard';
 import AddTaskButton from './AddTaskButton';
 import LabeledSelect from '../templates/LabeledSelect';
@@ -73,20 +74,15 @@ type TodoFilter = typeof TodoFilter[keyof typeof TodoFilter];
 export interface TaskListProps {
   list: TaskLists['id'];
   listIndex: number;
-  moveCard: (
-    dragIndex: number,
-    hoverIndex: number,
-    dragListIndex: number,
-    hoverListIndex: number
-  ) => void;
 }
 
 const TaskList: React.FC<TaskListProps> = (props) => {
-  const { list, listIndex, moveCard } = props;
+  const { list, listIndex } = props;
   const classes = useStyles();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editingTitle, setEditingTitle] = useState(list.title);
   const [filterQuery, setfilterQuery] = useState<TodoFilter>(TodoFilter.NONE);
+  const { dragDispatch } = useContext(DragContext);
 
   const [, drop] = useDrop({
     accept: ItemTypes.CARD,
@@ -98,7 +94,17 @@ const TaskList: React.FC<TaskListProps> = (props) => {
       if (dragListIndex === hoverListIndex) {
         return;
       }
-      moveCard(dragListIndex, hoverListIndex, dragIndex, hoverIndex);
+      const boardId = list.taskBoardId;
+      dragDispatch({
+        type: 'MOVE_CARD',
+        payload: {
+          dragListIndex,
+          hoverListIndex,
+          dragIndex,
+          hoverIndex,
+          boardId,
+        },
+      });
       item.index = hoverIndex;
       item.listIndex = hoverListIndex;
     },
@@ -176,12 +182,7 @@ const TaskList: React.FC<TaskListProps> = (props) => {
             mb={1}
             key={card.id} // i だとmonitor機能しない(isDragging変化しない)
           >
-            <TaskCard
-              card={card}
-              index={i}
-              listIndex={listIndex}
-              moveCard={moveCard}
-            />
+            <TaskCard card={card} index={i} listIndex={listIndex} />
           </Box>
         ))}
       </Box>

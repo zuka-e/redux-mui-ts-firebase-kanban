@@ -34,7 +34,6 @@ const CustomDragLayer: React.FC = () => {
               card={item.data}
               index={item.index}
               listIndex={item.listIndex}
-              moveCard={item}
             />
           </Box>
         );

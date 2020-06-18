@@ -537,23 +537,22 @@ export const sortCard = (props: {
     dispatch(setNotification(Notification.PermissionError));
     return;
   }
-
   try {
     dispatch(accessStart());
+    taskListArray.map(async (list) => {
+      const docRef = db
+        .collection('boards')
+        .doc(taskBoardId)
+        .collection('lists')
+        .doc(list.id);
+      await docRef.update({
+        cards: list.cards,
+      });
+    });
+    dispatch(setNotification(Notification.SuccessfullyUpdated));
   } catch (error) {
     dispatch(accessFailure(error));
   }
-  taskListArray.map(async (list) => {
-    const docRef = db
-      .collection('boards')
-      .doc(taskBoardId)
-      .collection('lists')
-      .doc(list.id);
-    await docRef.update({
-      cards: list.cards,
-    });
-  });
-  dispatch(setNotification(Notification.SuccessfullyUpdated));
 };
 
 export const addList = (props: {
