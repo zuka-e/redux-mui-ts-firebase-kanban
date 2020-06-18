@@ -1,5 +1,6 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 
+import { useSelector } from 'react-redux';
 import {
   useDrag,
   DragSourceMonitor,
@@ -12,7 +13,9 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Paper, Typography } from '@material-ui/core';
 
 import { ItemTypes, DragItem } from '../../models/DragItem';
-import { TaskCards } from '../../models/Task';
+import { TaskCards, TaskLists } from '../../models/Task';
+import { RootState } from '../../store/rootReducer';
+import { DragContext } from '../../context/DragContext';
 import OpenCardDetails from './OpenCardDetails';
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -35,19 +38,16 @@ export interface TaskCardProps {
   card: TaskCards['id'];
   index: number;
   listIndex: number;
-  moveCard: (
-    dragIndex: number,
-    hoverIndex: number,
-    dragListIndex: number,
-    hoverListIndex: number
-  ) => void;
 }
 
 const TaskCard: React.FC<TaskCardProps> = (props) => {
-  const { card, index, listIndex, moveCard } = props;
+  const { card, index, listIndex } = props;
   const classes = useStyles();
   const [open, setOpen] = useState(false);
-
+  const { dragDispatch } = useContext(DragContext);
+  const lists = useSelector(
+    (state: RootState) => state.firestore.data.lists as TaskLists
+  );
   const ref = useRef<HTMLDivElement>(null);
 
   const [{ isDragging }, drag, preview] = useDrag({
@@ -105,7 +105,19 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
         return;
       }
       // Time to actually perform the action
-      moveCard(dragListIndex, hoverListIndex, dragIndex, hoverIndex);
+      // moveCard(dragListIndex, hoverListIndex, dragIndex, hoverIndex);
+      const listId = card.taskListId;
+      const boardId = lists[listId].taskBoardId;
+      dragDispatch({
+        type: 'MOVE_CARD',
+        payload: {
+          dragListIndex,
+          hoverListIndex,
+          dragIndex,
+          hoverIndex,
+          boardId,
+        },
+      });
       // Note: we're mutating the monitor item here!
       // Generally it's better to avoid mutations,
       // but it's good here for the sake of performance
