@@ -18,7 +18,7 @@ import SubjectIcon from '@material-ui/icons/Subject';
 import { TaskCards } from '../../models/Task';
 import { isOwnedBy } from '../../models/Auth';
 import { useAppDispatch } from '../../store/store';
-import { toggleCard } from '../../store/tasksSlice';
+import { toggleCard } from '../../store/firestore/cards';
 import CardForm from './CardForm';
 import PopoverContent from '../templates/PopoverContent';
 import DeleteButton from './DeleteButton';

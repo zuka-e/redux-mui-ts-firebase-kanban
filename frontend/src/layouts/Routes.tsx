@@ -10,9 +10,9 @@ import {
   TaskListsArray,
   TaskCardsArray,
 } from '../models/Task';
-import { useAppDispatch } from '../store/store';
 import { RootState } from '../store/rootReducer';
-import { fetchData } from '../store/tasksSlice';
+import { useAppDispatch } from '../store/store';
+import { fetchData } from '../store/firestore/index';
 import DragStateProvider from '../context/DragContext';
 import Home from '../components/tasks/Home';
 import TaskBoard from '../components/tasks/TaskBoard';

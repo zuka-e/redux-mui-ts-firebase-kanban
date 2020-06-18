@@ -24,7 +24,7 @@ import { isSignedIn, isOwnedBy } from '../../models/Auth';
 import { RootState } from '../../store/rootReducer';
 import { DragContext } from '../../context/DragContext';
 import { useAppDispatch } from '../../store/store';
-import { sortCard } from '../../store/tasksSlice';
+import { sortCard } from '../../store/firestore/cards';
 import CustomDragLayer from './CustomDragLayer';
 import TaskList from './TaskList';
 import TitleForm from './TitleForm';
