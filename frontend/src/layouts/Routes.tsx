@@ -6,7 +6,7 @@ import { useFirestoreConnect, isLoaded } from 'react-redux-firebase';
 import Home from '../components/tasks/Home';
 import TaskBoard from '../components/tasks/TaskBoard';
 import { useAppDispatch } from '../store/store';
-import { fetchData } from '../store/tasksSlice';
+import { fetchData } from '../store/firestore/index';
 import NotFound404 from '../components/pages/NotFound404';
 import Login from '../components/pages/Login';
 import { LinearProgress } from '@material-ui/core';

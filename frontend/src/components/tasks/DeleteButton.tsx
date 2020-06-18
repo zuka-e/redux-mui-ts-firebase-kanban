@@ -4,7 +4,9 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { Box, Typography, Button } from '@material-ui/core';
 
 import { useAppDispatch } from '../../store/store';
-import { removeCard, removeList, removeBoard } from '../../store/tasksSlice';
+import { removeBoard } from '../../store/firestore/boards';
+import { removeList } from '../../store/firestore/lists';
+import { removeCard } from '../../store/firestore/cards';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

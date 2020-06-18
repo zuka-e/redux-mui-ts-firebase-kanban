@@ -12,7 +12,7 @@ import SaveIcon from '@material-ui/icons/Save';
 
 import { TaskCards } from '../../models/Task';
 import { useAppDispatch } from '../../store/store';
-import { editCard } from '../../store/tasksSlice';
+import { editCard } from '../../store/firestore/cards';
 
 interface CardFormProps {
   // 任意属性を利用して、複数のフォームに対応させる
