@@ -336,6 +336,7 @@ export const addCard = (props: {
         taskListId: taskListId,
         title: title,
         body: '',
+        done: false,
         createdAt: firebase.firestore.Timestamp.now(),
         updatedAt: firebase.firestore.Timestamp.now(),
       })
