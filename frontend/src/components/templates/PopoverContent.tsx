@@ -56,12 +56,22 @@ const PopoverContent: React.FC<PopoverContentProps> = (props) => {
       break;
     case 'bottom':
       anchorOrigin = {
-        vertical: 'top',
-        horizontal: 'right',
+        vertical: 'bottom',
+        horizontal: 'center',
       };
       transformOrigin = {
         vertical: 'top',
+        horizontal: 'center',
+      };
+      break;
+    case 'left':
+      anchorOrigin = {
+        vertical: 'top',
         horizontal: 'left',
+      };
+      transformOrigin = {
+        vertical: 'top',
+        horizontal: 'right',
       };
       break;
     default:
