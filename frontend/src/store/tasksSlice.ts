@@ -315,9 +315,6 @@ export const addCard = (props: {
   const { taskListId, title } = props;
   // storeからデータ取得
   const list = getState().tasks.lists[taskListId];
-  const boardId = list.taskBoardId;
-  const cardsRef = db.collection('boards').doc(boardId).collection('cards');
-  const listsRef = db.collection('boards').doc(boardId).collection('lists');
   // ログインしていなければ処理を中断
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
@@ -330,6 +327,9 @@ export const addCard = (props: {
   }
   try {
     dispatch(accessStart());
+    const boardId = list.taskBoardId;
+    const cardsRef = db.collection('boards').doc(boardId).collection('cards');
+    const listsRef = db.collection('boards').doc(boardId).collection('lists');
     const docId = await cardsRef
       .add({
         userId: currentUser?.uid,
@@ -366,8 +366,6 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
   const card = getState().tasks.cards[taskCardId];
   const listId = card.taskListId;
   const list = getState().tasks.lists[listId];
-  const boardId = list.taskBoardId;
-  const listsRef = db.collection('boards').doc(boardId).collection('lists');
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
@@ -380,6 +378,8 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
   }
   try {
     dispatch(accessStart());
+    const boardId = list.taskBoardId;
+    const listsRef = db.collection('boards').doc(boardId).collection('lists');
     const docRef = db
       .collection('boards')
       .doc(boardId)
@@ -387,6 +387,7 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
       .doc(taskCardId);
     await docRef.delete();
     const newCards = getState().tasks.lists[listId].cards.filter(
+      // ここにはない
       (card) => card.id !== taskCardId
     );
     await listsRef.doc(listId).update({
@@ -412,7 +413,6 @@ export const editCard = (props: editCardProps): AppThunk => async (
   const card = getState().tasks.cards[taskCardId];
   const listId = card.taskListId;
   const list = getState().tasks.lists[listId];
-  const boardId = list.taskBoardId;
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
@@ -424,6 +424,7 @@ export const editCard = (props: editCardProps): AppThunk => async (
   }
   try {
     dispatch(accessStart());
+    const boardId = list.taskBoardId;
     const docRef = db
       .collection('boards')
       .doc(boardId)
@@ -455,7 +456,6 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
   const card = getState().tasks.cards[taskCardId];
   const listId = card.taskListId;
   const list = getState().tasks.lists[listId];
-  const boardId = list.taskBoardId;
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
@@ -467,6 +467,7 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
   }
   try {
     dispatch(accessStart());
+    const boardId = list.taskBoardId;
     const docRef = db
       .collection('boards')
       .doc(boardId)
@@ -555,7 +556,6 @@ export const editList = (props: {
 }): AppThunk => async (dispatch, getState) => {
   const { taskListId, title } = props;
   const list = getState().tasks.lists[taskListId];
-  const boardId = list.taskBoardId;
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
@@ -567,6 +567,7 @@ export const editList = (props: {
   }
   try {
     dispatch(accessStart());
+    const boardId = list.taskBoardId;
     const docRef = db
       .collection('boards')
       .doc(boardId)
@@ -589,9 +590,6 @@ export const removeList = (props: { taskListId: string }): AppThunk => async (
   const { taskListId } = props;
   const list = getState().tasks.lists[taskListId];
   const boardId = list.taskBoardId;
-  const listsRef = db.collection('boards').doc(boardId).collection('lists');
-  const cards = getState().tasks.cards;
-  const cardsRef = db.collection('boards').doc(boardId).collection('cards');
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
@@ -603,6 +601,9 @@ export const removeList = (props: { taskListId: string }): AppThunk => async (
   }
   try {
     dispatch(accessStart());
+    const listsRef = db.collection('boards').doc(boardId).collection('lists');
+    const cards = getState().tasks.cards;
+    const cardsRef = db.collection('boards').doc(boardId).collection('cards');
     await listsRef.doc(taskListId).delete();
     Object.values(cards).forEach(
       (card) => card.taskListId === taskListId && cardsRef.doc(card.id).delete()
@@ -646,10 +647,6 @@ export const removeBoard = (props: { taskBoardId: string }): AppThunk => async (
 ) => {
   const { taskBoardId } = props;
   const board = getState().tasks.boards[taskBoardId];
-  const docRef = db.collection('boards').doc(taskBoardId);
-  const listsRef = docRef.collection('lists');
-  const cardsRef = docRef.collection('cards');
-  const { lists, cards } = getState().tasks;
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
@@ -661,6 +658,10 @@ export const removeBoard = (props: { taskBoardId: string }): AppThunk => async (
   }
   try {
     dispatch(accessStart());
+    const docRef = db.collection('boards').doc(taskBoardId);
+    const listsRef = docRef.collection('lists');
+    const cardsRef = docRef.collection('cards');
+    const { lists, cards } = getState().tasks;
     await docRef.delete();
     Object.values(lists).forEach((list) => {
       if (list.taskBoardId === taskBoardId) {
@@ -684,7 +685,6 @@ export const editBoard = (props: {
 }): AppThunk => async (dispatch, getState) => {
   const { taskBoardId, title } = props;
   const board = getState().tasks.boards[taskBoardId];
-  const docRef = db.collection('boards').doc(taskBoardId);
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
@@ -696,6 +696,7 @@ export const editBoard = (props: {
   }
   try {
     dispatch(accessStart());
+    const docRef = db.collection('boards').doc(taskBoardId);
     await docRef.update({
       title: title,
       updatedAt: firebase.firestore.Timestamp.now(),
