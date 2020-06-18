@@ -27,18 +27,16 @@ export const addList = (props: {
       .collection('boards')
       .doc(taskBoardId)
       .collection('lists');
-    const docId = await listsRef
-      .add({
-        userId: currentUser?.uid,
-        taskBoardId: taskBoardId,
-        title: title,
-        cards: [],
-        createdAt: firebase.firestore.Timestamp.now(),
-        updatedAt: firebase.firestore.Timestamp.now(),
-      })
-      .then((docRef) => docRef.id);
+    const docRef = await listsRef.add({
+      userId: currentUser?.uid,
+      taskBoardId: taskBoardId,
+      title: title,
+      cards: [],
+      createdAt: firebase.firestore.Timestamp.now(),
+      updatedAt: firebase.firestore.Timestamp.now(),
+    });
     dispatch(
-      addListSuccess({ taskBoardId: taskBoardId, id: docId, title: title })
+      addListSuccess({ taskBoardId: taskBoardId, id: docRef.id, title: title })
     );
   } catch (error) {
     dispatch(accessFailure(error));

@@ -7,54 +7,45 @@ export const seed = () => {
   faker.locale = 'en';
 
   [...Array(1)].map(async () => {
-    const boardId = await db
-      .collection('boards')
-      .add({
+    const boardRef = await db.collection('boards').add({
+      userId: 'ArPs4uFdxpgH3kcKE7XoApCpNHF2',
+      title: `${faker.hacker.adjective()} ${faker.hacker.verb()}`,
+      createdAt: faker.date.past(),
+      updatedAt: faker.date.recent(),
+    });
+    const boardId = boardRef.id;
+    const boardCollection = db.collection('boards').doc(boardId);
+
+    [...Array(3 + Math.floor(Math.random() * 10))].map(async () => {
+      const listsRef = boardCollection.collection('lists');
+      const listRef = await listsRef.add({
         userId: 'ArPs4uFdxpgH3kcKE7XoApCpNHF2',
+        taskBoardId: boardId,
         title: `${faker.hacker.adjective()} ${faker.hacker.verb()}`,
         createdAt: faker.date.past(),
         updatedAt: faker.date.recent(),
-      })
-      .then((docRef) => docRef.id);
+        cards: [],
+      });
+      const listId = listRef.id;
 
-    [...Array(3)].map(async () => {
-      const listsRef = db.collection('boards').doc(boardId).collection('lists');
-      const listId = await listsRef
-        .add({
+      [...Array(5 + Math.floor(Math.random() * 10))].map(async () => {
+        const cardsRef = boardCollection.collection('cards');
+        const docRef = await cardsRef.add({
           userId: 'ArPs4uFdxpgH3kcKE7XoApCpNHF2',
-          taskBoardId: boardId,
+          taskListId: listId,
           title: `${faker.hacker.adjective()} ${faker.hacker.verb()}`,
+          body: faker.hacker.phrase(),
+          done: Math.floor(Math.random() * 10) % 3 === 0,
           createdAt: faker.date.past(),
           updatedAt: faker.date.recent(),
-          cards: [],
-        })
-        .then((docRef) => docRef.id);
-
-      [...Array(3)].map(async (_, i) => {
-        const cardsRef = db
-          .collection('boards')
-          .doc(boardId)
-          .collection('cards');
-        cardsRef
-          .add({
-            userId: 'ArPs4uFdxpgH3kcKE7XoApCpNHF2',
-            taskListId: listId,
-            title: `${faker.hacker.adjective()} ${faker.hacker.verb()}`,
-            body: faker.hacker.phrase(),
-            done: i % 3 === 0,
-            createdAt: faker.date.past(),
-            updatedAt: faker.date.recent(),
-          })
-          .then((docRef) =>
-            docRef.get().then(function (doc) {
-              listsRef.doc(listId).update({
-                cards: firebase.firestore.FieldValue.arrayUnion({
-                  id: doc.id,
-                  ...doc.data(),
-                }),
-              });
-            })
-          );
+        });
+        const doc = await docRef.get();
+        listsRef.doc(listId).update({
+          cards: firebase.firestore.FieldValue.arrayUnion({
+            id: doc.id,
+            ...doc.data(),
+          }),
+        });
       });
     });
   });
