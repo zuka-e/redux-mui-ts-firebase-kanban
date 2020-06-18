@@ -15,14 +15,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import SaveIcon from '@material-ui/icons/Save';
 
 import { useAppDispatch } from '../../store/store';
-import {
-  editList,
-  addCard,
-  addList,
-  addBoard,
-  editCard,
-  editBoard,
-} from '../../store/tasksSlice';
+import { addBoard, editBoard } from '../../store/firestore/boards';
+import { addList, editList } from '../../store/firestore/lists';
+import { addCard, editCard } from '../../store/firestore/cards';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

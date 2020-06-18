@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 
-import produce from 'immer';
 import { useSelector } from 'react-redux';
 import { isEmpty } from 'react-redux-firebase';
 import { useParams, Redirect } from 'react-router-dom';
@@ -23,8 +22,9 @@ import CancelIcon from '@material-ui/icons/Cancel';
 import { TaskBoards, TaskListsArray } from '../../models/Task';
 import { isSignedIn, isOwnedBy } from '../../models/Auth';
 import { RootState } from '../../store/rootReducer';
+import { DragContext } from '../../context/DragContext';
 import { useAppDispatch } from '../../store/store';
-import { sortCard } from '../../store/tasksSlice';
+import { sortCard } from '../../store/firestore/cards';
 import CustomDragLayer from './CustomDragLayer';
 import TaskList from './TaskList';
 import TitleForm from './TitleForm';
@@ -91,50 +91,36 @@ const TaskBoard: React.FC = () => {
   const classes = useStyles();
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [editingTitle, setEditingTitle] = useState('');
-  const [isDragging, setIsDragging] = useState(false);
+  const { state, dragDispatch } = useContext(DragContext);
   const dispatch = useAppDispatch();
   const { boardId } = useParams(); // URLパラメータ取得
   const boards = useSelector(
     (state: RootState) => state.firestore.data.boards as TaskBoards
   );
-  const lists = useSelector(
+  const initialListsArray = useSelector(
     (state: RootState) => state.firestore.ordered.lists as TaskListsArray
   );
-  const [sortedLists, setSortedLists] = useState<TaskListsArray>(lists);
 
-  useEffect(() => {
-    setSortedLists(lists.filter((list) => list.taskBoardId === boardId));
-  }, [boardId, lists]);
-
-  const moveCard = (
-    dragListIndex: number,
-    hoverListIndex: number,
-    dragIndex: number,
-    hoverIndex: number
-  ) => {
-    setSortedLists(
-      produce(sortedLists, (draft) => {
-        const dragged = draft[dragListIndex].cards[dragIndex];
-        draft[dragListIndex].cards.splice(dragIndex, 1);
-        draft[hoverListIndex].cards.splice(hoverIndex, 0, dragged);
-      })
-    );
-  };
+  const sortedListsArray = state.listsArray.filter(
+    (list) => list.taskBoardId === boardId
+  );
 
   const handleSortStart = () => {
-    setIsDragging(true);
+    dragDispatch({ type: 'DRAG_START' });
   };
 
   const handleSortDone = () => {
     dispatch(
-      sortCard({ taskBoardId: boardId as string, taskListArray: sortedLists })
+      sortCard({
+        taskBoardId: boardId as string,
+        taskListArray: sortedListsArray,
+      })
     );
-    setIsDragging(false);
+    dragDispatch({ type: 'DRAG_END' });
   };
 
   const handleSortCancel = () => {
-    setIsDragging(false);
-    setSortedLists(lists.filter((list) => list.taskBoardId === boardId));
+    dragDispatch({ type: 'DRAG_CANCEL', payload: { initialListsArray } });
   };
 
   const toggleTitleForm = () => {
@@ -203,14 +189,14 @@ const TaskBoard: React.FC = () => {
         )}
       </Grid>
       <CustomDragLayer />
-      {sortedLists.map((list, i) => (
+      {sortedListsArray.map((list, i) => (
         <Grid item lg={2} md={3} sm={4} xs={6} key={list.id}>
           <Card
             className={classes.paper}
             elevation={7}
             onDragStart={handleSortStart}
           >
-            <TaskList list={list} listIndex={i} moveCard={moveCard} />
+            <TaskList list={list} listIndex={i} />
           </Card>
         </Grid>
       ))}
@@ -219,7 +205,7 @@ const TaskBoard: React.FC = () => {
           <AddTaskButton list id={boardId} />
         </Grid>
       )}
-      {isDragging && isOwnedBy(boards[boardId].userId) && (
+      {state.isSorting && isOwnedBy(boards[boardId].userId) && (
         <div className={classes.fab}>
           <Tooltip title='Done the sort' placement='top'>
             <Fab color='primary' aria-label='done' onClick={handleSortDone}>

@@ -1,22 +1,23 @@
 import React, { useEffect } from 'react';
 
+import { useSelector } from 'react-redux';
 import { Switch, Route } from 'react-router-dom';
 import { useFirestoreConnect, isLoaded } from 'react-redux-firebase';
-
-import Home from '../components/tasks/Home';
-import TaskBoard from '../components/tasks/TaskBoard';
-import { useAppDispatch } from '../store/store';
-import { fetchData } from '../store/tasksSlice';
-import NotFound404 from '../components/pages/NotFound404';
-import Login from '../components/pages/Login';
 import { LinearProgress } from '@material-ui/core';
-import { useSelector } from 'react-redux';
+
 import {
   TaskBoardsArray,
   TaskListsArray,
   TaskCardsArray,
 } from '../models/Task';
 import { RootState } from '../store/rootReducer';
+import { useAppDispatch } from '../store/store';
+import { fetchData } from '../store/firestore/index';
+import DragStateProvider from '../context/DragContext';
+import Home from '../components/tasks/Home';
+import TaskBoard from '../components/tasks/TaskBoard';
+import NotFound404 from '../components/pages/NotFound404';
+import Login from '../components/pages/Login';
 
 const Routes: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -66,7 +67,9 @@ const Routes: React.FC = () => {
         <Home />
       </Route>
       <Route path='/boards/:boardId'>
-        <TaskBoard />
+        <DragStateProvider>
+          <TaskBoard />
+        </DragStateProvider>
       </Route>
       <Route exact path='/login'>
         <Login />
