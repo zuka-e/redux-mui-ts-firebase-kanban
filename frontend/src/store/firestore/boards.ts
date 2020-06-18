@@ -22,16 +22,13 @@ export const addBoard = (props: { title: string }): AppThunk => async (
   }
   try {
     dispatch(accessStart());
-    const docId = await db
-      .collection('boards')
-      .add({
-        userId: currentUser?.uid,
-        title: title,
-        createdAt: firebase.firestore.Timestamp.now(),
-        updatedAt: firebase.firestore.Timestamp.now(),
-      })
-      .then((docRef) => docRef.id);
-    dispatch(addBoardSuccess({ id: docId, title: title }));
+    const docRef = await db.collection('boards').add({
+      userId: currentUser?.uid,
+      title: title,
+      createdAt: firebase.firestore.Timestamp.now(),
+      updatedAt: firebase.firestore.Timestamp.now(),
+    });
+    dispatch(addBoardSuccess({ id: docRef.id, title: title }));
   } catch (error) {
     dispatch(accessFailure(error));
   }

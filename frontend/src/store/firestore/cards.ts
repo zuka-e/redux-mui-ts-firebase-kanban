@@ -30,29 +30,24 @@ export const addCard = (props: {
   }
   try {
     dispatch(accessStart());
-    const docId = await cardsRef
-      .add({
-        userId: currentUser?.uid,
-        taskListId: taskListId,
-        title: title,
-        body: '',
-        done: false,
-        createdAt: firebase.firestore.Timestamp.now(),
-        updatedAt: firebase.firestore.Timestamp.now(),
-      })
-      .then((docRef) =>
-        docRef.get().then(function (doc) {
-          listsRef.doc(taskListId).update({
-            cards: firebase.firestore.FieldValue.arrayUnion({
-              id: doc.id,
-              ...doc.data(),
-            }),
-          });
-          return doc.id;
-        })
-      );
+    const docRef = await cardsRef.add({
+      userId: currentUser?.uid,
+      taskListId: taskListId,
+      title: title,
+      body: '',
+      done: false,
+      createdAt: firebase.firestore.Timestamp.now(),
+      updatedAt: firebase.firestore.Timestamp.now(),
+    });
+    const doc = await docRef.get();
+    await listsRef.doc(taskListId).update({
+      cards: firebase.firestore.FieldValue.arrayUnion({
+        id: doc.id,
+        ...doc.data(),
+      }),
+    });
     dispatch(
-      addCardSuccess({ taskListId: taskListId, id: docId, title: title })
+      addCardSuccess({ taskListId: taskListId, id: doc.id, title: title })
     );
   } catch (error) {
     dispatch(accessFailure(error));
