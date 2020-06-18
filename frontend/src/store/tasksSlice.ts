@@ -387,11 +387,11 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
       .doc(taskCardId);
     await docRef.delete();
     const newCards = getState().tasks.lists[listId].cards.filter(
-      // ここにはない
       (card) => card.id !== taskCardId
     );
     await listsRef.doc(listId).update({
       cards: newCards,
+      updatedAt: firebase.firestore.Timestamp.now(),
     });
     dispatch(removeCardSuccess({ taskCardId: taskCardId }));
     dispatch(setNotification(Notification.SuccessfullyDeleted));
@@ -430,16 +430,43 @@ export const editCard = (props: editCardProps): AppThunk => async (
       .doc(boardId)
       .collection('cards')
       .doc(taskCardId);
-    title &&
-      (await docRef.update({
+    const listsRef = db.collection('boards').doc(boardId).collection('lists');
+    if (title) {
+      await docRef.update({
         title: title,
         updatedAt: firebase.firestore.Timestamp.now(),
-      }));
-    body &&
-      (await docRef.update({
+      });
+      const newCardsOfList = list.cards.map((card) =>
+        card.id === taskCardId
+          ? {
+              ...card,
+              title: title,
+              updatedAt: firebase.firestore.Timestamp.now(),
+            }
+          : card
+      );
+      await listsRef.doc(listId).update({
+        cards: newCardsOfList,
+      });
+    }
+    if (body) {
+      await docRef.update({
         body: body,
         updatedAt: firebase.firestore.Timestamp.now(),
-      }));
+      });
+      const newCardsOfList = list.cards.map((card) =>
+        card.id === taskCardId
+          ? {
+              ...card,
+              body: body,
+              updatedAt: firebase.firestore.Timestamp.now(),
+            }
+          : card
+      );
+      await listsRef.doc(listId).update({
+        cards: newCardsOfList,
+      });
+    }
     dispatch(
       editCardSuccess({ taskCardId: taskCardId, title: title, body: body })
     );
@@ -475,6 +502,19 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
       .doc(taskCardId);
     await docRef.update({
       done: !card.done,
+    });
+    const listsRef = db.collection('boards').doc(boardId).collection('lists');
+    const newCardsOfList = list.cards.map((card) =>
+      card.id === taskCardId
+        ? {
+            ...card,
+            done: !card.done,
+            updatedAt: firebase.firestore.Timestamp.now(),
+          }
+        : card
+    );
+    await listsRef.doc(listId).update({
+      cards: newCardsOfList,
     });
     dispatch(toggleCardSuccess({ taskCardId: taskCardId }));
   } catch (error) {
