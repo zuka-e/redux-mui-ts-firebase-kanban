@@ -20,16 +20,22 @@ export const addCard = (props: {
 }): AppThunk => async (dispatch, getState) => {
   const { taskListId, title } = props;
   // storeからデータ取得
-  const boardId = getState().tasks.lists[taskListId].taskBoardId;
-  const cardsRef = db.collection('boards').doc(boardId).collection('cards');
-  const listsRef = db.collection('boards').doc(boardId).collection('lists');
+  const list = getState().tasks.lists[taskListId];
   // ログインしていなければ処理を中断
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
+  // listの変更を伴うため所有が必要
+  if (!isOwnedBy(list.userId)) {
+    dispatch(setNotification(Notification.PermissionError));
+    return;
+  }
   try {
     dispatch(accessStart());
+    const boardId = list.taskBoardId;
+    const cardsRef = db.collection('boards').doc(boardId).collection('cards');
+    const listsRef = db.collection('boards').doc(boardId).collection('lists');
     const docRef = await cardsRef.add({
       userId: currentUser?.uid,
       taskListId: taskListId,
@@ -61,20 +67,21 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
   const { taskCardId } = props;
   const card = getState().tasks.cards[taskCardId];
   const listId = card.taskListId;
-  const boardId = getState().tasks.lists[listId].taskBoardId;
-  const listsRef = db.collection('boards').doc(boardId).collection('lists');
+  const list = getState().tasks.lists[listId];
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
   // 所有者(データの'userId'が'currentUser'の'uid'と一致)でなければ処理を中断
-  if (!isOwnedBy(card.userId)) {
+  if (!isOwnedBy(card.userId) || !isOwnedBy(list.userId)) {
     dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
     dispatch(accessStart());
+    const boardId = list.taskBoardId;
+    const listsRef = db.collection('boards').doc(boardId).collection('lists');
     const docRef = db
       .collection('boards')
       .doc(boardId)
@@ -86,6 +93,7 @@ export const removeCard = (props: { taskCardId: string }): AppThunk => async (
     );
     await listsRef.doc(listId).update({
       cards: newCards,
+      updatedAt: firebase.firestore.Timestamp.now(),
     });
     dispatch(removeCardSuccess({ taskCardId: taskCardId }));
     dispatch(setNotification(Notification.SuccessfullyDeleted));
@@ -106,33 +114,61 @@ export const editCard = (props: editCardProps): AppThunk => async (
   const { taskCardId, title, body } = props;
   const card = getState().tasks.cards[taskCardId];
   const listId = card.taskListId;
-  const boardId = getState().tasks.lists[listId].taskBoardId;
+  const list = getState().tasks.lists[listId];
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
-  if (!isOwnedBy(card.userId)) {
+  if (!isOwnedBy(card.userId) || !isOwnedBy(list.userId)) {
     dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
     dispatch(accessStart());
+    const boardId = list.taskBoardId;
     const docRef = db
       .collection('boards')
       .doc(boardId)
       .collection('cards')
       .doc(taskCardId);
-    title &&
-      (await docRef.update({
+    const listsRef = db.collection('boards').doc(boardId).collection('lists');
+    if (title) {
+      await docRef.update({
         title: title,
         updatedAt: firebase.firestore.Timestamp.now(),
-      }));
-    body &&
-      (await docRef.update({
+      });
+      const newCardsOfList = list.cards.map((card) =>
+        card.id === taskCardId
+          ? {
+              ...card,
+              title: title,
+              updatedAt: firebase.firestore.Timestamp.now(),
+            }
+          : card
+      );
+      await listsRef.doc(listId).update({
+        cards: newCardsOfList,
+      });
+    }
+    if (body) {
+      await docRef.update({
         body: body,
         updatedAt: firebase.firestore.Timestamp.now(),
-      }));
+      });
+      const newCardsOfList = list.cards.map((card) =>
+        card.id === taskCardId
+          ? {
+              ...card,
+              body: body,
+              updatedAt: firebase.firestore.Timestamp.now(),
+            }
+          : card
+      );
+      await listsRef.doc(listId).update({
+        cards: newCardsOfList,
+      });
+    }
     dispatch(
       editCardSuccess({ taskCardId: taskCardId, title: title, body: body })
     );
@@ -148,18 +184,19 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
   const { taskCardId } = props;
   const card = getState().tasks.cards[taskCardId];
   const listId = card.taskListId;
-  const boardId = getState().tasks.lists[listId].taskBoardId;
+  const list = getState().tasks.lists[listId];
 
   if (!isSignedIn()) {
     dispatch(setNotification(Notification.NotSignedInWarning));
     return;
   }
-  if (!isOwnedBy(card.userId)) {
+  if (!isOwnedBy(card.userId) || !isOwnedBy(list.userId)) {
     dispatch(setNotification(Notification.PermissionError));
     return;
   }
   try {
     dispatch(accessStart());
+    const boardId = list.taskBoardId;
     const docRef = db
       .collection('boards')
       .doc(boardId)
@@ -189,21 +226,20 @@ export const sortCard = (props: {
     dispatch(setNotification(Notification.PermissionError));
     return;
   }
-
   try {
     dispatch(accessStart());
+    taskListArray.map(async (list) => {
+      const docRef = db
+        .collection('boards')
+        .doc(taskBoardId)
+        .collection('lists')
+        .doc(list.id);
+      await docRef.update({
+        cards: list.cards,
+      });
+      dispatch(setNotification(Notification.SuccessfullyUpdated));
+    });
   } catch (error) {
     dispatch(accessFailure(error));
   }
-  taskListArray.map(async (list) => {
-    const docRef = db
-      .collection('boards')
-      .doc(taskBoardId)
-      .collection('lists')
-      .doc(list.id);
-    await docRef.update({
-      cards: list.cards,
-    });
-  });
-  dispatch(setNotification(Notification.SuccessfullyUpdated));
 };
