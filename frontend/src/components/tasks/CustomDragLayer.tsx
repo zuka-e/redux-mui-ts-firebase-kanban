@@ -49,7 +49,7 @@ const CustomDragLayer: React.FC = () => {
     <CustomDragLayerWrapper>
       <div style={getItemStyles(currentOffset)}>
         <Grid container>
-          <Grid item lg={2} md={3} sm={4} xs={6}>
+          <Grid item lg={3} md={4} sm={6} xs={12}>
             <div style={{ transform: 'rotate(5deg)' }}>{renderItem()}</div>
           </Grid>
         </Grid>

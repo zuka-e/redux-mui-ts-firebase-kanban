@@ -192,7 +192,7 @@ const TaskBoard: React.FC = () => {
       </Grid>
       <CustomDragLayer />
       {sortedListsArray.map((list, i) => (
-        <Grid item lg={2} md={3} sm={4} xs={6} key={list.id}>
+        <Grid item lg={3} md={4} sm={6} xs={12} key={list.id}>
           <Card
             className={classes.paper}
             elevation={7}
@@ -203,7 +203,7 @@ const TaskBoard: React.FC = () => {
         </Grid>
       ))}
       {isSignedIn() && (
-        <Grid item lg={2} md={3} sm={4} xs={6}>
+        <Grid item lg={3} md={4} sm={6} xs={12}>
           <AddTaskButton list id={boardId} />
         </Grid>
       )}

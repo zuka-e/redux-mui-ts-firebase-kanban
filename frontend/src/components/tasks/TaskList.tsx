@@ -168,7 +168,7 @@ const TaskList: React.FC<TaskListProps> = (props) => {
         selectedValue={filterQuery}
         handleChange={handleChange}
       />
-      <Box className={classes.scrollbar} maxHeight='250px'>
+      <Box className={classes.scrollbar} maxHeight='550px'>
         {filteredCards.map((card, i) => (
           <Box
             bgcolor='background.paper'
