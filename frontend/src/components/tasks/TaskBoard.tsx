@@ -41,6 +41,9 @@ const useStyles = makeStyles((theme: Theme) =>
     },
     title: {
       width: 'fit-content',
+      fontSize: '2.125rem',
+      fontWeight: 'bold',
+      whiteSpace: 'nowrap',
       padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
       borderRadius: theme.spacing(1),
       cursor: 'pointer',
@@ -172,7 +175,6 @@ const TaskBoard: React.FC = () => {
             <Typography
               className={classes.title}
               component='h1'
-              variant='h4'
               color='textSecondary'
               onClick={toggleTitleForm}
             >

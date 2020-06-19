@@ -20,25 +20,22 @@ import ListMenu from './ListMenu';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
+    header: {
       cursor: 'pointer',
+      fontSize: '1.2em',
+      fontWeight: 'bold',
+      whiteSpace: 'nowrap',
+      width: 'calc(100% - 30px)',
+      padding: theme.spacing(1),
+      borderRadius: theme.spacing(0.5),
       '&:hover': {
         backgroundColor: 'rgb(0,0,0,0.025)',
       },
     },
-    header: {
-      flex: 'auto',
-      fontSize: '1.2em',
-      fontWeight: 'bold',
-      borderRadius: theme.spacing(0.5),
-    },
-    board: {
-      backgroundColor: theme.palette.background.paper,
-    },
-    card: {
-      '& > p': {
-        padding: theme.spacing(1),
-      },
+    menuButton: {
+      position: 'absolute',
+      top: '4px',
+      right: 0,
     },
     scrollbar: {
       overflowX: 'hidden',
@@ -143,13 +140,9 @@ const TaskList: React.FC<TaskListProps> = (props) => {
           setEditingTitle={setEditingTitle}
         />
       ) : (
-        <Box
-          className={classes.card}
-          display='flex'
-          justifyContent='space-between'
-        >
+        <Box position='relative'>
           <Typography
-            className={`${classes.root} ${classes.header}`}
+            className={`${classes.header} ${classes.scrollbar}`}
             onClick={toggleTitleForm}
           >
             {list.title}
@@ -157,7 +150,7 @@ const TaskList: React.FC<TaskListProps> = (props) => {
           {isOwnedBy(list.userId) && (
             <PopoverContent
               trigger={
-                <IconButton size='small'>
+                <IconButton size='small' className={classes.menuButton}>
                   <MoreVertIcon />
                 </IconButton>
               }
