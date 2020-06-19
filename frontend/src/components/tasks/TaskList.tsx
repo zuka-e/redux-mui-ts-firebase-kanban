@@ -120,6 +120,7 @@ const TaskList: React.FC<TaskListProps> = (props) => {
 
   const toggleTitleForm = () => {
     setIsEditingTitle(!isEditingTitle);
+    setEditingTitle(editingTitle || list.title);
   };
 
   const handleClickAway = () => {
