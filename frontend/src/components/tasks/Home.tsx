@@ -30,6 +30,29 @@ const useStyles = makeStyles((theme: Theme) =>
       color: 'inherit',
       textDecoration: 'none',
     },
+    header: {
+      fontSize: '1.5em',
+      fontWeight: 'bold',
+      whiteSpace: 'nowrap',
+    },
+    scrollbar: {
+      overflowX: 'hidden',
+      overflowY: 'hidden',
+      '&:hover': {
+        overflowX: 'auto',
+        overflowY: 'auto',
+      },
+      '&::-webkit-scrollbar': {
+        width: '5px',
+        height: '1px',
+      },
+      '&::-webkit-scrollbar-track': {
+        backgroundColor: '#eee',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: '#ccc',
+      },
+    },
     cmtime: {
       display: 'flex',
       justifyContent: 'flex-end',
@@ -59,8 +82,7 @@ const Home: React.FC = () => {
             <Link to={`/boards/${board.id}`} className={classes.link}>
               <Card className={classes.paper} elevation={7}>
                 <Typography
-                  component='p'
-                  variant='h5'
+                  className={`${classes.header} ${classes.scrollbar}`}
                   color='textSecondary'
                   gutterBottom
                 >
