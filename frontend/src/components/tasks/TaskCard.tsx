@@ -98,13 +98,16 @@ const TaskCard: React.FC<TaskCardProps> = (props) => {
   });
   drag(drop(ref));
 
+  const isTouchDevice = window.ontouchstart === null;
+  // or navigator.userAgent.match(/iPhone|Android.+Mobile/)
+
   const handleClick = () => {
     setOpen(true);
   };
 
   return (
     <Paper
-      ref={ref}
+      ref={isTouchDevice ? undefined : ref}
       className={`${classes.root} ${isOver && classes.dragAndHover}`}
     >
       <OpenCardDetails card={card} open={open} setOpen={setOpen}>
