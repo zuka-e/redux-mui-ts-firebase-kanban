@@ -202,8 +202,21 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
       .doc(boardId)
       .collection('cards')
       .doc(taskCardId);
+    const listsRef = db.collection('boards').doc(boardId).collection('lists');
     await docRef.update({
       done: !card.done,
+    });
+    const newCardsOfList = list.cards.map((card) =>
+      card.id === taskCardId
+        ? {
+            ...card,
+            done: !card.done,
+            updatedAt: firebase.firestore.Timestamp.now(),
+          }
+        : card
+    );
+    await listsRef.doc(listId).update({
+      cards: newCardsOfList,
     });
     dispatch(toggleCardSuccess({ taskCardId: taskCardId }));
   } catch (error) {
