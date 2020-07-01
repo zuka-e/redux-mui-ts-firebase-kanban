@@ -52,7 +52,7 @@ const DeleteButton: React.FC<DeleteProps> = (props) => {
         <Typography className={classes.message}>{message}</Typography>
       )}
       <Box my={1} display='flex' justifyContent='space-around'>
-        <Typography variant='h5' component='p' color='error'>
+        <Typography color='error' gutterBottom>
           Are you sure to delete?
         </Typography>
       </Box>
