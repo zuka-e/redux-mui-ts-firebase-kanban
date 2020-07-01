@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     fab: {
-      position: 'absolute',
+      position: 'fixed',
       bottom: '15px',
       right: '15px',
       '& > *': {
