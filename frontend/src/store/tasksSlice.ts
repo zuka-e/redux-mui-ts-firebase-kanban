@@ -221,6 +221,20 @@ const tasksSlice = createSlice({
       state.loading = false;
       state.error = null;
     },
+
+    sortCardSuccess(
+      state,
+      action: PayloadAction<{
+        list: TaskLists['id'];
+      }>
+    ) {
+      const { list } = action.payload;
+      const newCards = list.cards;
+      state.lists[list.id].cards = newCards;
+      newCards.map((newCard) => (state.cards[newCard.id].taskListId = list.id));
+      state.loading = false;
+      state.error = null;
+    },
   },
 });
 
@@ -232,6 +246,7 @@ export const {
   removeCardSuccess,
   editCardSuccess,
   toggleCardSuccess,
+  sortCardSuccess,
   addListSuccess,
   editListSuccess,
   removeListSuccess,

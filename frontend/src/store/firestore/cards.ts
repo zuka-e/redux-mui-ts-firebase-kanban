@@ -11,6 +11,7 @@ import {
   removeCardSuccess,
   editCardSuccess,
   toggleCardSuccess,
+  sortCardSuccess,
 } from '../tasksSlice';
 
 export const addCard = (props: {
@@ -250,8 +251,19 @@ export const sortCard = (props: {
       await docRef.update({
         cards: list.cards,
       });
-      dispatch(setNotification(Notification.SuccessfullyUpdated));
+      list.cards.map(async (card) => {
+        const docRef = db
+          .collection('boards')
+          .doc(taskBoardId)
+          .collection('cards')
+          .doc(card.id);
+        await docRef.update({
+          taskListId: list.id,
+        });
+      });
+      dispatch(sortCardSuccess({ list }));
     });
+    dispatch(setNotification(Notification.SuccessfullyUpdated));
   } catch (error) {
     dispatch(accessFailure(error));
   }
