@@ -123,11 +123,11 @@ const mainTheme = createMuiTheme({
       secondary: '#a08a1c',
     },
     primary: {
-      main: cyan['A400'],
+      main: '#40cbb5',
       contrastText: '#fff',
     },
     secondary: {
-      main: yellow['A200'],
+      main: '#e0fffa',
     },
   },
 });

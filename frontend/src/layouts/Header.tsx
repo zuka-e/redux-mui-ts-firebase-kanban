@@ -189,32 +189,30 @@ const Header: React.FC = () => {
   }
 
   return (
-    <div className={classes.root}>
-      <AppBar position='static'>
-        <Toolbar>
-          <IconButton
-            edge='start'
-            className={classes.menuButton}
-            color='inherit'
-            aria-label='menu'
-            aria-controls='menu'
-            aria-haspopup='true'
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Drawer anchor='left' open={state} onClose={toggleDrawer(false)}>
-            {renderDrawerContent()}
-          </Drawer>
-          <Typography className={classes.root} component='p' variant='h4'>
-            <Link to={'/'} className={`${classes.title} ${classes.link}`}>
-              Title
-            </Link>
-          </Typography>
-          {isSignedIn() ? renderAccountIcon() : renderSignInLink()}
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar position='static'>
+      <Toolbar>
+        <IconButton
+          edge='start'
+          className={classes.menuButton}
+          color='inherit'
+          aria-label='menu'
+          aria-controls='menu'
+          aria-haspopup='true'
+          onClick={toggleDrawer(true)}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Drawer anchor='left' open={state} onClose={toggleDrawer(false)}>
+          {renderDrawerContent()}
+        </Drawer>
+        <Typography className={classes.root} component='p' variant='h4'>
+          <Link to={'/'} className={`${classes.title} ${classes.link}`}>
+            Title
+          </Link>
+        </Typography>
+        {isSignedIn() ? renderAccountIcon() : renderSignInLink()}
+      </Toolbar>
+    </AppBar>
   );
 };
 
