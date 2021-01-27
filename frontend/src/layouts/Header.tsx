@@ -5,7 +5,6 @@ import { isLoaded } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { pink } from '@material-ui/core/colors';
-import { Backdrop, CircularProgress } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Drawer from '@material-ui/core/Drawer';
@@ -34,10 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-    },
-    backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
-      color: '#fff',
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -181,11 +176,7 @@ const Header: React.FC = () => {
   );
 
   if (!isLoaded(boards)) {
-    return (
-      <Backdrop className={classes.backdrop} open={!isLoaded(boards)}>
-        <CircularProgress color='inherit' />
-      </Backdrop>
-    );
+    return <React.Fragment />;
   }
 
   return (
@@ -207,7 +198,7 @@ const Header: React.FC = () => {
         </Drawer>
         <Typography className={classes.root} component='p' variant='h4'>
           <Link to={'/'} className={`${classes.title} ${classes.link}`}>
-            Title
+            {process.env.REACT_APP_PROJECT_NAME}
           </Link>
         </Typography>
         {isSignedIn() ? renderAccountIcon() : renderSignInLink()}
