@@ -71,6 +71,9 @@ const Routes: React.FC = () => {
           <TaskBoard />
         </DragStateProvider>
       </Route>
+      <Route exact path='/boards'>
+        <TaskBoardIndex />
+      </Route>
       <Route exact path='/login'>
         <Login />
       </Route>
