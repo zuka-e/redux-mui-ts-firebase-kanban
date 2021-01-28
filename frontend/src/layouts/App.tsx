@@ -16,6 +16,7 @@ import { makeStyles, createStyles, Theme } from '@material-ui/core/styles';
 import { RootState } from '../store/rootReducer';
 import { ThemeContext } from './ThemeProvider';
 import Header from './Header';
+import Footer from './Footer';
 import TemporaryMessage from './TemporaryMessage';
 import Routes from './Routes';
 import { authIsReady } from 'react-redux-firebase';
@@ -23,9 +24,6 @@ import store from '../store/store';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      marginTop: theme.spacing(1),
-    },
     backdrop: {
       zIndex: theme.zIndex.drawer + 1,
       color: '#fff',
@@ -66,12 +64,7 @@ const App: React.FC = () => {
         <DndProvider backend={HTML5Backend}>
           <CssBaseline />
           <Header />
-          <Container
-            component='main'
-            className={classes.root}
-            maxWidth={false}
-            disableGutters
-          >
+          <Container component='main' maxWidth={false} disableGutters>
             {notification && (
               <TemporaryMessage
                 type={notification.type}
@@ -80,6 +73,7 @@ const App: React.FC = () => {
             )}
             <Routes />
           </Container>
+          <Footer />
         </DndProvider>
       </ThemeProvider>
     </Router>
