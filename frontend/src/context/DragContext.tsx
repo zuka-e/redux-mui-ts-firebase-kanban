@@ -82,7 +82,11 @@ const reducer = (state: DragState, action: DragActionTypes): DragState => {
         );
         const dragged = sortedLists[dragListIndex].cards[dragIndex];
         sortedLists[dragListIndex].cards.splice(dragIndex, 1);
+
         sortedLists[hoverListIndex].cards.splice(hoverIndex, 0, dragged);
+        sortedLists[hoverListIndex].cards.map(
+          (card) => (card.taskListId = sortedLists[hoverListIndex].id)
+        );
       });
     default:
       return state;

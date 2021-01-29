@@ -11,6 +11,7 @@ import {
   removeCardSuccess,
   editCardSuccess,
   toggleCardSuccess,
+  sortCardSuccess,
 } from '../tasksSlice';
 
 export const addCard = (props: {
@@ -202,8 +203,21 @@ export const toggleCard = (props: { taskCardId: string }): AppThunk => async (
       .doc(boardId)
       .collection('cards')
       .doc(taskCardId);
+    const listsRef = db.collection('boards').doc(boardId).collection('lists');
     await docRef.update({
       done: !card.done,
+    });
+    const newCardsOfList = list.cards.map((card) =>
+      card.id === taskCardId
+        ? {
+            ...card,
+            done: !card.done,
+            updatedAt: firebase.firestore.Timestamp.now(),
+          }
+        : card
+    );
+    await listsRef.doc(listId).update({
+      cards: newCardsOfList,
     });
     dispatch(toggleCardSuccess({ taskCardId: taskCardId }));
   } catch (error) {
@@ -237,8 +251,19 @@ export const sortCard = (props: {
       await docRef.update({
         cards: list.cards,
       });
-      dispatch(setNotification(Notification.SuccessfullyUpdated));
+      list.cards.map(async (card) => {
+        const docRef = db
+          .collection('boards')
+          .doc(taskBoardId)
+          .collection('cards')
+          .doc(card.id);
+        await docRef.update({
+          taskListId: list.id,
+        });
+      });
+      dispatch(sortCardSuccess({ list }));
     });
+    dispatch(setNotification(Notification.SuccessfullyUpdated));
   } catch (error) {
     dispatch(accessFailure(error));
   }

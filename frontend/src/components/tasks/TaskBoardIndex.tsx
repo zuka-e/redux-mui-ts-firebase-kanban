@@ -21,6 +21,9 @@ import AddTaskButton from './AddTaskButton';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+      marginTop: theme.spacing(1),
+    },
     paper: {
       margin: theme.spacing(1),
       padding: theme.spacing(1),
@@ -64,7 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-const Home: React.FC = () => {
+const TaskBoardIndex: React.FC = () => {
   const classes = useStyles();
   const boards = useSelector(
     (state: RootState) => state.firestore.ordered.boards as TaskBoardsArray
@@ -75,7 +78,7 @@ const Home: React.FC = () => {
   }
 
   return (
-    <Grid container>
+    <Grid container className={classes.root}>
       {boards.map((board) => {
         return (
           <Grid item lg={3} sm={4} xs={6} key={board.id}>
@@ -106,4 +109,4 @@ const Home: React.FC = () => {
   );
 };
 
-export default Home;
+export default TaskBoardIndex;

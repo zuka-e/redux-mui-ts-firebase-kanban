@@ -21,7 +21,7 @@
     "axios": "^0.19.2",
     "faker": "^4.1.0",
     "firebase": "^7.14.5",
-    "firebaseui": "^4.5.0",
+    "firebaseui": "^4.7.1",
     "immer": "^6.0.9",
     "moment": "^2.26.0",
     "react": "^16.13.1",

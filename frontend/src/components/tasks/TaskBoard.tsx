@@ -8,7 +8,6 @@ import {
   Grid,
   Card,
   Typography,
-  Box,
   Button,
   Hidden,
   Tooltip,
@@ -39,12 +38,16 @@ const useStyles = makeStyles((theme: Theme) =>
       padding: theme.spacing(1),
       backgroundColor: theme.palette.secondary.light,
     },
+    boardHeader: {
+      flex: 'auto',
+      padding: theme.spacing(1),
+    },
     title: {
       width: 'fit-content',
       fontSize: '2.125rem',
       fontWeight: 'bold',
       whiteSpace: 'nowrap',
-      padding: `${theme.spacing(0.5)}px ${theme.spacing(2)}px`,
+      padding: `${theme.spacing(0.5)}px ${theme.spacing(1)}px`,
       borderRadius: theme.spacing(1),
       cursor: 'pointer',
       '&:hover': {
@@ -52,22 +55,15 @@ const useStyles = makeStyles((theme: Theme) =>
       },
     },
     fab: {
-      position: 'absolute',
+      position: 'fixed',
       bottom: '15px',
       right: '15px',
       '& > *': {
         margin: theme.spacing(1),
       },
     },
-    flexAuto: {
-      display: 'flex',
-      flex: 'auto',
-      margin: `auto ${theme.spacing(1)}px`,
-    },
-    flexEnd: {
-      display: 'flex',
-      justifyContent: 'flex-end',
-      margin: `auto ${theme.spacing(1)}px`,
+    taskList: {
+      minWidth: '375px',
     },
     scrollbar: {
       overflowX: 'hidden',
@@ -96,7 +92,7 @@ const TaskBoard: React.FC = () => {
   const [editingTitle, setEditingTitle] = useState('');
   const { state, dragDispatch } = useContext(DragContext);
   const dispatch = useAppDispatch();
-  const { boardId } = useParams(); // URLパラメータ取得
+  const { boardId } = useParams<{ boardId: string }>(); // URLパラメータ取得
   const boards = useSelector(
     (state: RootState) => state.firestore.data.boards as TaskBoards
   );
@@ -157,20 +153,18 @@ const TaskBoard: React.FC = () => {
   return (
     <Grid container>
       <Grid container justify='space-between' wrap='nowrap'>
-        <Grid item className={`${classes.flexAuto} ${classes.scrollbar}`}>
+        <Grid item className={`${classes.scrollbar} ${classes.boardHeader}`}>
           {isEditingTitle && isOwnedBy(boards[boardId].userId) ? (
-            <Box mt={1}>
-              <TitleForm
-                method={'PATCH'}
-                board
-                id={boardId}
-                currentValue={boards[boardId].title}
-                toggleForm={toggleTitleForm}
-                handleClickAway={handleClickAway}
-                editingTitle={editingTitle}
-                setEditingTitle={setEditingTitle}
-              />
-            </Box>
+            <TitleForm
+              method={'PATCH'}
+              board
+              id={boardId}
+              currentValue={boards[boardId].title}
+              toggleForm={toggleTitleForm}
+              handleClickAway={handleClickAway}
+              editingTitle={editingTitle}
+              setEditingTitle={setEditingTitle}
+            />
           ) : (
             <Typography
               className={classes.title}
@@ -183,44 +177,46 @@ const TaskBoard: React.FC = () => {
           )}
         </Grid>
         {isOwnedBy(boards[boardId].userId) && (
-          <Grid item className={classes.flexEnd} style={{ marginTop: '4px' }}>
+          <Grid item>
             <PopoverContent trigger={<ResponsiveMenuButton />}>
               <BoardMenu boardId={boardId} />
             </PopoverContent>
           </Grid>
         )}
       </Grid>
-      <CustomDragLayer />
-      {sortedListsArray.map((list, i) => (
-        <Grid item lg={3} md={4} sm={6} xs={12} key={list.id}>
-          <Card
-            className={classes.paper}
-            elevation={7}
-            onDragStart={handleSortStart}
-          >
-            <TaskList list={list} listIndex={i} />
-          </Card>
-        </Grid>
-      ))}
-      {isSignedIn() && (
-        <Grid item lg={3} md={4} sm={6} xs={12}>
-          <AddTaskButton list id={boardId} />
-        </Grid>
-      )}
-      {state.isSorting && isOwnedBy(boards[boardId].userId) && (
-        <div className={classes.fab}>
-          <Tooltip title='Done the sort' placement='top'>
-            <Fab color='primary' aria-label='done' onClick={handleSortDone}>
-              <DoneIcon />
-            </Fab>
-          </Tooltip>
-          <Tooltip title='Cancel' placement='top'>
-            <Fab aria-label='Cancel' onClick={handleSortCancel}>
-              <CancelIcon />
-            </Fab>
-          </Tooltip>
-        </div>
-      )}
+      <Grid container wrap='nowrap' className={classes.scrollbar}>
+        <CustomDragLayer />
+        {sortedListsArray.map((list, i) => (
+          <Grid item key={list.id} className={classes.taskList}>
+            <Card
+              className={classes.paper}
+              elevation={7}
+              onDragStart={handleSortStart}
+            >
+              <TaskList list={list} listIndex={i} />
+            </Card>
+          </Grid>
+        ))}
+        {isSignedIn() && (
+          <Grid item className={classes.taskList}>
+            <AddTaskButton list id={boardId} />
+          </Grid>
+        )}
+        {state.isSorting && isOwnedBy(boards[boardId].userId) && (
+          <div className={classes.fab}>
+            <Tooltip title='Done the sort' placement='top'>
+              <Fab color='primary' aria-label='done' onClick={handleSortDone}>
+                <DoneIcon />
+              </Fab>
+            </Tooltip>
+            <Tooltip title='Cancel' placement='top'>
+              <Fab aria-label='Cancel' onClick={handleSortCancel}>
+                <CancelIcon />
+              </Fab>
+            </Tooltip>
+          </div>
+        )}
+      </Grid>
     </Grid>
   );
 };

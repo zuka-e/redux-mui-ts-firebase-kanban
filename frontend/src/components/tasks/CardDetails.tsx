@@ -84,7 +84,13 @@ const CardDetails: React.FC<CardDetailsProps> = (props) => {
     <Card>
       <CardContent>
         <FormControlLabel // 'label'のある'checkbox'
-          control={<Checkbox checked={card.done} onClick={handleClick} />}
+          control={
+            <Checkbox
+              color='primary'
+              checked={card.done}
+              onClick={handleClick}
+            />
+          }
           disabled={!isOwnedBy(card.userId)}
           label={card.done ? 'Finished!' : 'Unfinished.'}
         />

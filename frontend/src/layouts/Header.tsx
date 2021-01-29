@@ -5,7 +5,6 @@ import { isLoaded } from 'react-redux-firebase';
 import { Link } from 'react-router-dom';
 import { createStyles, makeStyles, Theme } from '@material-ui/core/styles';
 import { pink } from '@material-ui/core/colors';
-import { Backdrop, CircularProgress } from '@material-ui/core';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Drawer from '@material-ui/core/Drawer';
@@ -34,10 +33,6 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-    },
-    backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
-      color: '#fff',
     },
     menuButton: {
       marginRight: theme.spacing(2),
@@ -181,40 +176,34 @@ const Header: React.FC = () => {
   );
 
   if (!isLoaded(boards)) {
-    return (
-      <Backdrop className={classes.backdrop} open={!isLoaded(boards)}>
-        <CircularProgress color='inherit' />
-      </Backdrop>
-    );
+    return <React.Fragment />;
   }
 
   return (
-    <div className={classes.root}>
-      <AppBar position='static'>
-        <Toolbar>
-          <IconButton
-            edge='start'
-            className={classes.menuButton}
-            color='inherit'
-            aria-label='menu'
-            aria-controls='menu'
-            aria-haspopup='true'
-            onClick={toggleDrawer(true)}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Drawer anchor='left' open={state} onClose={toggleDrawer(false)}>
-            {renderDrawerContent()}
-          </Drawer>
-          <Typography className={classes.root} component='p' variant='h4'>
-            <Link to={'/'} className={`${classes.title} ${classes.link}`}>
-              Title
-            </Link>
-          </Typography>
-          {isSignedIn() ? renderAccountIcon() : renderSignInLink()}
-        </Toolbar>
-      </AppBar>
-    </div>
+    <AppBar position='static'>
+      <Toolbar>
+        <IconButton
+          edge='start'
+          className={classes.menuButton}
+          color='inherit'
+          aria-label='menu'
+          aria-controls='menu'
+          aria-haspopup='true'
+          onClick={toggleDrawer(true)}
+        >
+          <MenuIcon />
+        </IconButton>
+        <Drawer anchor='left' open={state} onClose={toggleDrawer(false)}>
+          {renderDrawerContent()}
+        </Drawer>
+        <Typography className={classes.root} component='p' variant='h4'>
+          <Link to={'/'} className={`${classes.title} ${classes.link}`}>
+            {process.env.REACT_APP_PROJECT_NAME}
+          </Link>
+        </Typography>
+        {isSignedIn() ? renderAccountIcon() : renderSignInLink()}
+      </Toolbar>
+    </AppBar>
   );
 };
 

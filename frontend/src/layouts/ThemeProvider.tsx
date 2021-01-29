@@ -116,6 +116,22 @@ const limeTheme = createMuiTheme({
   },
 });
 
+const mainTheme = createMuiTheme({
+  palette: {
+    text: {
+      primary: brown['900'],
+      secondary: '#a08a1c',
+    },
+    primary: {
+      main: '#40cbb5',
+      contrastText: '#fff',
+    },
+    secondary: {
+      main: '#e0fffa',
+    },
+  },
+});
+
 export const themes = [
   DEFAULT,
   LIGHT,
@@ -154,7 +170,7 @@ export const ThemeContext = React.createContext<ThemeContext>({
 } as ThemeContext);
 
 const ThemeProvider: React.FC = (props) => {
-  const [theme, setTheme] = useState<Theme>(greenTheme);
+  const [theme, setTheme] = useState<Theme>(mainTheme);
 
   // 利用側(イベント)で文字列(theme)渡す
   const toggleTheme = (theme: string) => {
