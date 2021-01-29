@@ -14,10 +14,11 @@ import { RootState } from '../store/rootReducer';
 import { useAppDispatch } from '../store/store';
 import { fetchData } from '../store/firestore/index';
 import DragStateProvider from '../context/DragContext';
-import Home from '../components/tasks/Home';
+import TaskBoardIndex from '../components/tasks/TaskBoardIndex';
 import TaskBoard from '../components/tasks/TaskBoard';
 import NotFound404 from '../components/pages/NotFound404';
 import Login from '../components/pages/Login';
+import Home from './Home';
 
 const Routes: React.FC = () => {
   const dispatch = useAppDispatch();
