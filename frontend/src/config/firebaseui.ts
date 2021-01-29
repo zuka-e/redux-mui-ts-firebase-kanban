@@ -9,10 +9,8 @@ export const uiConfig = {
     firebase.auth.EmailAuthProvider.PROVIDER_ID,
   ],
   // tosUrl and privacyPolicyUrl accept either url string or a callback function.
-  tosUrl: '/#',
-  privacyPolicyUrl: function () {
-    window.location.assign('/#');
-  },
+  tosUrl: '/terms',
+  privacyPolicyUrl: '/privacy',
 };
 
 const ui = new firebaseui.auth.AuthUI(firebase.auth());

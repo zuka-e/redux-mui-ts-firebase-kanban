@@ -19,6 +19,8 @@ import TaskBoard from '../components/tasks/TaskBoard';
 import NotFound404 from '../components/pages/NotFound404';
 import Login from '../components/pages/Login';
 import Home from './Home';
+import Terms from '../ui/Terms';
+import Privacy from '../ui/Privacy';
 
 const Routes: React.FC = () => {
   const dispatch = useAppDispatch();
@@ -77,6 +79,12 @@ const Routes: React.FC = () => {
       </Route>
       <Route exact path='/login'>
         <Login />
+      </Route>
+      <Route exact path='/terms'>
+        <Terms />
+      </Route>
+      <Route exact path='/privacy'>
+        <Privacy />
       </Route>
       <Route path='/'>
         <NotFound404 />
